@@ -12,10 +12,11 @@ public class Monster extends Entity {
         setSpeed(2);
         setMoney(5);
         setStrength(30);
-        setDamage(20*(1+getStrength()/100));
+        setDamage(20 * (1 + getStrength() / 100));
         setBoxEntity(boxMonster());
     }
-    public StackPane boxMonster(){
+
+    public StackPane boxMonster() {
         StackPane stackPane = new StackPane();
         Rectangle rectangle = new Rectangle(getWidth(), getHeight());
         rectangle.setFill(Color.RED);
@@ -23,23 +24,14 @@ public class Monster extends Entity {
         stackPane.getChildren().add(rectangle);
         return stackPane;
     }
+
     @Override
     public void basicAttack(Entity entity) {
-        entity.setLife(entity.getLife()-this.getDamage());
+        entity.loseLife(this.getDamage());
     }
 
     @Override
     public void actionAfterDeath() {
         System.out.println("I'm dead");
-    }
-
-    @Override
-    public void applyEffectFromList() {
-        System.out.println("I use effect");
-    }
-
-    @Override
-    public void dropItem() {
-
     }
 }
