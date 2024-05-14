@@ -18,7 +18,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("Cube War");
-        TileMap tileMap = new TileMap(Levels[1], stage);
+        TileMap tileMap = new TileMap(Levels[0], stage);
         Scene scene = new Scene(tileMap, 793, 780);
         stage.sizeToScene();
         stage.setScene(scene);

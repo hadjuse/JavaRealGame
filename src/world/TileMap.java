@@ -1,10 +1,13 @@
 package world;
 
 import entity.Entity;
+import item.ItemEntity;
 import item.ItemPotion;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import monster.Monster;
 import player.Player;
@@ -18,11 +21,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TileMap extends GridPane {
-    List<List<String>> map;
-    String pathToCsv;
-    Player player;
-    Monster monster;
-    ItemPotion itemPotion;
+    private List<List<String>> map;
+    private String pathToCsv;
+    private Player player;
+    private Monster monster;
+    private ItemPotion itemPotion;
+    private Rectangle hitBoxWall;
+
+    List<ItemEntity> itemEntities;
     public List<List<String>> getMap() {
         return map;
     }
@@ -65,7 +71,8 @@ public class TileMap extends GridPane {
                         placeMap(i, j, "images/tile/tile001.png");
                         break;
                     case "3":
-                        placeMap(i, j, "images/dungeon/frames/wall_mid.png");
+                        //placeMap(i, j, "images/tile/wall_mid.png");
+                        placeWall(Wall(), i, j);
                         break;
                 }
             }
@@ -83,7 +90,13 @@ public class TileMap extends GridPane {
 
     public StackPane Wall() {
         StackPane wall = new StackPane();
-
+        ImageView tile = new ImageView("images/tile/wall_mid.png");
+        tile.setFitWidth(50);
+        tile.setFitHeight(50);
+        hitBoxWall = new Rectangle(tile.getFitHeight(), tile.getFitWidth());
+        hitBoxWall.setFill(Color.TRANSPARENT);
+        wall.getChildren().add(tile);
+        wall.getChildren().add(hitBoxWall);
         return wall;
     }
 
@@ -99,7 +112,7 @@ public class TileMap extends GridPane {
         GridPane.setRowIndex(entity.getBoxEntity(), i);
         GridPane.setColumnIndex(entity.getBoxEntity(), j);
     }
-    public void placeItemPotion(ItemPotion itemPotion, int i, int j){
+    public void placePotion(ItemPotion itemPotion, int i, int j){
         GridPane.setRowIndex(itemPotion.getItemStackPane(), i);
         GridPane.setColumnIndex(itemPotion.getItemStackPane(), j);
         this.getChildren().add(itemPotion.getItemStackPane());
@@ -111,6 +124,11 @@ public class TileMap extends GridPane {
         GridPane.setRowIndex(itemPotion.getItemStackPane(), i);
         GridPane.setColumnIndex(itemPotion.getItemStackPane(), j);
     }
+    public void placeWall(StackPane wall, int i, int j){
+        GridPane.setRowIndex(wall, i);
+        GridPane.setColumnIndex(wall, j);
+        this.getChildren().add(wall);
+    }
     public TileMap(String pathToCsv, Stage stage) throws FileNotFoundException {
         setPathToCsv(pathToCsv);
         setMap(new ArrayList<>());
@@ -118,11 +136,12 @@ public class TileMap extends GridPane {
         this.setHgap(-1);
         genMap(getMap());
         showMap(getMap());
-        player = new Player("Hadjuse", stage);
         monster = new Monster("Monster", 20, 20);
-        itemPotion = new ItemPotion("POTION_HEAL", 50);
-        placeEntity(player, 9, 4);
+        itemPotion = new ItemPotion("POTION_STRENGTH");
+        player = new Player("Hadjuse", stage, itemPotion, this, hitBoxWall);
+
+        placePotion(itemPotion, 3,10);
         placeEntity(monster, 9, 5);
-        placeItemPotion(itemPotion, 3,10);
+        placeEntity(player, 9, 4);
     }
 }
