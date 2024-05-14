@@ -16,19 +16,20 @@ public class Player extends Entity {
     private boolean timelineDirectionY;
     private Timeline movementX;
     private Timeline movementY;
-
     public Player(String name, Stage stage) {
         // TODO enable MOVE
+        // TODO collision detection
+        // TODO ATTACKING
         super(name, 20, 20);
         setLife(100);
         setSpeed(2);
         setStrength(10);
-        setDamage(20*(1+getStrength()/100));
+        setDamage(20 * (1 + getStrength() / 100));
         setBoxEntity(boxPlayer());
         eventMovement(stage);
-
     }
-    public StackPane boxPlayer(){
+
+    public StackPane boxPlayer() {
         StackPane stackPane = new StackPane();
         Rectangle rectangle = new Rectangle(getWidth(), getHeight());
         rectangle.setFill(Color.BLUE);
@@ -39,7 +40,7 @@ public class Player extends Entity {
 
     @Override
     public void basicAttack(Entity entity) {
-        entity.setLife(entity.getLife()-this.getDamage());
+        entity.loseLife(this.getDamage());
     }
 
     @Override
@@ -47,29 +48,19 @@ public class Player extends Entity {
 
     }
 
-    @Override
-    public void applyEffectFromList() {
-
-    }
-
-    @Override
-    public void dropItem() {
-
-    }
-
-    public void eventMovement(Stage stage){
+    public void eventMovement(Stage stage) {
         movementX = new Timeline(new KeyFrame(Duration.millis(10), e -> {
-            getBoxEntity().setTranslateX(getBoxEntity().getTranslateX() + (timelineDirectionX ? 3 : -3) / getSpeed());
+            getBoxEntity().setTranslateX(getBoxEntity().getTranslateX() + (timelineDirectionX ? 3 : -3) * getSpeed());
         }));
         movementX.setCycleCount(Timeline.INDEFINITE);
 
         movementY = new Timeline(new KeyFrame(Duration.millis(10), e -> {
-            getBoxEntity().setTranslateY(getBoxEntity().getTranslateY() + (timelineDirectionY ? 3 : -3) / getSpeed());
+            getBoxEntity().setTranslateY(getBoxEntity().getTranslateY() + (timelineDirectionY ? 3 : -3) * getSpeed());
         }));
         movementY.setCycleCount(Timeline.INDEFINITE);
 
         stage.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
-            switch (keyEvent.getCode()){
+            switch (keyEvent.getCode()) {
                 case Z -> {
                     timelineDirectionY = false;
                     movementY.play();
