@@ -11,12 +11,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.FileNotFoundException;
+
 public class Player extends Entity {
     private boolean timelineDirectionX;
     private boolean timelineDirectionY;
     private Timeline movementX;
     private Timeline movementY;
-    public Player(String name, Stage stage) {
+    public Player(String name, Stage stage) throws FileNotFoundException {
         // TODO enable MOVE
         // TODO collision detection
         // TODO ATTACKING

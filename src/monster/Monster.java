@@ -5,8 +5,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.io.FileNotFoundException;
+
 public class Monster extends Entity {
-    public Monster(String name, double width, double height) {
+    public Monster(String name, double width, double height) throws FileNotFoundException {
         super(name, width, height);
         setLife(120);
         setSpeed(2);

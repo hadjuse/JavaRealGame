@@ -4,10 +4,12 @@ import entity.Entity;
 import inventory.Inventory;
 import javafx.scene.layout.StackPane;
 
+import java.io.FileNotFoundException;
+
 public class PotionSeller extends Entity {
     private Inventory inventory;
     private StackPane sellerPane;
-    public PotionSeller(String name, double width, double height) {
+    public PotionSeller(String name, double width, double height) throws FileNotFoundException {
         super(name, width, height);
         setMoney(100000);
     }
