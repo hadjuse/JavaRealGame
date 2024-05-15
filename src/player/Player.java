@@ -3,16 +3,20 @@ package player;
 import entity.ActionEntityBattle;
 import entity.Entity;
 import item.ItemPotion;
+import item.QuestItem;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.Bounds;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import monster.Monster;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
@@ -29,7 +33,7 @@ public class Player extends Entity implements ActionEntityBattle {
         double velocityX;
         double velocityY;
     }
-    public Player(String name, Stage stage, TileMap tileMap, List<Shape> bounds) throws FileNotFoundException {
+    public Player(String name, Stage stage, TileMap tileMap, List<ItemPotion> itemPotions, List<Monster> monsters, List<QuestItem> questItems) throws FileNotFoundException {
         // TODO enable MOVE
         // TODO collision detection
         // TODO ATTACKING
@@ -42,19 +46,46 @@ public class Player extends Entity implements ActionEntityBattle {
         setDamage(20 * (1 + getStrength() / 100));
         setBoxEntity(boxEntity());
         getBoxEntity().setFocusTraversable(true);
-        //getBoxEntity().requestFocus();
 
         movementPlayer = new Timeline(new KeyFrame(Duration.millis(20), event -> {
             double newX = getHitBox().getTranslateX() + (spriteData.velocityX * getSpeed()); // TODO on modifie les vitesses ici
             double newY = getHitBox().getTranslateY() + (spriteData.velocityY * getSpeed()); // TODO on modifie les vitesses ici
             getHitBox().setTranslateX(newX);
             getHitBox().setTranslateY(newY);
-
         }));
         eventMovement(tileMap, spriteData);
 
         movementPlayer.setCycleCount(movementPlayer.INDEFINITE);
         movementPlayer.play();
+
+
+        //tileMap.setFocusTraversable(true);
+        //tileMap.requestFocus();
+        tileMap.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.E) {
+                for (ItemPotion itemPotion : itemPotions) {
+                    Shape intersect = Shape.intersect(getHitBox(), itemPotion.getHitBox());
+                    if (intersect.getBoundsInLocal().getWidth() > 0) {
+                        System.out.println("%s take potion %s".formatted(getName(), itemPotion.getName()));
+                        getInventory().addItemPotion(itemPotion);
+                        tileMap.removeItemEntity(itemPotion);
+                    }
+                }
+
+                for (QuestItem questItem : questItems) {
+                    Shape intersect = Shape.intersect(getHitBox(), questItem.getHitBox());
+                    if (intersect.getBoundsInLocal().getWidth() > 0) {
+                        System.out.println("%s take itemQuest %s".formatted(getName(), questItem.getName()));
+                        getInventory().addQuestItem(questItem);
+                        tileMap.removeItemEntity(questItem);
+                    }
+                }
+            }
+        });
+
+
+
+
     }
 
     public StackPane boxEntity() {
@@ -102,7 +133,7 @@ public class Player extends Entity implements ActionEntityBattle {
 
 
     public void checkCollision(Shape bound, SpriteData spriteData) {
-            Shape intersection = Shape.intersect(getHitBox(),  bound);
+            Shape intersection = Shape.intersect(this.getBoxEntity().getShape(),  bound);
             if (intersection.getBoundsInLocal().getWidth() != -1) {
                 //TODO collision;
                 double newX = getHitBox().getTranslateX() - spriteData.velocityX * getSpeed();
@@ -133,18 +164,21 @@ public class Player extends Entity implements ActionEntityBattle {
         try {
             if (entity.getLife() <= 0) {
                 System.out.printf("%s is dead%n", entity.getName());
-                StackPane pane = entity.getInventory().getItemPotion(0).getItemStackPane();
-                pane.setTranslateX(pane.getTranslateX());
-                pane.setTranslateY(pane.getTranslateY());
-                map.placeItemEntity(entity.getInventory().getItemPotion(0), 14 , 15/2);
-                map.removeEntity(entity);
+                ItemPotion itemPotion = entity.getInventory().getItemPotion(0);
+                entity.giveItem(this, itemPotion);
                 addMoney(entity.getMoney());
+                map.removeEntity(entity);
+                setDead(true);
+                System.out.printf("%s receive %s\n", getName(), itemPotion.getName());
+                System.out.println("%s".formatted(getInventory()));
             }
         } catch (IndexOutOfBoundsException e){
             map.removeEntity(entity);
             addMoney(entity.getMoney());
+        } catch (IllegalArgumentException e){
+            map.removeEntity(entity);
+            System.out.printf("You receive Directly the %s\n", entity.getInventory().getItemPotion(0).getName());
+            entity.giveItem(this, entity.getInventory().getItemPotion(0));
         }
-
     }
-
 }

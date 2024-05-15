@@ -19,9 +19,9 @@ public class PotionSeller extends Entity {
         super(name, width, height, map);
         setMoney(100000);
         setInventory(new Inventory(5));
-        getInventory().addItemPotion(new ItemPotion("POTION_HEAL",player, map,  1));
-        getInventory().addItemPotion(new ItemPotion("POTION_STRENGTH",player,  map,1));
-        getInventory().addItemPotion(new ItemPotion("POTION_DAMAGE",player,  map, 1));
+        getInventory().addItemPotion(new ItemPotion("POTION_HEAL", map));
+        getInventory().addItemPotion(new ItemPotion("POTION_STRENGTH",  map));
+        getInventory().addItemPotion(new ItemPotion("POTION_DAMAGE",  map));
     }
 
 

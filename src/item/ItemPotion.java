@@ -38,8 +38,7 @@ public class ItemPotion extends ItemEntity {
             String.format("%sflask_yellow.png", directory),
     };
 
-    public ItemPotion(String name, Player player, TileMap map, int quantity) throws FileNotFoundException {
-        setQuantity(quantity);
+    public ItemPotion(String name, TileMap map) throws FileNotFoundException {
         setName(name);
         setItemEnum(ItemPotionEnum.valueOf(getName()));
         switch (getItemEnum()) {
@@ -65,7 +64,7 @@ public class ItemPotion extends ItemEntity {
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
         }
         setItemStackPane(renderItem());
-
+        /*
         map.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode() == KeyCode.E) {
                 Shape intersect = Shape.intersect(getHitBox(), player.getHitBox());
@@ -76,7 +75,7 @@ public class ItemPotion extends ItemEntity {
                     this.applyEffectPotion(player);
                 }
             }
-        });
+        });*/
 
     }
 
@@ -204,7 +203,6 @@ public class ItemPotion extends ItemEntity {
                 ", strength=" + strength +
                 ", speed=" + speed +
                 ", damage=" + damage +
-                ", hitBox=" + hitBox +
                 "} " + super.toString();
     }
 }

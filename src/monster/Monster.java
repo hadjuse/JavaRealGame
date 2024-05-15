@@ -30,6 +30,7 @@ public class Monster extends Entity {
         setStrength(30);
         setBoxEntity(boxMonster());
         setDamage(20 * (1 + getStrength() / 100));
+
         getBoxEntity().setOnMouseClicked( mouseEvent -> {
             if (getBoxEntity().contains(mouseEvent.getX(), mouseEvent.getY())) {
                 player.basicAttack(this, map);

@@ -5,8 +5,11 @@ import item.ItemEntity;
 import item.ItemPotion;
 import item.QuestItem;
 import javafx.animation.Timeline;
+import javafx.geometry.Bounds;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -34,35 +37,24 @@ public class TileMap extends GridPane {
     private Monster monster;
     private ItemEntity itemPotion;
     private Rectangle hitBoxWall;
+    private Timeline gameLoop1;
+    private List<Shape> bounds = new ArrayList<Shape>();
+    private List<ItemPotion> itemPotions = new ArrayList<ItemPotion>();
+    private List<Monster> monsters = new ArrayList<Monster>();
+    private List<QuestItem> questItems = new ArrayList<QuestItem>();
+    private final String[] Levels = new String[]{
+            String.format("%s/src/world/Level/level1.csv", System.getProperty("user.dir")),
+            String.format("%s/src/world/Level/level2.csv", System.getProperty("user.dir")),
+            String.format("%s/src/world/Level/level3.csv", System.getProperty("user.dir")),
+    };
     public Rectangle getHitBoxWall() {
         return hitBoxWall;
     }
     public void setHitBoxWall(Rectangle hitBoxWall) {
         this.hitBoxWall = hitBoxWall;
     }
-
-    private Timeline gameLoop1;
-    private List<Shape> bounds = new ArrayList<Shape>();
     public TileMap(String pathToCsv, Stage stage) throws FileNotFoundException {
-        setPathToCsv(pathToCsv);
-        setMap(new ArrayList<>());
-        this.setVgap(-1);
-        this.setHgap(-1);
-        genMap(getMap());
-        showMap(getMap());
-
-        player = new Player("Hadjuse", stage, this,  bounds);
-        ItemEntity potionHeal = new ItemPotion("POTION_HEAL",player, this, 1);
-        itemPotion = new ItemPotion("POTION_STRENGTH",player, this, 1);
-        QuestItem newQuestItem = new QuestItem("GG", player, this);
-        monster = new Monster("Monster", 20, 20, player, this);
-        monster.getInventory().addItemPotion((ItemPotion) potionHeal);
-        bounds.add(monster.getBoundsMonster());
-        bounds.add(hitBoxWall);
-        placeItemEntity(itemPotion, 3, 10);
-        placeEntity(monster, 9, 5);
-        placeItemEntity(newQuestItem, 10, 10);
-        placeEntity(player, 2, 3);
+        setupOriginalRoom(Levels[0], stage);
     }
 
     public List<List<String>> getMap() {
@@ -170,4 +162,153 @@ public class TileMap extends GridPane {
         GridPane.setColumnIndex(wall, j);
         this.getChildren().add(wall);
     }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Monster getMonster() {
+        return monster;
+    }
+
+    public void setMonster(Monster monster) {
+        this.monster = monster;
+    }
+
+    public ItemEntity getItemPotion() {
+        return itemPotion;
+    }
+
+    public void setItemPotion(ItemEntity itemPotion) {
+        this.itemPotion = itemPotion;
+    }
+
+    public List<Shape> getBounds() {
+        return bounds;
+    }
+
+    public void setBounds(List<Shape> bounds) {
+        this.bounds = bounds;
+    }
+
+    public List<ItemPotion> getItemPotions() {
+        return itemPotions;
+    }
+
+    public void setItemPotions(List<ItemPotion> itemPotions) {
+        this.itemPotions = itemPotions;
+    }
+
+    public List<Monster> getMonsters() {
+        return monsters;
+    }
+
+    public void setMonsters(List<Monster> monsters) {
+        this.monsters = monsters;
+    }
+
+    public List<QuestItem> getQuestItems() {
+        return questItems;
+    }
+
+    public void setQuestItems(List<QuestItem> questItems) {
+        this.questItems = questItems;
+    }
+    public void changeMapRoom2(String pathToCsv, Stage stage) throws FileNotFoundException {
+        this.setOnKeyPressed(null);
+        for (ItemEntity item : itemPotions) {
+            removeItemEntity(item);
+        }
+        getChildren().clear(); // Clear the existing map
+        setPathToCsv(pathToCsv);
+        setMap(new ArrayList<>());
+        genMap(getMap());
+        showMap(getMap());
+
+        placeEntity(getPlayer(), 2, 3);
+
+        // Add three monsters to the map
+        Monster monster1 = new Monster("Monster 1", 20, 20, player, this);
+        Monster monster2 = new Monster("Monster 2", 20, 20, player, this);
+        Monster monster3 = new Monster("Monster 3", 20, 20, player, this);
+
+        // Set the position of the monsters
+        placeEntity(monster1, 5, 5);
+        placeEntity(monster2, 10, 10);
+        placeEntity(monster3, 15, 15);
+
+        // Add the monsters to the list of monsters
+        monsters.add(monster1);
+        monsters.add(monster2);
+        monsters.add(monster3);
+
+        Button setupOriginalRoomButton = new Button("2");
+        setupOriginalRoomButton.setPrefWidth(200);
+        setupOriginalRoomButton.setOnAction(event -> {
+            try {
+                player.getInventory().clear();
+                monsters.clear();
+                questItems.clear();
+                itemPotions.clear();
+                this.setupOriginalRoom(Levels[0], stage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+        this.getChildren().add(setupOriginalRoomButton);
+    }
+    public void setupOriginalRoom(String string,Stage stage) throws FileNotFoundException {
+        this.setOnKeyPressed(null);
+        for (ItemEntity item : itemPotions) {
+            removeItemEntity(item);
+        }
+        getChildren().clear();
+        setPathToCsv(string);
+        setMap(new ArrayList<>());
+        this.setVgap(-1);
+        this.setHgap(-1);
+        genMap(getMap());
+        showMap(getMap());
+
+        ItemEntity potionHeal = new ItemPotion("POTION_HEAL", this);
+        ItemEntity potionSpeed = new ItemPotion("POTION_SPEED", this);
+        ItemEntity potionStrength = new ItemPotion("POTION_STRENGTH", this);
+        ItemEntity potionDamage = new ItemPotion("POTION_DAMAGE", this);
+        itemPotions.add((ItemPotion) potionHeal);
+        itemPotions.add((ItemPotion) potionSpeed);
+        itemPotions.add((ItemPotion) potionStrength);
+        itemPotions.add((ItemPotion) potionDamage);
+
+        QuestItem newQuestItem = new QuestItem("GG", player, this);
+
+        bounds.add(hitBoxWall);
+        placeItemEntity(potionHeal, 3, 10);
+        placeItemEntity(newQuestItem, 10, 10);
+        questItems.add(newQuestItem);
+        player = new Player("Hadjuse", stage, this, itemPotions, monsters, questItems);
+        placeEntity(player, 2, 3);
+        monster = new Monster("Monster", 20, 20, player, this);
+        monster.getInventory().addItemPotion((ItemPotion) potionHeal);
+        bounds.add(monster.getBoundsMonster());
+        placeEntity(monster, 9, 5);
+        Button changeMapButton = new Button("1");
+        // Set the preferred height
+        changeMapButton.setOnAction(event -> {
+            try {
+                player.getInventory().clear();
+                monsters.clear();
+                questItems.clear();
+                itemPotions.clear();
+                this.changeMapRoom2(Levels[1], stage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+        this.getChildren().add(changeMapButton);
+    }
+
 }

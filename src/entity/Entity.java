@@ -25,6 +25,11 @@ public abstract class Entity {
     private double height;
     private String name;
     private Rectangle bounds;
+    private ItemPotion potionHeal;
+    private ItemPotion potionStrength;
+    private ItemPotion potionSpeed;
+    private ItemPotion potionDamage;
+    private QuestItem questItem;
     public Entity(String name, double width, double height, TileMap map) throws FileNotFoundException {
         setMoney(0);
         setWidth(width);
@@ -32,6 +37,10 @@ public abstract class Entity {
         setBoxEntity(getBoxEntity());
         setInventory(new Inventory(5));
         setName(name);
+        setPotionDamage(new ItemPotion("POTION_HEAL", map));
+        setPotionHeal(new ItemPotion("POTION_STRENGTH", map));
+        setPotionSpeed(new ItemPotion("POTION_SPEED", map));
+        setPotionStrength(new ItemPotion("POTION_DAMAGE", map));
     }
 
     public double getLife() {
@@ -209,5 +218,45 @@ public abstract class Entity {
 
     public void setBounds(Rectangle bounds) {
         this.bounds = bounds;
+    }
+
+    public ItemPotion getPotionStrength() {
+        return potionStrength;
+    }
+
+    public void setPotionStrength(ItemPotion potionStrength) {
+        this.potionStrength = potionStrength;
+    }
+
+    public ItemPotion getPotionSpeed() {
+        return potionSpeed;
+    }
+
+    public void setPotionSpeed(ItemPotion potionSpeed) {
+        this.potionSpeed = potionSpeed;
+    }
+
+    public ItemPotion getPotionDamage() {
+        return potionDamage;
+    }
+
+    public void setPotionDamage(ItemPotion potionDamage) {
+        this.potionDamage = potionDamage;
+    }
+
+    public ItemPotion getPotionHeal() {
+        return potionHeal;
+    }
+
+    public void setPotionHeal(ItemPotion potionHeal) {
+        this.potionHeal = potionHeal;
+    }
+
+    public QuestItem getQuestItem() {
+        return questItem;
+    }
+
+    public void setQuestItem(QuestItem questItem) {
+        this.questItem = questItem;
     }
 }

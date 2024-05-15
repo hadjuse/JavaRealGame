@@ -18,23 +18,12 @@ public class QuestItem extends ItemEntity {
     public QuestItem(String name,Player player, TileMap map) throws FileNotFoundException {
         setName(name);
         setItemStackPane(renderItem());
-        map.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.E) {
-                Shape intersect = Shape.intersect(getHitBox(), player.getHitBox());
-                if (intersect.getBoundsInLocal().getWidth() > 0 && intersect.getBoundsInLocal().getHeight() > 0) {
-                    System.out.println("%s take the %s".formatted(player.getName(), getName()));
-                    player.getInventory().addQuestItem(this);
-                    map.removeItemEntity(this);
-                }
-            }
-        });
     }
 
     @Override
     public StackPane renderItem() throws FileNotFoundException {
         StackPane stackPane = new StackPane();
         setHitBox(new Rectangle(25, 25));
-
         getHitBox().setFill(Color.YELLOW);
         stackPane.getChildren().add(getHitBox());
         return stackPane;

@@ -96,4 +96,13 @@ public class Inventory {
     public ItemPotion getItemPotion(int index) {
         return itemPotionList.get(index);
     }
+
+    @Override
+    public String toString() {
+        return "Inventory{" +
+                "questItemList=" + questItemList +
+                ", usableItemList=" + usableItemList +
+                ", itemPotionList=" + itemPotionList +
+                '}';
+    }
 }
