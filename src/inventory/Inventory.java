@@ -1,6 +1,6 @@
 package inventory;
 
-import item.ConsumableItem;
+import item.QuestItem;
 import item.ItemPotion;
 import item.UsableItem;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory {
-    private List<ConsumableItem> consumableItemList;
+    private List<QuestItem> questItemList;
     private List<UsableItem> usableItemList;
     private List<ItemPotion> itemPotionList;
 
@@ -19,12 +19,12 @@ public class Inventory {
         setItemPotionList(new ArrayList<>(quantity));
     }
 
-    public List<ConsumableItem> getConsumableItemList() {
-        return consumableItemList;
+    public List<QuestItem> getConsumableItemList() {
+        return questItemList;
     }
 
-    public void setConsumableItemList(List<ConsumableItem> consumableItemList) {
-        this.consumableItemList = consumableItemList;
+    public void setConsumableItemList(List<QuestItem> questItemList) {
+        this.questItemList = questItemList;
     }
 
     public List<UsableItem> getUsableItemList() {
@@ -43,8 +43,8 @@ public class Inventory {
         this.itemPotionList = itemPotionList;
     }
 
-    public void addConsumableItem(ConsumableItem consumableItem) {
-        consumableItemList.add(consumableItem);
+    public void addQuestItem(QuestItem questItem) {
+        questItemList.add(questItem);
     }
 
     public void addUsableItem(UsableItem usableItem) {
@@ -55,8 +55,8 @@ public class Inventory {
         itemPotionList.add(itemPotion);
     }
 
-    public void removeConsumableItem(ConsumableItem consumableItem) {
-        consumableItemList.remove(consumableItem);
+    public void removeConsumableItem(QuestItem questItem) {
+        questItemList.remove(questItem);
     }
 
     public void removeUsableItem(UsableItem usableItem) {
@@ -68,13 +68,13 @@ public class Inventory {
     }
 
     public void clear() {
-        consumableItemList.clear();
+        questItemList.clear();
         usableItemList.clear();
         itemPotionList.clear();
     }
 
     public int getConsumableItemCount() {
-        return consumableItemList.size();
+        return questItemList.size();
     }
 
     public int getUsableItemCount() {
@@ -85,8 +85,8 @@ public class Inventory {
         return itemPotionList.size();
     }
 
-    public ConsumableItem getConsumableItem(int index) {
-        return consumableItemList.get(index);
+    public QuestItem getConsumableItem(int index) {
+        return questItemList.get(index);
     }
 
     public UsableItem getUsableItem(int index) {
@@ -95,5 +95,14 @@ public class Inventory {
 
     public ItemPotion getItemPotion(int index) {
         return itemPotionList.get(index);
+    }
+
+    @Override
+    public String toString() {
+        return "Inventory{" +
+                "questItemList=" + questItemList +
+                ", usableItemList=" + usableItemList +
+                ", itemPotionList=" + itemPotionList +
+                '}';
     }
 }
