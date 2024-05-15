@@ -1,8 +1,6 @@
 package item;
 
 import entity.Entity;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -12,12 +10,12 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import player.Player;
 import world.TileMap;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.security.Key;
 
 public class ItemPotion extends ItemEntity {
     private final String directory = String.format("%s/src/images/potion/", System.getProperty("user.dir"));
@@ -40,7 +38,7 @@ public class ItemPotion extends ItemEntity {
             String.format("%sflask_yellow.png", directory),
     };
 
-    public ItemPotion(String name, Player player, TileMap map, int quantity, Stage stage) throws FileNotFoundException {
+    public ItemPotion(String name, Player player, TileMap map, int quantity) throws FileNotFoundException {
         setQuantity(quantity);
         setName(name);
         setItemEnum(ItemPotionEnum.valueOf(getName()));
@@ -67,21 +65,21 @@ public class ItemPotion extends ItemEntity {
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
         }
         setItemStackPane(renderItem());
-        eventPotion(player, map, stage);
-    }
 
-    private void eventPotion(Player player, TileMap map, Stage stage) {
-        stage.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+        map.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode() == KeyCode.E) {
-                Shape intersect = Shape.intersect(getHitBox(), player.getHitbox());
+                Shape intersect = Shape.intersect(getHitBox(), player.getHitBox());
                 if (intersect.getBoundsInLocal().getWidth() > 0 && intersect.getBoundsInLocal().getHeight() > 0) {
-                    System.out.println("%s take the %s".formatted( player.getName(), getName()));
+                    System.out.println("%s take the %s".formatted(player.getName(), getName()));
                     player.getInventory().addItemPotion(this);
                     map.removeItemEntity(this);
+                    this.applyEffectPotion(player);
                 }
             }
         });
+
     }
+
 
     public double getLife() {
         return life;

@@ -15,13 +15,13 @@ public class PotionSeller extends Entity {
     private Inventory inventory;
     private StackPane sellerPane;
 
-    public PotionSeller(String name, double width, double height, TileMap map, Player player, Stage stage) throws FileNotFoundException {
+    public PotionSeller(String name, double width, double height, TileMap map, Player player) throws FileNotFoundException {
         super(name, width, height, map);
         setMoney(100000);
         setInventory(new Inventory(5));
-        getInventory().addItemPotion(new ItemPotion("POTION_HEAL", player, map, 1, stage));
-        getInventory().addItemPotion(new ItemPotion("POTION_STRENGTH", player, map, 1, stage));
-        getInventory().addItemPotion(new ItemPotion("POTION_DAMAGE", player, map, 1, stage));
+        getInventory().addItemPotion(new ItemPotion("POTION_HEAL",player, map,  1));
+        getInventory().addItemPotion(new ItemPotion("POTION_STRENGTH",player,  map,1));
+        getInventory().addItemPotion(new ItemPotion("POTION_DAMAGE",player,  map, 1));
     }
 
 

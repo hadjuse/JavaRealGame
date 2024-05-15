@@ -1,11 +1,12 @@
 package entity;
 
 import inventory.Inventory;
-import item.ConsumableItem;
+import item.QuestItem;
 import item.ItemEntity;
 import item.ItemPotion;
 import item.UsableItem;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
@@ -23,7 +24,7 @@ public abstract class Entity {
     private double width;
     private double height;
     private String name;
-
+    private Rectangle bounds;
     public Entity(String name, double width, double height, TileMap map) throws FileNotFoundException {
         setMoney(0);
         setWidth(width);
@@ -163,8 +164,8 @@ public abstract class Entity {
         } else if (item instanceof UsableItem usable) {
             entity.getInventory().addUsableItem(usable);
             getInventory().removeUsableItem(usable);
-        } else if (item instanceof ConsumableItem consumable) {
-            entity.getInventory().addConsumableItem(consumable);
+        } else if (item instanceof QuestItem consumable) {
+            entity.getInventory().addQuestItem(consumable);
             getInventory().removeConsumableItem(consumable);
         }
     }
@@ -174,8 +175,8 @@ public abstract class Entity {
             getInventory().addItemPotion(potion);
         } else if (item instanceof UsableItem usable) {
             getInventory().addUsableItem(usable);
-        } else if (item instanceof ConsumableItem consumable) {
-            getInventory().addConsumableItem(consumable);
+        } else if (item instanceof QuestItem consumable) {
+            getInventory().addQuestItem(consumable);
         }
     }
 
@@ -200,5 +201,13 @@ public abstract class Entity {
             itemPotion.applyEffectPotion(this);
             getInventory().removeItemPotion(itemPotion);
         }
+    }
+
+    public Rectangle getBounds() {
+        return bounds;
+    }
+
+    public void setBounds(Rectangle bounds) {
+        this.bounds = bounds;
     }
 }
