@@ -3,7 +3,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import world.TileMap;
 
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main extends Application {
     private final String[] Levels = new String[]{
             String.format("%s/src/world/Level/level1.csv", System.getProperty("user.dir")),
@@ -27,5 +26,6 @@ public class Main extends Application {
         stage.setX(1280 / 2);
         stage.setY(0);
         stage.show();
+
     }
 }

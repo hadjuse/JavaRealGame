@@ -1,13 +1,12 @@
 package player;
 
+import entity.ActionEntityBattle;
 import entity.Entity;
-import item.ItemEntity;
-import item.ItemPotion;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -18,34 +17,29 @@ import world.TileMap;
 
 import java.io.FileNotFoundException;
 
-public class Player extends Entity {
+public class Player extends Entity implements ActionEntityBattle {
     private boolean timelineDirectionX;
     private boolean timelineDirectionY;
     private Timeline movementX;
     private Timeline movementY;
     private Rectangle hitbox;
-    private Timeline collisionTimeline;
-    public Player(String name, Stage stage, ItemPotion potion, TileMap tileMap, Rectangle hitBox) throws FileNotFoundException {
+
+    public Player(String name, Stage stage, TileMap tileMap, Rectangle hitBox) throws FileNotFoundException {
         // TODO enable MOVE
         // TODO collision detection
         // TODO ATTACKING
-        super(name, 20, 20);
+        super(name, 20, 20, tileMap);
+        setName(name);
         setLife(100);
         setSpeed(1.5);
         setStrength(10);
         setDamage(20 * (1 + getStrength() / 100));
-        setBoxEntity(boxPlayer());
+        setBoxEntity(boxEntity());
         eventMovement(stage);
-        eventPotion(stage, potion, tileMap);
-        collisionTimeline = new Timeline(new KeyFrame(Duration.millis(10), e -> {
-            eventCollision(stage, hitBox);
-        }));
-        collisionTimeline.setCycleCount(collisionTimeline.INDEFINITE);
-        collisionTimeline.play();
-
+        eventCollision(hitBox);
     }
 
-    public StackPane boxPlayer() {
+    public StackPane boxEntity() {
         StackPane stackPane = new StackPane();
         setHitbox(new Rectangle(getWidth(), getHeight()));
         getHitbox().setFill(Color.BLUE);
@@ -54,19 +48,10 @@ public class Player extends Entity {
         return stackPane;
     }
 
-    @Override
-    public void basicAttack(Entity entity) {
-        entity.loseLife(this.getDamage());
-    }
-
-    @Override
-    public void actionAfterDeath() {
-
-    }
 
     public void eventMovement(Stage stage) {
         movementX = new Timeline(new KeyFrame(Duration.millis(10), e -> {
-            getBoxEntity().setTranslateX(getBoxEntity().getTranslateX() + (timelineDirectionX ? 1: -1) * getSpeed());
+            getBoxEntity().setTranslateX(getBoxEntity().getTranslateX() + (timelineDirectionX ? 1 : -1) * getSpeed());
         }));
         movementX.setCycleCount(Timeline.INDEFINITE);
 
@@ -106,27 +91,12 @@ public class Player extends Entity {
         });
     }
 
-    public void eventPotion(Stage stage, ItemPotion itemPotion, TileMap tileMap){
-        stage.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
-            switch (keyEvent.getCode()) {
-                case E -> {
-                    Shape intersect = Shape.intersect(getHitbox(), itemPotion.getHitBox());
-                    if (intersect.getBoundsInLocal().getWidth() > 0 && intersect.getBoundsInLocal().getHeight() > 0) {
-                        System.out.println("I take this potion");
-                        getInventory().addItemPotion(itemPotion);
-                        tileMap.removeItemPotion(itemPotion);
-                    }
-                }
-            }
-        });
-    }
-    public void eventCollision(Stage stage, Rectangle hitBox){
+    public void eventCollision(Rectangle hitBox) {
         Shape intersection = Shape.intersect(getHitbox(), hitBox);
-        if (intersection.getBoundsInLocal().getWidth() != -1 && intersection.getBoundsInLocal().getHeight() != -1){
+        if (intersection.getBoundsInLocal().getWidth() != -1 && intersection.getBoundsInLocal().getHeight() != -1) {
             System.out.println("I collide");
             //TODO collision;
         }
-
     }
 
     public Rectangle getHitbox() {
@@ -136,4 +106,26 @@ public class Player extends Entity {
     public void setHitbox(Rectangle hitbox) {
         this.hitbox = hitbox;
     }
+
+    @Override
+    public void basicAttack(Entity entity, TileMap map) {
+        System.out.printf("%s attack %s%n", getName(), entity.getName());
+        System.out.printf("Life of %s = %f%n", entity.getName(), entity.getLife());
+        entity.loseLife(this.getDamage());
+        actionAfterDeath(map, entity);
+        addMoney(entity.getMoney());
+    }
+
+    @Override
+    public void actionAfterDeath(TileMap map, Entity entity) {
+        if (entity.getLife() <= 0) {
+            System.out.printf("%s is dead%n", entity.getName());
+            StackPane pane = entity.getInventory().getItemPotion(0).getItemStackPane();
+            pane.setTranslateX(pane.getTranslateX());
+            pane.setTranslateY(pane.getTranslateY());
+            map.placeItemEntity(entity.getInventory().getItemPotion(0), 14 , 15/2);
+            map.removeEntity(entity);
+        }
+    }
+
 }
