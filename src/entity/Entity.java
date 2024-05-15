@@ -6,11 +6,9 @@ import item.ItemEntity;
 import item.ItemPotion;
 import item.UsableItem;
 import javafx.scene.layout.StackPane;
+import world.TileMap;
 
 import java.io.FileNotFoundException;
-import java.lang.reflect.GenericSignatureFormatError;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class Entity {
     private double life;
@@ -24,13 +22,15 @@ public abstract class Entity {
     private boolean isDead;
     private double width;
     private double height;
+    private String name;
 
-    public Entity(String name, double width, double height) throws FileNotFoundException {
+    public Entity(String name, double width, double height, TileMap map) throws FileNotFoundException {
         setMoney(0);
         setWidth(width);
         setHeight(height);
         setBoxEntity(getBoxEntity());
         setInventory(new Inventory(5));
+        setName(name);
     }
 
     public double getLife() {
@@ -130,6 +130,7 @@ public abstract class Entity {
     }
 
     public void addMoney(double money) {
+        System.out.println("You Earn " + money);
         setMoney(getMoney() + money);
     }
 
@@ -150,12 +151,10 @@ public abstract class Entity {
     }
 
     public void loseMoney(double money) {
+        System.out.println("You Lose " + money);
         setMoney(getMoney() - money);
     }
 
-    public abstract void basicAttack(Entity entity);
-
-    public abstract void actionAfterDeath();
 
     public void giveItem(Entity entity, ItemEntity item) {
         if (item instanceof ItemPotion potion) {
@@ -186,5 +185,20 @@ public abstract class Entity {
 
     public void setInventory(Inventory inventory) {
         this.inventory = inventory;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void UsePotion(){
+        ItemPotion itemPotion = getInventory().getItemPotion(0);
+        if(itemPotion!= null){
+            itemPotion.applyEffectPotion(this);
+            getInventory().removeItemPotion(itemPotion);
+        }
     }
 }

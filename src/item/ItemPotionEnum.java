@@ -1,6 +1,6 @@
 package item;
 
-public enum ItemEnum {
+public enum ItemPotionEnum {
     POTION_HEAL,
     POTION_STRENGTH,
     POTION_SPEED,

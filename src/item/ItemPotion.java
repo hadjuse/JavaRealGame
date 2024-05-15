@@ -1,11 +1,20 @@
 package item;
 
 import entity.Entity;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import player.Player;
+import world.TileMap;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,10 +25,11 @@ public class ItemPotion extends ItemEntity {
     private double strength;
     private double speed;
     private double damage;
-    private ItemEnum itemEnum;
+    private Rectangle hitBox;
+    private ItemPotionEnum itemPotionEnum;
     private String name;
-    private StackPane itemStackPane;
-    private String[] SpritePath = new String[]{
+
+    private final String[] SpritePath = new String[]{
             String.format("%sflask_big_blue.png", directory),
             String.format("%sflask_big_green.png", directory),
             String.format("%sflask_big_red.png", directory),
@@ -29,27 +39,48 @@ public class ItemPotion extends ItemEntity {
             String.format("%sflask_red.png", directory),
             String.format("%sflask_yellow.png", directory),
     };
-    public ItemPotion(String name, int value) throws FileNotFoundException{
-        super(value);
+
+    public ItemPotion(String name, Player player, TileMap map, int quantity, Stage stage) throws FileNotFoundException {
+        setQuantity(quantity);
         setName(name);
-        setItemEnum(ItemEnum.valueOf(getName()));
+        setItemEnum(ItemPotionEnum.valueOf(getName()));
         switch (getItemEnum()) {
             case POTION_HEAL:
                 setLife(20);
+                setValueMoney(10);
                 break;
             case POTION_STRENGTH:
-                setStrength(10);
+                setStrength(15);
+                setValueMoney(20);
+
                 break;
             case POTION_SPEED:
-                setSpeed(1.5);
+                setSpeed(2);
+                setValueMoney(15);
+
                 break;
             case POTION_DAMAGE:
                 setDamage(20);
+                setValueMoney(13);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
         }
         setItemStackPane(renderItem());
+        eventPotion(player, map, stage);
+    }
+
+    private void eventPotion(Player player, TileMap map, Stage stage) {
+        stage.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.E) {
+                Shape intersect = Shape.intersect(getHitBox(), player.getHitbox());
+                if (intersect.getBoundsInLocal().getWidth() > 0 && intersect.getBoundsInLocal().getHeight() > 0) {
+                    System.out.println("%s take the %s".formatted( player.getName(), getName()));
+                    player.getInventory().addItemPotion(this);
+                    map.removeItemEntity(this);
+                }
+            }
+        });
     }
 
     public double getLife() {
@@ -84,12 +115,12 @@ public class ItemPotion extends ItemEntity {
         this.damage = damage;
     }
 
-    public ItemEnum getItemEnum() {
-        return itemEnum;
+    public ItemPotionEnum getItemEnum() {
+        return itemPotionEnum;
     }
 
-    public void setItemEnum(ItemEnum itemEnum) {
-        this.itemEnum = itemEnum;
+    public void setItemEnum(ItemPotionEnum itemPotionEnum) {
+        this.itemPotionEnum = itemPotionEnum;
     }
 
     public String getName() {
@@ -99,8 +130,9 @@ public class ItemPotion extends ItemEntity {
     public void setName(String name) {
         this.name = name;
     }
-    public void applyEffect(Entity entity){
-        switch (getItemEnum()){
+
+    public void applyEffectPotion(Entity entity) {
+        switch (getItemEnum()) {
             case POTION_HEAL:
                 entity.addLife(getLife());
                 break;
@@ -118,49 +150,63 @@ public class ItemPotion extends ItemEntity {
         }
     }
 
-    public StackPane getItemStackPane() {
-        return itemStackPane;
-    }
-
-    public void setItemStackPane(StackPane itemStackPane) {
-        this.itemStackPane = itemStackPane;
-    }
+    @Override
     public StackPane renderItem() throws FileNotFoundException {
         StackPane stackPane = new StackPane();
-        Rectangle rect = new Rectangle(25, 25);
+        setHitBox(new Rectangle(25, 25));
         Image image;
         ImageView imageView;
-        switch (getItemEnum()){
+        switch (getItemEnum()) {
             case POTION_HEAL:
                 image = new Image(new FileInputStream(getSpritePath()[0]));
                 imageView = new ImageView(image);
-                rect.setFill(new ImagePattern(image));
+                getHitBox().setFill(new ImagePattern(image));
                 break;
             case POTION_STRENGTH:
                 image = new Image(new FileInputStream(getSpritePath()[1]));
                 imageView = new ImageView(image);
-                rect.setFill(new ImagePattern(image));
+                getHitBox().setFill(new ImagePattern(image));
                 break;
 
             case POTION_SPEED:
                 image = new Image(new FileInputStream(getSpritePath()[2]));
                 imageView = new ImageView(image);
-                rect.setFill(new ImagePattern(image));
+                getHitBox().setFill(new ImagePattern(image));
                 break;
 
             case POTION_DAMAGE:
                 image = new Image(new FileInputStream(getSpritePath()[3]));
                 imageView = new ImageView(image);
-                rect.setFill(new ImagePattern(image));
+                getHitBox().setFill(new ImagePattern(image));
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
         }
-        stackPane.getChildren().addAll(rect, imageView);
+        stackPane.getChildren().addAll(getHitBox(), imageView);
         return stackPane;
     }
 
     public String[] getSpritePath() {
         return SpritePath;
+    }
+
+    public Rectangle getHitBox() {
+        return hitBox;
+    }
+
+    public void setHitBox(Rectangle hitBox) {
+        this.hitBox = hitBox;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemPotion{" +
+                "name='" + name + '\'' +
+                ", life=" + life +
+                ", strength=" + strength +
+                ", speed=" + speed +
+                ", damage=" + damage +
+                ", hitBox=" + hitBox +
+                "} " + super.toString();
     }
 }

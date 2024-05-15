@@ -1,23 +1,14 @@
 package pnj;
 
 import entity.Entity;
+import world.TileMap;
+
+import java.io.FileNotFoundException;
 
 public class PnjQuest extends Entity {
-    public PnjQuest(String name, double width, double height) {
-        super(name, width, height);
+    public PnjQuest(String name, double width, double height, TileMap map) throws FileNotFoundException {
+        super(name, width, height, map);
     }
-
-    @Override
-    public void basicAttack(Entity entity) {
-
-    }
-
-    @Override
-    public void actionAfterDeath() {
-
-    }
-
-
 
 
 }
