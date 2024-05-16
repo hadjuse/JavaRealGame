@@ -4,6 +4,7 @@ import entity.ActionEntityBattle;
 import entity.Entity;
 import item.ItemPotion;
 import item.QuestItem;
+import item.ItemEntity;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Bounds;
@@ -33,7 +34,7 @@ public class Player extends Entity implements ActionEntityBattle {
         double velocityX;
         double velocityY;
     }
-    public Player(String name, Stage stage, TileMap tileMap, List<ItemPotion> itemPotions, List<Monster> monsters, List<QuestItem> questItems) throws FileNotFoundException {
+    public Player(String name, Stage stage, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities) throws FileNotFoundException {
         // TODO enable MOVE
         // TODO collision detection
         // TODO ATTACKING
@@ -63,21 +64,22 @@ public class Player extends Entity implements ActionEntityBattle {
         //tileMap.requestFocus();
         tileMap.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode() == KeyCode.E) {
-                for (ItemPotion itemPotion : itemPotions) {
-                    Shape intersect = Shape.intersect(getHitBox(), itemPotion.getHitBox());
-                    if (intersect.getBoundsInLocal().getWidth() > 0) {
-                        System.out.println("%s take potion %s".formatted(getName(), itemPotion.getName()));
-                        getInventory().addItemPotion(itemPotion);
-                        tileMap.removeItemEntity(itemPotion);
+                for (ItemEntity itemEntity: itemEntities){
+                    if (itemEntity instanceof ItemPotion potion){
+                        Shape intersect = Shape.intersect(getHitBox(), potion.getHitBox());
+                        if (intersect.getBoundsInLocal().getWidth() > 0) {
+                            System.out.println("%s take potion %s".formatted(getName(), potion.getName()));
+                            getInventory().addItemPotion(potion);
+                            tileMap.removeItemEntity(potion);
+                        }
                     }
-                }
-
-                for (QuestItem questItem : questItems) {
-                    Shape intersect = Shape.intersect(getHitBox(), questItem.getHitBox());
-                    if (intersect.getBoundsInLocal().getWidth() > 0) {
-                        System.out.println("%s take itemQuest %s".formatted(getName(), questItem.getName()));
-                        getInventory().addQuestItem(questItem);
-                        tileMap.removeItemEntity(questItem);
+                    if (itemEntity instanceof QuestItem questItem){
+                        Shape intersect = Shape.intersect(getHitBox(), questItem.getHitBox());
+                        if (intersect.getBoundsInLocal().getWidth() > 0) {
+                            System.out.println("%s take itemQuest %s".formatted(getName(), questItem.getName()));
+                            getInventory().addQuestItem(questItem);
+                            tileMap.removeItemEntity(questItem);
+                        }
                     }
                 }
             }
