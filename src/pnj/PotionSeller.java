@@ -2,10 +2,8 @@ package pnj;
 
 import entity.Entity;
 import inventory.Inventory;
-import item.ItemEntity;
 import item.ItemPotion;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 import player.Player;
 import world.TileMap;
 
@@ -20,8 +18,8 @@ public class PotionSeller extends Entity {
         setMoney(100000);
         setInventory(new Inventory(5));
         getInventory().addItemPotion(new ItemPotion("POTION_HEAL", map));
-        getInventory().addItemPotion(new ItemPotion("POTION_STRENGTH",  map));
-        getInventory().addItemPotion(new ItemPotion("POTION_DAMAGE",  map));
+        getInventory().addItemPotion(new ItemPotion("POTION_STRENGTH", map));
+        getInventory().addItemPotion(new ItemPotion("POTION_DAMAGE", map));
     }
 
 

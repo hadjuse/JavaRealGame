@@ -1,12 +1,8 @@
 package item;
 
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import player.Player;
 import world.TileMap;
 
@@ -15,7 +11,8 @@ import java.io.FileNotFoundException;
 public class QuestItem extends ItemEntity {
     private Rectangle hitBox;
     private String name;
-    public QuestItem(String name,Player player, TileMap map) throws FileNotFoundException {
+
+    public QuestItem(String name, Player player, TileMap map) throws FileNotFoundException {
         setName(name);
         setItemStackPane(renderItem());
     }

@@ -5,11 +5,9 @@ import item.ItemEntity;
 import item.ItemPotion;
 import item.QuestItem;
 import javafx.animation.Timeline;
-import javafx.geometry.Bounds;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -28,6 +26,11 @@ import java.util.List;
 import java.util.Random;
 
 public class TileMap extends GridPane {
+    private final String[] Levels = new String[]{
+            String.format("%s/src/world/Level/level1.csv", System.getProperty("user.dir")),
+            String.format("%s/src/world/Level/level2.csv", System.getProperty("user.dir")),
+            String.format("%s/src/world/Level/level3.csv", System.getProperty("user.dir")),
+    };
     public Random randomX = new Random();
     public Random randomY = new Random();
     List<ItemEntity> itemEntities = new ArrayList<>();
@@ -43,19 +46,17 @@ public class TileMap extends GridPane {
     private List<ItemPotion> itemPotions = new ArrayList<ItemPotion>();
     private List<Monster> monsters = new ArrayList<Monster>();
     private List<QuestItem> questItems = new ArrayList<QuestItem>();
-    private final String[] Levels = new String[]{
-            String.format("%s/src/world/Level/level1.csv", System.getProperty("user.dir")),
-            String.format("%s/src/world/Level/level2.csv", System.getProperty("user.dir")),
-            String.format("%s/src/world/Level/level3.csv", System.getProperty("user.dir")),
-    };
+
+    public TileMap(String pathToCsv, Stage stage) throws FileNotFoundException {
+        setupOriginalRoom(Levels[0], stage);
+    }
+
     public Rectangle getHitBoxWall() {
         return hitBoxWall;
     }
+
     public void setHitBoxWall(Rectangle hitBoxWall) {
         this.hitBoxWall = hitBoxWall;
-    }
-    public TileMap(String pathToCsv, Stage stage) throws FileNotFoundException {
-        setupOriginalRoom(Levels[0], stage);
     }
 
     public List<List<String>> getMap() {
@@ -219,6 +220,7 @@ public class TileMap extends GridPane {
     public void setQuestItems(List<QuestItem> questItems) {
         this.questItems = questItems;
     }
+
     public void changeMapRoom2(String pathToCsv, Stage stage) throws FileNotFoundException {
         this.setOnKeyPressed(null);
         for (ItemEntity item : itemPotions) {
@@ -261,7 +263,8 @@ public class TileMap extends GridPane {
         });
         this.getChildren().add(setupOriginalRoomButton);
     }
-    public void setupOriginalRoom(String string,Stage stage) throws FileNotFoundException {
+
+    public void setupOriginalRoom(String string, Stage stage) throws FileNotFoundException {
         this.setOnKeyPressed(null);
         for (ItemEntity item : itemPotions) {
             removeItemEntity(item);
@@ -290,11 +293,11 @@ public class TileMap extends GridPane {
         player = new Player("Hadjuse", stage, this, itemEntities, entities);
 
         bounds.add(hitBoxWall);
-        bounds.add(monster.getBoundsMonster());
-        Monster monster1 = new Monster("Monster 1", 20, 20, player, this);
-        entities.add(monster1);
-        placeEntity(monster1, 9,5);
 
+        Monster monster1 = new Monster("Monster 1", 20, 20, player, this);
+        bounds.add(monster1.getBoundsMonster());
+        entities.add(monster1);
+        placeEntity(monster1, 9, 5);
         placeItemEntity(potionHeal, 3, 10);
         placeItemEntity(newQuestItem, 10, 10);
         placeEntity(player, 2, 3);

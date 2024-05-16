@@ -2,15 +2,14 @@ package player;
 
 import entity.ActionEntityBattle;
 import entity.Entity;
+import item.ItemEntity;
 import item.ItemPotion;
 import item.QuestItem;
-import item.ItemEntity;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.geometry.Bounds;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -29,11 +28,8 @@ public class Player extends Entity implements ActionEntityBattle {
     private Timeline movementX;
     private Timeline movementY;
     private Rectangle hitBox;
-    private Timeline movementPlayer;
-    private static class SpriteData {
-        double velocityX;
-        double velocityY;
-    }
+    private final Timeline movementPlayer;
+
     public Player(String name, Stage stage, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities) throws FileNotFoundException {
         // TODO enable MOVE
         // TODO collision detection
@@ -53,10 +49,11 @@ public class Player extends Entity implements ActionEntityBattle {
             double newY = getHitBox().getTranslateY() + (spriteData.velocityY * getSpeed()); // TODO on modifie les vitesses ici
             getHitBox().setTranslateX(newX);
             getHitBox().setTranslateY(newY);
+            checkCollision(entities, spriteData);
         }));
         eventMovement(tileMap, spriteData);
 
-        movementPlayer.setCycleCount(movementPlayer.INDEFINITE);
+        movementPlayer.setCycleCount(Animation.INDEFINITE);
         movementPlayer.play();
 
 
@@ -64,19 +61,19 @@ public class Player extends Entity implements ActionEntityBattle {
         //tileMap.requestFocus();
         tileMap.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode() == KeyCode.E) {
-                for (ItemEntity itemEntity: itemEntities){
-                    if (itemEntity instanceof ItemPotion potion){
+                for (ItemEntity itemEntity : itemEntities) {
+                    if (itemEntity instanceof ItemPotion potion) {
                         Shape intersect = Shape.intersect(getHitBox(), potion.getHitBox());
                         if (intersect.getBoundsInLocal().getWidth() > 0) {
-                            System.out.println("%s take potion %s".formatted(getName(), potion.getName()));
+                            System.out.printf("%s take potion %s%n", getName(), potion.getName());
                             getInventory().addItemPotion(potion);
                             tileMap.removeItemEntity(potion);
                         }
                     }
-                    if (itemEntity instanceof QuestItem questItem){
+                    if (itemEntity instanceof QuestItem questItem) {
                         Shape intersect = Shape.intersect(getHitBox(), questItem.getHitBox());
                         if (intersect.getBoundsInLocal().getWidth() > 0) {
-                            System.out.println("%s take itemQuest %s".formatted(getName(), questItem.getName()));
+                            System.out.printf("%s take itemQuest %s%n", getName(), questItem.getName());
                             getInventory().addQuestItem(questItem);
                             tileMap.removeItemEntity(questItem);
                         }
@@ -84,8 +81,6 @@ public class Player extends Entity implements ActionEntityBattle {
                 }
             }
         });
-
-
 
 
     }
@@ -98,7 +93,6 @@ public class Player extends Entity implements ActionEntityBattle {
         stackPane.getChildren().add(getHitBox());
         return stackPane;
     }
-
 
     public void eventMovement(TileMap map, SpriteData spriteData) {
         map.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
@@ -132,18 +126,24 @@ public class Player extends Entity implements ActionEntityBattle {
         });
     }
 
+    public void checkCollision(List<Entity> bounds, SpriteData spriteData) {
+        for (Entity bound : bounds){
+            if (bound instanceof Monster monster){
+                //System.out.println(monster.getBoundsMonster());
 
-
-    public void checkCollision(Shape bound, SpriteData spriteData) {
-            Shape intersection = Shape.intersect(this.getBoxEntity().getShape(),  bound);
-            if (intersection.getBoundsInLocal().getWidth() != -1) {
-                //TODO collision;
-                double newX = getHitBox().getTranslateX() - spriteData.velocityX * getSpeed();
-                double newY = getHitBox().getTranslateY() - spriteData.velocityY * getSpeed();
-                getHitBox().setTranslateX(newX);
-                getHitBox().setTranslateY(newY);
+                Shape intersection = Shape.intersect(getHitBox(),  monster.getBoundsMonster());
+                if (intersection.getBoundsInLocal().getWidth() != -1) {
+                    //TODO collision;
+                    double newX = getHitBox().getTranslateX() - spriteData.velocityX * getSpeed();
+                    double newY = getHitBox().getTranslateY() - spriteData.velocityY * getSpeed();
+                    getHitBox().setTranslateX(newX);
+                    getHitBox().setTranslateY(newY);
+                }
             }
+        }
     }
+
+
     public Rectangle getHitBox() {
         return hitBox;
     }
@@ -172,15 +172,20 @@ public class Player extends Entity implements ActionEntityBattle {
                 map.removeEntity(entity);
                 setDead(true);
                 System.out.printf("%s receive %s\n", getName(), itemPotion.getName());
-                System.out.println("%s".formatted(getInventory()));
+                System.out.printf("%s%n", getInventory());
             }
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             map.removeEntity(entity);
             addMoney(entity.getMoney());
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             map.removeEntity(entity);
             System.out.printf("You receive Directly the %s\n", entity.getInventory().getItemPotion(0).getName());
             entity.giveItem(this, entity.getInventory().getItemPotion(0));
         }
+    }
+
+    private static class SpriteData {
+        double velocityX;
+        double velocityY;
     }
 }

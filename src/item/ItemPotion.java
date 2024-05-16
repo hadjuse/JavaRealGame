@@ -3,30 +3,16 @@ package item;
 import entity.Entity;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-import javafx.stage.Stage;
-import player.Player;
 import world.TileMap;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.security.Key;
 
 public class ItemPotion extends ItemEntity {
     private final String directory = String.format("%s/src/images/potion/", System.getProperty("user.dir"));
-    private double life;
-    private double strength;
-    private double speed;
-    private double damage;
-    private Rectangle hitBox;
-    private ItemPotionEnum itemPotionEnum;
-    private String name;
-
     private final String[] SpritePath = new String[]{
             String.format("%sflask_big_blue.png", directory),
             String.format("%sflask_big_green.png", directory),
@@ -37,6 +23,13 @@ public class ItemPotion extends ItemEntity {
             String.format("%sflask_red.png", directory),
             String.format("%sflask_yellow.png", directory),
     };
+    private double life;
+    private double strength;
+    private double speed;
+    private double damage;
+    private Rectangle hitBox;
+    private ItemPotionEnum itemPotionEnum;
+    private String name;
 
     public ItemPotion(String name, TileMap map) throws FileNotFoundException {
         setName(name);

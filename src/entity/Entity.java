@@ -1,9 +1,9 @@
 package entity;
 
 import inventory.Inventory;
-import item.QuestItem;
 import item.ItemEntity;
 import item.ItemPotion;
+import item.QuestItem;
 import item.UsableItem;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
@@ -30,6 +30,7 @@ public abstract class Entity {
     private ItemPotion potionSpeed;
     private ItemPotion potionDamage;
     private QuestItem questItem;
+
     public Entity(String name, double width, double height, TileMap map) throws FileNotFoundException {
         setMoney(0);
         setWidth(width);
@@ -204,9 +205,10 @@ public abstract class Entity {
     public void setName(String name) {
         this.name = name;
     }
-    public void UsePotion(){
+
+    public void UsePotion() {
         ItemPotion itemPotion = getInventory().getItemPotion(0);
-        if(itemPotion!= null){
+        if (itemPotion != null) {
             itemPotion.applyEffectPotion(this);
             getInventory().removeItemPotion(itemPotion);
         }

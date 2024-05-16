@@ -1,7 +1,7 @@
 package inventory;
 
-import item.QuestItem;
 import item.ItemPotion;
+import item.QuestItem;
 import item.UsableItem;
 
 import java.io.FileNotFoundException;
