@@ -1,6 +1,7 @@
 package item;
 
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 
 import java.io.FileNotFoundException;
 
@@ -8,6 +9,11 @@ public abstract class ItemEntity {
     private double valueMoney;
     private StackPane itemStackPane;
     private int quantity;
+    private Rectangle hitBox;
+
+    public ItemEntity() {
+        setHitBox(new Rectangle(50, 50));
+    }
 
     public double getValueMoney() {
         return valueMoney;
@@ -34,10 +40,20 @@ public abstract class ItemEntity {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
     public void addQuantity(int quantity) {
         this.quantity += quantity;
     }
+
     public void removeQuantity(int quantity) {
         this.quantity -= quantity;
+    }
+
+    public Rectangle getHitBox() {
+        return hitBox;
+    }
+
+    public void setHitBox(Rectangle hitBox) {
+        this.hitBox = hitBox;
     }
 }

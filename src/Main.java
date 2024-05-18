@@ -1,26 +1,19 @@
 import item.ItemEntity;
-import item.ItemPotion;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
-import monster.Monster;
-import player.Player;
 import world.TileMap;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Main extends Application {
-    List<ItemEntity> itemEntities;
     private final String[] Levels = new String[]{
             String.format("%s/src/world/Level/level1.csv", System.getProperty("user.dir")),
             String.format("%s/src/world/Level/level2.csv", System.getProperty("user.dir")),
             String.format("%s/src/world/Level/level3.csv", System.getProperty("user.dir")),
     };
+    List<ItemEntity> itemEntities;
+
     public static void main(String[] args) {
         launch(args);
     }
