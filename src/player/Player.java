@@ -2,6 +2,7 @@ package player;
 
 import entity.ActionEntityBattle;
 import entity.Entity;
+import inventory.Inventory;
 import item.*;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
@@ -14,7 +15,9 @@ import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import world.TileMap;
 
+import java.io.Console;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -37,6 +40,7 @@ public class Player extends Entity implements ActionEntityBattle {
         setBoxEntity(boxEntity());
         setXSpawn(0);
         setYSpawn(0);
+        setInventory(new Inventory(1));
         movementPlayer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -45,7 +49,7 @@ public class Player extends Entity implements ActionEntityBattle {
                 getHitBox().setTranslateX(newX);
                 getHitBox().setTranslateY(newY);
                 try {
-                    checkCollision(entities, spriteData, tileMap, stage);
+                    checkCollision(entities, spriteData);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 }
@@ -67,22 +71,38 @@ public class Player extends Entity implements ActionEntityBattle {
                     Shape intersect = Shape.intersect(getHitBox(), itemEntity.getHitBox());
                     if (intersect.getBoundsInLocal().getMinX() > 0) {
                         if (itemEntity instanceof ItemPotion potion) {
-                            System.out.printf("%s take potion %s%n", getName(), potion.getName());
-                            getInventory().addItemPotion(potion);
-                            iterator.remove();
-                            tileMap.removeItemEntity(potion);
+                            boolean potionNotInInventory = getInventory().getItemPotionList().contains(itemEntity);
+                            boolean enoughSpace = getInventory().getItemPotionList().size() < getInventory().getQuantity();
+                            if (!potionNotInInventory && enoughSpace){
+                                getInventory().addItemPotion(potion, getInventory().getQuantity());
+                                System.out.printf("%s take potion %s%n", getName(), potion.getName());
+                                tileMap.removeItemEntity(potion);
+                                iterator.remove();
+                            }else {
+                                System.out.println("Cannot add Item potion not enough space");
+                            }
                         } else if (itemEntity instanceof QuestItem questItem) {
-                            System.out.printf("%s take itemQuest %s%n", getName(), questItem.getName());
-                            getInventory().addQuestItem(questItem);
-                            iterator.remove();
-                            tileMap.removeItemEntity(questItem);
+                            boolean questItemNotInInventory = !getInventory().getQuestItemList().contains(itemEntity);
+                            boolean enoughSpace = getInventory().getQuestItemList().size() < getInventory().getQuantity();
+                            if (questItemNotInInventory && enoughSpace) {
+                                getInventory().addQuestItem(questItem, getInventory().getQuantity());
+                                System.out.printf("%s take itemQuest %s%n", getName(), questItem.getName());
+                                tileMap.removeItemEntity(questItem);
+                                iterator.remove();
+                            }else {
+                                System.out.println("Cannot add Item quest not enough space !");
+                            }
                         }
                     }
                 }
             }
         });
+    }
 
 
+    private static void clearConsole() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     public double getXSpawn() {
@@ -141,7 +161,7 @@ public class Player extends Entity implements ActionEntityBattle {
         });
     }
 
-    public void checkCollision(List<Entity> bounds, SpriteData spriteData, TileMap map, Stage stage) throws FileNotFoundException {
+    public void checkCollision(List<Entity> bounds, SpriteData spriteData) throws FileNotFoundException {
         for (Entity bound : bounds) {
             if (bound instanceof Wall wall) {
                 //System.out.println(monster.getBoundsMonster());

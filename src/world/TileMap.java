@@ -314,8 +314,6 @@ public class TileMap extends GridPane {
         placeEntity(player, 14, 1);
 
         Button changeMapButton = new Button("1");
-        // Set the preferred height
-        //player.checkCollision(getEntities(), player.spriteData, this, stage);
         changeMapButton.setOnAction(event -> {
             try {
                 player.getInventory().clear();

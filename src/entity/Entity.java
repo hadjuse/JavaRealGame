@@ -168,25 +168,26 @@ public abstract class Entity {
 
 
     public void giveItem(Entity entity, ItemEntity item) {
+        int quantityInventory = entity.getInventory().getQuantity();
         if (item instanceof ItemPotion potion) {
-            entity.getInventory().addItemPotion(potion);
+            entity.getInventory().addItemPotion(potion, quantityInventory);
             getInventory().removeItemPotion(potion);
         } else if (item instanceof UsableItem usable) {
-            entity.getInventory().addUsableItem(usable);
+            entity.getInventory().addUsableItem(usable, quantityInventory);
             getInventory().removeUsableItem(usable);
-        } else if (item instanceof QuestItem consumable) {
-            entity.getInventory().addQuestItem(consumable);
-            getInventory().removeConsumableItem(consumable);
+        } else if (item instanceof QuestItem questItem) {
+            entity.getInventory().addQuestItem(questItem, quantityInventory);
+            getInventory().removeConsumableItem(questItem);
         }
     }
 
     public void takeItem(ItemEntity item) {
         if (item instanceof ItemPotion potion) {
-            getInventory().addItemPotion(potion);
+            getInventory().addItemPotion(potion, getInventory().getQuantity() );
         } else if (item instanceof UsableItem usable) {
-            getInventory().addUsableItem(usable);
-        } else if (item instanceof QuestItem consumable) {
-            getInventory().addQuestItem(consumable);
+            getInventory().addUsableItem(usable, getInventory().getQuantity() );
+        } else if (item instanceof QuestItem questItem) {
+            getInventory().addQuestItem(questItem, getInventory().getQuantity() );
         }
     }
 
