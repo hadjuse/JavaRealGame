@@ -45,5 +45,4 @@ public class Monster extends Entity {
         return stackPane;
     }
 
-
 }

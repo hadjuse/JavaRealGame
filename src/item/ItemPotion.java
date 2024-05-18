@@ -180,13 +180,6 @@ public class ItemPotion extends ItemEntity {
         return SpritePath;
     }
 
-    public Rectangle getHitBox() {
-        return hitBox;
-    }
-
-    public void setHitBox(Rectangle hitBox) {
-        this.hitBox = hitBox;
-    }
 
     @Override
     public String toString() {
@@ -197,5 +190,15 @@ public class ItemPotion extends ItemEntity {
                 ", speed=" + speed +
                 ", damage=" + damage +
                 "} " + super.toString();
+    }
+
+    @Override
+    public Rectangle getHitBox() {
+        return hitBox;
+    }
+
+    @Override
+    public void setHitBox(Rectangle hitBox) {
+        this.hitBox = hitBox;
     }
 }

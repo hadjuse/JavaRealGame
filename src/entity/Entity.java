@@ -77,7 +77,7 @@ public abstract class Entity {
     }
 
     public boolean isDead() {
-        return isDead;
+        return getLife() <= 0;
     }
 
     public void setDead(boolean dead) {
