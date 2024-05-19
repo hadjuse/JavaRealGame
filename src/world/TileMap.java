@@ -29,7 +29,7 @@ public class TileMap extends GridPane {
     private String[] Levels = new String[]{
             String.format("%s/src/world/Level/level1.csv", System.getProperty("user.dir")),
             String.format("%s/src/world/Level/level2.csv", System.getProperty("user.dir")),
-            String.format("%s/src/world/Level/level3.csv", System.getProperty("user.dir")),
+            String.format("%s/src/world/Level/backroom.csv", System.getProperty("user.dir")),
     };
     private List<List<String>> map;
     private String pathToCsv;
@@ -43,7 +43,8 @@ public class TileMap extends GridPane {
     private List<QuestItem> questItems = new ArrayList<QuestItem>();
 
     public TileMap(String pathToCsv, Stage stage) throws FileNotFoundException {
-        setupOriginalRoom(Levels[0], stage);
+        //level1(Levels[0], stage);
+        backRoom(getLevels()[2], stage);
     }
 
     public String[] getLevels() {
@@ -134,6 +135,11 @@ public class TileMap extends GridPane {
                         QuestItem newQuestItem = new QuestItem("QuestItem", tileMap);
                         placeItemEntity(newQuestItem, i, j);
                         itemEntities.add(newQuestItem);
+                        break;
+                    case "f":
+                        Wall wallFountain = new Wall("fountain", 50, 50, tileMap);
+                        placeEntity(wallFountain, i, j);
+                        entities.add(wallFountain);
                         break;
                 }
             }
@@ -241,7 +247,7 @@ public class TileMap extends GridPane {
         this.questItems = questItems;
     }
 
-    public void changeMapRoom2(String pathToCsv, Stage stage) throws FileNotFoundException {
+    public void Level2(String pathToCsv, Stage stage) throws FileNotFoundException {
         this.setOnKeyPressed(null);
         for (ItemEntity item : itemPotions) {
             removeItemEntity(item);
@@ -269,22 +275,10 @@ public class TileMap extends GridPane {
         entities.add(monster2);
         entities.add(monster3);
 
-        Button setupOriginalRoomButton = new Button("2");
-        setupOriginalRoomButton.setPrefWidth(200);
-        setupOriginalRoomButton.setOnAction(event -> {
-            try {
-                player.getInventory().clear();
-                itemEntities.clear();
-                entities.clear();
-                this.setupOriginalRoom(Levels[0], stage);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
-        this.getChildren().add(setupOriginalRoomButton);
+        ButtonBackRoom(stage);
     }
 
-    public void setupOriginalRoom(String string, Stage stage) throws FileNotFoundException {
+    public void level1(String string, Stage stage) throws FileNotFoundException {
         this.setOnKeyPressed(null);
         for (ItemEntity item : itemPotions) {
             removeItemEntity(item);
@@ -309,25 +303,78 @@ public class TileMap extends GridPane {
 
         //itemEntities.add(newQuestItem);
 
-        player = new Player("Hadjuse", this, itemEntities, entities, stage);
+        player = new Player("Hadjuse", this, itemEntities, entities);
 
         placeEntity(player, 14, 1);
+        ButtonBackRoom(stage);
+    }
 
+    public void backRoom(String pathToCsv, Stage stage) throws FileNotFoundException {
+        //this.setOnKeyPressed(null);
+        for (ItemEntity item : itemPotions) {
+            removeItemEntity(item);
+        }
+        this.setVgap(-1);
+        this.setHgap(-1);
+        getChildren().clear(); // Clear the existing map
+        setPathToCsv(pathToCsv);
+        setMap(new ArrayList<>());
+        genMap(getMap());
+        showMap(getMap(), this);
+
+        setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities()));
+        placeEntity(getPlayer(), 14, 7);
+        ButtonLevel1(stage);
+        ButtonLevel2(stage);
+    }
+
+    private void ButtonLevel2(Stage stage) {
+        Button changeMapButton = new Button("2");
+        changeMapButton.setOnAction(event -> {
+            try {
+                player.getInventory().clear();
+                itemEntities.clear();
+                entities.clear();
+                this.Level2(Levels[1], stage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+        GridPane.setColumnIndex(changeMapButton, 9);
+        GridPane.setRowIndex(changeMapButton, 0);
+        this.getChildren().add(changeMapButton);
+    }
+
+    private void ButtonLevel1(Stage stage) {
         Button changeMapButton = new Button("1");
         changeMapButton.setOnAction(event -> {
             try {
                 player.getInventory().clear();
                 itemEntities.clear();
                 entities.clear();
-                this.changeMapRoom2(Levels[1], stage);
+                this.level1(Levels[0], stage);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         });
+        GridPane.setColumnIndex(changeMapButton, 6);
+        GridPane.setRowIndex(changeMapButton, 0);
         this.getChildren().add(changeMapButton);
     }
-
-    public void changeMapStart(String pathToCsv, Stage stage) throws FileNotFoundException {
-        // TODO setUp a StartMapChange.
+    private void ButtonBackRoom(Stage stage) {
+        Button changeMapButton = new Button("Back");
+        changeMapButton.setOnAction(event -> {
+            try {
+                player.getInventory().clear();
+                itemEntities.clear();
+                entities.clear();
+                this.backRoom(Levels[2], stage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+        GridPane.setColumnIndex(changeMapButton, 0);
+        GridPane.setRowIndex(changeMapButton, 0);
+        this.getChildren().add(changeMapButton);
     }
 }

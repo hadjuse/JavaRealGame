@@ -28,7 +28,7 @@ public class Player extends Entity implements ActionEntityBattle {
     private double XSpawn;
     private double YSpawn;
 
-    public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities, Stage stage) throws FileNotFoundException {
+    public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities) throws FileNotFoundException {
         // TODO Collision with walls
         super(name, 25, 25, tileMap);
         spriteData = new SpriteData();
@@ -57,11 +57,11 @@ public class Player extends Entity implements ActionEntityBattle {
         };
         movementPlayer.start();
 
-        eventMovement(tileMap, spriteData, entities, stage);
+        eventMovement(tileMap, spriteData);
 
 
-        //tileMap.setFocusTraversable(true);
-        //tileMap.requestFocus();
+        getBoxEntity().setFocusTraversable(true);
+        getBoxEntity().requestFocus();
         tileMap.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
 
             if (keyEvent.getCode() == KeyCode.E) {
@@ -131,8 +131,7 @@ public class Player extends Entity implements ActionEntityBattle {
         return stackPane;
     }
 
-    public void eventMovement(TileMap map, SpriteData spriteData, List<Entity> entities, Stage stage) {
-
+    public void eventMovement(TileMap map, SpriteData spriteData) {
         map.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             switch (keyEvent.getCode()) {
                 case Z -> {
