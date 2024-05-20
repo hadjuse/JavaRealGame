@@ -111,15 +111,19 @@ public class ItemPotion extends ItemEntity {
     public void applyEffectPotion(Entity entity) {
         switch (getItemEnum()) {
             case POTION_HEAL:
+                System.out.println("You gain %f Life !".formatted(getLife()));
                 entity.addLife(getLife());
                 break;
             case POTION_STRENGTH:
+                System.out.println("You gain %f Strength!".formatted(getStrength()));
                 entity.addStrength(getStrength());
                 break;
             case POTION_SPEED:
+                System.out.println("You gain %f Speed!".formatted(getSpeed()));
                 entity.setSpeed(getSpeed());
                 break;
             case POTION_DAMAGE:
+                System.out.println("You gain %f Damage!".formatted(getDamage()));
                 entity.addDamage(getDamage());
                 break;
             default:

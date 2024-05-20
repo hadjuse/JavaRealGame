@@ -1,5 +1,6 @@
 package monster;
 
+import entity.ActionEntityBattle;
 import entity.Entity;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -9,7 +10,7 @@ import world.TileMap;
 
 import java.io.FileNotFoundException;
 
-public class Monster extends Entity {
+public class Monster extends Entity implements ActionEntityBattle {
 
     public Monster(String name, double width, double height, Player player, TileMap map) throws FileNotFoundException {
         super(name, width, height, map);
@@ -36,4 +37,13 @@ public class Monster extends Entity {
         return stackPane;
     }
 
+    @Override
+    public void basicAttack(Entity entity, TileMap map) {
+
+    }
+
+    @Override
+    public void actionAfterDeath(TileMap map, Entity entity) {
+
+    }
 }

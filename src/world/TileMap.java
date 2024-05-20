@@ -261,7 +261,6 @@ public class TileMap extends GridPane {
         showMap(getMap(), this);
 
 
-
         // Add three monsters to the map
         Monster monster1 = new Monster("Monster 1", 20, 20, player, this);
         Monster monster2 = new Monster("Monster 2", 20, 20, player, this);

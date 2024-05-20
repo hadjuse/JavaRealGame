@@ -5,15 +5,22 @@ import entity.Entity;
 import inventory.Inventory;
 import item.*;
 import javafx.animation.AnimationTimer;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.stage.Stage;
 import world.TileMap;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.List;
@@ -62,6 +69,7 @@ public class Player extends Entity implements ActionEntityBattle {
         getHitBox().setFocusTraversable(true);
         //getHitBox().requestFocus();
         eventInteractionItem(tileMap, itemEntities);
+
     }
 
     private static void clearConsole() {
@@ -147,6 +155,9 @@ public class Player extends Entity implements ActionEntityBattle {
                 }
                 case S -> {
                     spriteData.velocityY = 3;
+                }
+                case P -> {
+                    showInventoryWindow();
                 }
             }
         });
@@ -236,4 +247,62 @@ public class Player extends Entity implements ActionEntityBattle {
         double velocityX;
         double velocityY;
     }
+    private void showInventoryWindow() {
+        // Create a new stage for the inventory window
+        Stage inventoryStage = new Stage();
+
+        // Set the title and size of the stage
+        inventoryStage.setTitle("Player Inventory");
+        inventoryStage.setWidth(720);
+        inventoryStage.setHeight(200);
+
+        // Create a grid pane for the inventory items
+        GridPane inventoryGridPane = new GridPane();
+        inventoryGridPane.setHgap(10);
+        inventoryGridPane.setVgap(10);
+
+        int rowIndex = 0;
+        for (ItemPotion potion : getInventory().getItemPotionList()) {
+            try {
+                // Create an ImageView for the inventory item
+                ImageView potionImageView = new ImageView(new Image(new FileInputStream(potion.getSpritePath()[potion.getItemEnum().ordinal()])));
+
+                // Create a Label for the name of the inventory item
+                Label potionNameLabel = new Label(potion.getName());
+
+                // Create a Button for the inventory item
+                Button potionButton = UsePotionButton(potion, potionImageView);
+
+                // Add the Button, the name Label, and the price Label to the grid pane
+                inventoryGridPane.add(potionButton, 0, rowIndex);
+                inventoryGridPane.add(potionNameLabel, 1, rowIndex);
+                rowIndex++;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Set the scene of the stage
+        inventoryStage.setScene(new Scene(inventoryGridPane));
+
+        // Show the stage
+        inventoryStage.show();
+    }
+
+    private Button UsePotionButton(ItemPotion potion, ImageView potionImageView) {
+        Button potionButton = new Button();
+        potionButton.setGraphic(potionImageView);
+        potionButton.setOnAction(event -> {
+            boolean potionInInventory = getInventory().getItemPotionList().contains(potion);
+            if (potionInInventory){
+                potion.applyEffectPotion(this);
+                getInventory().removeItemPotion(potion);
+            }else {
+                System.out.println("You don't have this potion");
+            }
+
+        });
+        return potionButton;
+    }
+
 }
