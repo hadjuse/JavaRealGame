@@ -15,15 +15,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class Wall extends Entity {
-    private Rectangle hitBox;
-    private int frameIndex;
-    private ImageView spriteImage;
     private final String[] idlePath = {
             String.format("%s/src/images/tile/wallAnim/wall_fountain_mid_blue_anim_f0.png", System.getProperty("user.dir")),
             String.format("%s/src/images/tile/wallAnim/wall_fountain_mid_blue_anim_f1.png", System.getProperty("user.dir")),
             String.format("%s/src/images/tile/wallAnim/wall_fountain_mid_blue_anim_f2.png", System.getProperty("user.dir")),
     };
-
+    private Rectangle hitBox;
+    private int frameIndex;
+    private ImageView spriteImage;
     private Timeline idle;
 
     public Wall(String name, double width, double height, TileMap map) throws FileNotFoundException {

@@ -27,7 +27,7 @@ public class Player extends Entity implements ActionEntityBattle {
 
     public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities) throws FileNotFoundException {
         // TODO Collision with walls
-        super(name, 35, 35, tileMap);
+        super(name, 30, 30, tileMap);
         spriteData = new SpriteData();
         setName(name);
         setLife(100);
@@ -46,6 +46,7 @@ public class Player extends Entity implements ActionEntityBattle {
                 double newY = getHitBox().getTranslateY() + (spriteData.velocityY * getSpeed());
                 getHitBox().setTranslateX(newX);
                 getHitBox().setTranslateY(newY);
+
                 try {
                     checkCollision(entities, spriteData);
                 } catch (FileNotFoundException e) {
@@ -58,9 +59,14 @@ public class Player extends Entity implements ActionEntityBattle {
         eventMovement(tileMap, spriteData);
 
 
-        getBoxEntity().setFocusTraversable(true);
-        getBoxEntity().requestFocus();
+        getHitBox().setFocusTraversable(true);
+        //getHitBox().requestFocus();
         eventInteractionItem(tileMap, itemEntities);
+    }
+
+    private static void clearConsole() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     private void eventInteractionItem(TileMap tileMap, List<ItemEntity> itemEntities) {
@@ -99,12 +105,6 @@ public class Player extends Entity implements ActionEntityBattle {
                 }
             }
         });
-    }
-
-
-    private static void clearConsole() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
     }
 
     public double getXSpawn() {

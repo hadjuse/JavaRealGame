@@ -5,7 +5,6 @@ import item.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
@@ -48,7 +47,6 @@ public class TileMap extends GridPane {
         //level1(Levels[0], stage);
         setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities()));
         backRoom(getLevels()[2], stage);
-
     }
 
     public String[] getLevels() {
@@ -170,10 +168,14 @@ public class TileMap extends GridPane {
     }
 
     public void moveEntity(Entity entity, int i, int j) {
+        //this.removeEntity(entity);
         GridPane.setRowIndex(entity.getBoxEntity(), i);
         GridPane.setColumnIndex(entity.getBoxEntity(), j);
-        entity.getBoxEntity().setTranslateX(0);
-        entity.getBoxEntity().setTranslateY(0);
+        if (entity instanceof Player player) {
+            player.getHitBox().setTranslateX(0);
+            player.getHitBox().setTranslateY(0);
+        }
+        this.getChildren().add(entity.getBoxEntity());
     }
 
     public void placeItemEntity(ItemEntity itemEntity, int i, int j) {
@@ -189,12 +191,6 @@ public class TileMap extends GridPane {
     public void moveItemEntity(ItemEntity itemEntity, int i, int j) {
         GridPane.setRowIndex(itemEntity.getItemStackPane(), i);
         GridPane.setColumnIndex(itemEntity.getItemStackPane(), j);
-    }
-
-    public void placeWall(StackPane wall, int i, int j) {
-        GridPane.setRowIndex(wall, i);
-        GridPane.setColumnIndex(wall, j);
-        this.getChildren().add(wall);
     }
 
     public Player getPlayer() {
@@ -264,7 +260,7 @@ public class TileMap extends GridPane {
         genMap(getMap());
         showMap(getMap(), this);
 
-        placeEntity(getPlayer(), 14, 1);
+
 
         // Add three monsters to the map
         Monster monster1 = new Monster("Monster 1", 20, 20, player, this);
@@ -280,7 +276,7 @@ public class TileMap extends GridPane {
         entities.add(monster1);
         entities.add(monster2);
         entities.add(monster3);
-
+        moveEntity(getPlayer(), 14, 1);
         ButtonBackRoom(stage);
     }
 
@@ -311,7 +307,7 @@ public class TileMap extends GridPane {
 
         //player = new Player("Hadjuse", this, itemEntities, entities);
 
-        placeEntity(getPlayer(), 14, 1);
+        moveEntity(getPlayer(), 14, 1);
         ButtonBackRoom(stage);
     }
 
@@ -332,8 +328,9 @@ public class TileMap extends GridPane {
 
         setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer()));
         placeEntity(getPotionSeller(), 7, 1);
-        placeEntity(getPlayer(), 14, 7);
-        moveEntity(getPlayer(), 5, 3);
+        moveEntity(getPlayer(), 14, 7);
+        //placeEntity(getPlayer(), 14, 7);
+        //moveEntity(getPlayer(), 5, 3);
         ButtonLevel1(stage);
         ButtonLevel2(stage);
     }
