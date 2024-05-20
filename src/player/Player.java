@@ -12,25 +12,22 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.stage.Stage;
 import world.TileMap;
 
-import java.io.Console;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class Player extends Entity implements ActionEntityBattle {
-    public SpriteData spriteData;
     private final AnimationTimer movementPlayer;
+    public SpriteData spriteData;
     private Rectangle hitBox;
     private double XSpawn;
     private double YSpawn;
 
-    public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities, Stage stage) throws FileNotFoundException {
+    public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities) throws FileNotFoundException {
         // TODO Collision with walls
-        super(name, 25, 25, tileMap);
+        super(name, 35, 35, tileMap);
         spriteData = new SpriteData();
         setName(name);
         setLife(100);
@@ -41,6 +38,7 @@ public class Player extends Entity implements ActionEntityBattle {
         setXSpawn(0);
         setYSpawn(0);
         setInventory(new Inventory(1));
+        setMoney(0);
         movementPlayer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -57,11 +55,15 @@ public class Player extends Entity implements ActionEntityBattle {
         };
         movementPlayer.start();
 
-        eventMovement(tileMap, spriteData, entities, stage);
+        eventMovement(tileMap, spriteData);
 
 
-        //tileMap.setFocusTraversable(true);
-        //tileMap.requestFocus();
+        getBoxEntity().setFocusTraversable(true);
+        getBoxEntity().requestFocus();
+        eventInteractionItem(tileMap, itemEntities);
+    }
+
+    private void eventInteractionItem(TileMap tileMap, List<ItemEntity> itemEntities) {
         tileMap.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
 
             if (keyEvent.getCode() == KeyCode.E) {
@@ -71,25 +73,25 @@ public class Player extends Entity implements ActionEntityBattle {
                     Shape intersect = Shape.intersect(getHitBox(), itemEntity.getHitBox());
                     if (intersect.getBoundsInLocal().getMinX() > 0) {
                         if (itemEntity instanceof ItemPotion potion) {
-                            boolean potionNotInInventory = getInventory().getItemPotionList().contains(itemEntity);
+                            boolean potionInInventory = getInventory().getItemPotionList().contains(itemEntity);
                             boolean enoughSpace = getInventory().getItemPotionList().size() < getInventory().getQuantity();
-                            if (!potionNotInInventory && enoughSpace){
+                            if (!potionInInventory && enoughSpace) {
                                 getInventory().addItemPotion(potion, getInventory().getQuantity());
                                 System.out.printf("%s take potion %s%n", getName(), potion.getName());
                                 tileMap.removeItemEntity(potion);
                                 iterator.remove();
-                            }else {
+                            } else {
                                 System.out.println("Cannot add Item potion not enough space");
                             }
                         } else if (itemEntity instanceof QuestItem questItem) {
-                            boolean questItemNotInInventory = !getInventory().getQuestItemList().contains(itemEntity);
+                            boolean questItemInInventory = getInventory().getQuestItemList().contains(itemEntity);
                             boolean enoughSpace = getInventory().getQuestItemList().size() < getInventory().getQuantity();
-                            if (questItemNotInInventory && enoughSpace) {
+                            if (!questItemInInventory && enoughSpace) {
                                 getInventory().addQuestItem(questItem, getInventory().getQuantity());
                                 System.out.printf("%s take itemQuest %s%n", getName(), questItem.getName());
                                 tileMap.removeItemEntity(questItem);
                                 iterator.remove();
-                            }else {
+                            } else {
                                 System.out.println("Cannot add Item quest not enough space !");
                             }
                         }
@@ -131,8 +133,7 @@ public class Player extends Entity implements ActionEntityBattle {
         return stackPane;
     }
 
-    public void eventMovement(TileMap map, SpriteData spriteData, List<Entity> entities, Stage stage) {
-
+    public void eventMovement(TileMap map, SpriteData spriteData) {
         map.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             switch (keyEvent.getCode()) {
                 case Z -> {

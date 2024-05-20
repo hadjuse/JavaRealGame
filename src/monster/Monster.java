@@ -10,13 +10,12 @@ import world.TileMap;
 import java.io.FileNotFoundException;
 
 public class Monster extends Entity {
-    private Rectangle boundsMonster;
 
     public Monster(String name, double width, double height, Player player, TileMap map) throws FileNotFoundException {
         super(name, width, height, map);
         setLife(120);
         setSpeed(2);
-        setMoney(5);
+        setMoney(50);
         setStrength(30);
         setBoxEntity(boxMonster());
         setDamage(20 * (1 + getStrength() / 100));
@@ -28,20 +27,12 @@ public class Monster extends Entity {
         });
     }
 
-    public Rectangle getBoundsMonster() {
-        return boundsMonster;
-    }
-
-    public void setBoundsMonster(Rectangle boundsMonster) {
-        this.boundsMonster = boundsMonster;
-    }
-
     public StackPane boxMonster() {
         StackPane stackPane = new StackPane();
-        setBoundsMonster(new Rectangle(getWidth(), getHeight()));
-        getBoundsMonster().setFill(Color.RED);
-        getBoundsMonster().setOpacity(0.5);
-        stackPane.getChildren().add(boundsMonster);
+        setBounds(new Rectangle(getWidth(), getHeight()));
+        getBounds().setFill(Color.RED);
+        getBounds().setOpacity(0.5);
+        stackPane.getChildren().add(getBounds());
         return stackPane;
     }
 

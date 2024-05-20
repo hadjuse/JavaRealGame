@@ -13,6 +13,7 @@ public class Inventory {
     private List<UsableItem> usableItemList;
     private List<ItemPotion> itemPotionList;
     private int quantity;
+
     public Inventory(int quantity) throws FileNotFoundException {
         setConsumableItemList(new ArrayList<>(quantity));
         setUsableItemList(new ArrayList<>(quantity));
@@ -45,30 +46,15 @@ public class Inventory {
     }
 
     public void addQuestItem(QuestItem questItem, int quantity) {
-        // Check if the quantity limit is exceeded
-        if (questItemList.size() < quantity) {
-            // If not, add the item to the list
-            questItemList.add(questItem);
-        } else {
-            // If the limit is exceeded, you can print a message or handle it in a different way
-            System.out.println("Cannot add quest item. The limit is exceeded.");
-        }
+        questItemList.add(questItem);
     }
 
     public void addUsableItem(UsableItem usableItem, int quantity) {
-        if (usableItemList.size() < quantity) {
-            usableItemList.add(usableItem);
-        } else {
-            System.out.println("Cannot add usable item. The limit is exceeded.");
-        }
+        usableItemList.add(usableItem);
     }
 
     public void addItemPotion(ItemPotion itemPotion, int quantity) {
-        if (itemPotionList.size() < quantity) {
-            itemPotionList.add(itemPotion);
-        } else {
-            System.out.println("Cannot add usable item. The limit is exceeded.");
-        }
+        itemPotionList.add(itemPotion);
     }
 
     public void removeConsumableItem(QuestItem questItem) {
