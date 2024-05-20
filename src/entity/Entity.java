@@ -141,7 +141,7 @@ public abstract class Entity {
     }
 
     public void addMoney(double money) {
-        System.out.println("You Earn " + money);
+        System.out.printf("%s Earn %f%n", getName(), money);
         setMoney(getMoney() + money);
     }
 
@@ -183,11 +183,11 @@ public abstract class Entity {
 
     public void takeItem(ItemEntity item) {
         if (item instanceof ItemPotion potion) {
-            getInventory().addItemPotion(potion, getInventory().getQuantity() );
+            getInventory().addItemPotion(potion, getInventory().getQuantity());
         } else if (item instanceof UsableItem usable) {
-            getInventory().addUsableItem(usable, getInventory().getQuantity() );
+            getInventory().addUsableItem(usable, getInventory().getQuantity());
         } else if (item instanceof QuestItem questItem) {
-            getInventory().addQuestItem(questItem, getInventory().getQuantity() );
+            getInventory().addQuestItem(questItem, getInventory().getQuantity());
         }
     }
 

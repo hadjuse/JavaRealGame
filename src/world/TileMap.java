@@ -11,6 +11,7 @@ import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import monster.Monster;
 import player.Player;
+import pnj.PotionSeller;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -35,6 +36,7 @@ public class TileMap extends GridPane {
     private String pathToCsv;
     private Player player;
     private Monster monster;
+    private PotionSeller potionSeller;
     private ItemEntity itemPotion;
     private Rectangle hitBoxWall;
     private List<Shape> bounds = new ArrayList<Shape>();
@@ -44,7 +46,9 @@ public class TileMap extends GridPane {
 
     public TileMap(String pathToCsv, Stage stage) throws FileNotFoundException {
         //level1(Levels[0], stage);
+        setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities()));
         backRoom(getLevels()[2], stage);
+
     }
 
     public String[] getLevels() {
@@ -168,6 +172,8 @@ public class TileMap extends GridPane {
     public void moveEntity(Entity entity, int i, int j) {
         GridPane.setRowIndex(entity.getBoxEntity(), i);
         GridPane.setColumnIndex(entity.getBoxEntity(), j);
+        entity.getBoxEntity().setTranslateX(0);
+        entity.getBoxEntity().setTranslateY(0);
     }
 
     public void placeItemEntity(ItemEntity itemEntity, int i, int j) {
@@ -303,14 +309,15 @@ public class TileMap extends GridPane {
 
         //itemEntities.add(newQuestItem);
 
-        player = new Player("Hadjuse", this, itemEntities, entities);
+        //player = new Player("Hadjuse", this, itemEntities, entities);
 
-        placeEntity(player, 14, 1);
+        placeEntity(getPlayer(), 14, 1);
         ButtonBackRoom(stage);
     }
 
     public void backRoom(String pathToCsv, Stage stage) throws FileNotFoundException {
-        //this.setOnKeyPressed(null);
+        this.setOnKeyPressed(null);
+        //System.out.println(getPlayer().getMoney());
         for (ItemEntity item : itemPotions) {
             removeItemEntity(item);
         }
@@ -322,8 +329,11 @@ public class TileMap extends GridPane {
         genMap(getMap());
         showMap(getMap(), this);
 
-        setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities()));
+
+        setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer()));
+        placeEntity(getPotionSeller(), 7, 1);
         placeEntity(getPlayer(), 14, 7);
+        moveEntity(getPlayer(), 5, 3);
         ButtonLevel1(stage);
         ButtonLevel2(stage);
     }
@@ -361,6 +371,7 @@ public class TileMap extends GridPane {
         GridPane.setRowIndex(changeMapButton, 0);
         this.getChildren().add(changeMapButton);
     }
+
     private void ButtonBackRoom(Stage stage) {
         Button changeMapButton = new Button("Back");
         changeMapButton.setOnAction(event -> {
@@ -376,5 +387,13 @@ public class TileMap extends GridPane {
         GridPane.setColumnIndex(changeMapButton, 0);
         GridPane.setRowIndex(changeMapButton, 0);
         this.getChildren().add(changeMapButton);
+    }
+
+    public PotionSeller getPotionSeller() {
+        return potionSeller;
+    }
+
+    public void setPotionSeller(PotionSeller potionSeller) {
+        this.potionSeller = potionSeller;
     }
 }

@@ -2,7 +2,6 @@ package item;
 
 import entity.Entity;
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,19 +13,19 @@ import world.TileMap;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.security.Key;
 
 public class Wall extends Entity {
     private Rectangle hitBox;
     private int frameIndex;
     private ImageView spriteImage;
-    private String[] idlePath = {
+    private final String[] idlePath = {
             String.format("%s/src/images/tile/wallAnim/wall_fountain_mid_blue_anim_f0.png", System.getProperty("user.dir")),
             String.format("%s/src/images/tile/wallAnim/wall_fountain_mid_blue_anim_f1.png", System.getProperty("user.dir")),
             String.format("%s/src/images/tile/wallAnim/wall_fountain_mid_blue_anim_f2.png", System.getProperty("user.dir")),
     };
 
     private Timeline idle;
+
     public Wall(String name, double width, double height, TileMap map) throws FileNotFoundException {
         super(name, width, height, map);
         setBoxEntity(Wall());
@@ -35,7 +34,7 @@ public class Wall extends Entity {
             spriteImage.setFitWidth(width);
             spriteImage.setFitHeight(height);
             getBoxEntity().getChildren().add(spriteImage);
-            idle = new Timeline(new KeyFrame(Duration.millis(80), event->{
+            idle = new Timeline(new KeyFrame(Duration.millis(80), event -> {
                 idle();
             }));
             idle.setCycleCount(Timeline.INDEFINITE);
@@ -61,11 +60,12 @@ public class Wall extends Entity {
     public void setHitBox(Rectangle hitBox) {
         this.hitBox = hitBox;
     }
+
     public void idle() {
         try {
-            frameIndex =(frameIndex + 1) % idlePath.length;
+            frameIndex = (frameIndex + 1) % idlePath.length;
             spriteImage.setImage(new Image(new FileInputStream(idlePath[frameIndex])));
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println("File not found");
         }
     }

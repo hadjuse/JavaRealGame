@@ -57,19 +57,6 @@ public class ItemPotion extends ItemEntity {
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
         }
         setItemStackPane(renderItem());
-        /*
-        map.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.E) {
-                Shape intersect = Shape.intersect(getHitBox(), player.getHitBox());
-                if (intersect.getBoundsInLocal().getWidth() > 0 && intersect.getBoundsInLocal().getHeight() > 0) {
-                    System.out.println("%s take the %s".formatted(player.getName(), getName()));
-                    player.getInventory().addItemPotion(this);
-                    map.removeItemEntity(this);
-                    this.applyEffectPotion(player);
-                }
-            }
-        });*/
-
     }
 
 
