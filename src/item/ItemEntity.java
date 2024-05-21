@@ -10,7 +10,7 @@ public abstract class ItemEntity {
     private StackPane itemStackPane;
     private int quantity;
     private Rectangle hitBox;
-
+    private boolean collidable;
     public ItemEntity() {
         setHitBox(new Rectangle(50, 50));
     }
@@ -55,5 +55,13 @@ public abstract class ItemEntity {
 
     public void setHitBox(Rectangle hitBox) {
         this.hitBox = hitBox;
+    }
+
+    public boolean isCollidable() {
+        return collidable;
+    }
+
+    public void setCollidable(boolean collidable) {
+        this.collidable = collidable;
     }
 }

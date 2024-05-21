@@ -6,11 +6,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import player.Player;
 import world.TileMap;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
+// Si je veux ajouter un nouvel Item je modifie ici et je rajoute les actions dans players.
 public class ItemPotion extends ItemEntity {
     private final String directory = String.format("%s/src/images/potion/", System.getProperty("user.dir"));
     private final String[] SpritePath = new String[]{
@@ -52,6 +53,9 @@ public class ItemPotion extends ItemEntity {
             case POTION_DAMAGE:
                 setDamage(20);
                 setValueMoney(13);
+                break;
+            case KILL:
+                setDamage(0);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
@@ -111,21 +115,28 @@ public class ItemPotion extends ItemEntity {
     public void applyEffectPotion(Entity entity) {
         switch (getItemEnum()) {
             case POTION_HEAL:
-                System.out.println("You gain %f Life !".formatted(getLife()));
+                System.out.printf("You gain %f Life !%n", getLife());
                 entity.addLife(getLife());
                 break;
             case POTION_STRENGTH:
-                System.out.println("You gain %f Strength!".formatted(getStrength()));
+                System.out.printf("You gain %f Strength!%n", getStrength());
                 entity.addStrength(getStrength());
                 break;
             case POTION_SPEED:
-                System.out.println("You gain %f Speed!".formatted(getSpeed()));
+                System.out.printf("You gain %f Speed!%n", getSpeed());
                 entity.setSpeed(getSpeed());
                 break;
             case POTION_DAMAGE:
-                System.out.println("You gain %f Damage!".formatted(getDamage()));
+                System.out.printf("You gain %f Damage!%n", getDamage());
                 entity.addDamage(getDamage());
                 break;
+            case KILL:
+                System.out.printf("I can Kill all entities!%n");
+                break;
+            case Teleport:
+                if (entity instanceof Player player){
+                    System.out.println("I can teleport");
+                }
             default:
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
         }
@@ -157,6 +168,16 @@ public class ItemPotion extends ItemEntity {
 
             case POTION_DAMAGE:
                 image = new Image(new FileInputStream(getSpritePath()[3]));
+                imageView = new ImageView(image);
+                getHitBox().setFill(new ImagePattern(image));
+                break;
+            case KILL:
+                image = new Image(new FileInputStream(getSpritePath()[4]));
+                imageView = new ImageView(image);
+                getHitBox().setFill(new ImagePattern(image));
+                break;
+            case Teleport:
+                image = new Image(new FileInputStream(getSpritePath()[5]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;

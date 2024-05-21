@@ -9,6 +9,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import monster.Monster;
+import monster.MonsterEnum;
 import player.Player;
 import pnj.PotionSeller;
 
@@ -42,7 +43,7 @@ public class TileMap extends GridPane {
     private List<ItemPotion> itemPotions = new ArrayList<ItemPotion>();
     private List<Monster> monsters = new ArrayList<Monster>();
     private List<QuestItem> questItems = new ArrayList<QuestItem>();
-
+    private MonsterEnum monsterEnum;
     public TileMap(String pathToCsv, Stage stage) throws FileNotFoundException {
         //level1(Levels[0], stage);
         setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities()));
@@ -262,14 +263,14 @@ public class TileMap extends GridPane {
 
 
         // Add three monsters to the map
-        Monster monster1 = new Monster("Monster 1", 20, 20, player, this);
-        Monster monster2 = new Monster("Monster 2", 20, 20, player, this);
-        Monster monster3 = new Monster("Monster 3", 20, 20, player, this);
+        Monster monster1 = new Monster(MonsterEnum.MONSTER_1, player, this);
+        Monster monster2 = new Monster(MonsterEnum.MONSTER_2, player, this);
+        Monster monster3 = new Monster(MonsterEnum.MONSTER_3, player, this);
 
         // Set the position of the monsters
         placeEntity(monster1, 5, 5);
         placeEntity(monster2, 10, 10);
-        placeEntity(monster3, 15, 15);
+        placeEntity(monster3, 14, 14);
 
         // Add the monsters to the list of monsters
         entities.add(monster1);
@@ -328,8 +329,7 @@ public class TileMap extends GridPane {
         setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer()));
         placeEntity(getPotionSeller(), 7, 1);
         moveEntity(getPlayer(), 14, 7);
-        //placeEntity(getPlayer(), 14, 7);
-        //moveEntity(getPlayer(), 5, 3);
+        getPlayer().getInventory().addItemPotion(new ItemPotion("KILL", this), 1);
         ButtonLevel1(stage);
         ButtonLevel2(stage);
     }
@@ -391,5 +391,13 @@ public class TileMap extends GridPane {
 
     public void setPotionSeller(PotionSeller potionSeller) {
         this.potionSeller = potionSeller;
+    }
+
+    public MonsterEnum getMonsterEnum() {
+        return monsterEnum;
+    }
+
+    public void setMonsterEnum(MonsterEnum monsterEnum) {
+        this.monsterEnum = monsterEnum;
     }
 }
