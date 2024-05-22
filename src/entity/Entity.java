@@ -10,6 +10,7 @@ import javafx.scene.shape.Rectangle;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 public abstract class Entity {
     private double life;
@@ -20,6 +21,7 @@ public abstract class Entity {
     private StackPane boxEntity;
     private Inventory inventory;
     private boolean isAttacked;
+    private boolean canBeAttacked;
     private boolean isDead;
     private double width;
     private double height;
@@ -30,6 +32,7 @@ public abstract class Entity {
     private ItemPotion potionSpeed;
     private ItemPotion potionDamage;
     private QuestItem questItem;
+    private boolean collidable;
 
     public Entity(String name, double width, double height, TileMap map) throws FileNotFoundException {
         setMoney(0);
@@ -38,10 +41,6 @@ public abstract class Entity {
         setBoxEntity(getBoxEntity());
         setInventory(new Inventory(5));
         setName(name);
-        setPotionDamage(new ItemPotion("POTION_HEAL", map));
-        setPotionHeal(new ItemPotion("POTION_STRENGTH", map));
-        setPotionSpeed(new ItemPotion("POTION_SPEED", map));
-        setPotionStrength(new ItemPotion("POTION_DAMAGE", map));
     }
 
     public double getLife() {
@@ -140,9 +139,9 @@ public abstract class Entity {
         setDamage(getDamage() + damage);
     }
 
-    public void addMoney(double money) {
-        System.out.printf("%s Earn %f%n", getName(), money);
-        setMoney(getMoney() + money);
+    public void addMoney(double money, Entity entity) {
+        //System.out.printf("%s Earn %f%n", getName(), money);
+        entity.setMoney(getMoney() + money);
     }
 
     public void loseLife(double life) {
@@ -261,5 +260,21 @@ public abstract class Entity {
 
     public void setQuestItem(QuestItem questItem) {
         this.questItem = questItem;
+    }
+
+    public boolean isCanBeAttacked() {
+        return canBeAttacked;
+    }
+
+    public void setCanBeAttacked(boolean canBeAttacked) {
+        this.canBeAttacked = canBeAttacked;
+    }
+
+    public boolean isCollidable() {
+        return collidable;
+    }
+
+    public void setCollidable(boolean collidable) {
+        this.collidable = collidable;
     }
 }

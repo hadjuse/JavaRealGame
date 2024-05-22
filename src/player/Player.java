@@ -5,15 +5,23 @@ import entity.Entity;
 import inventory.Inventory;
 import item.*;
 import javafx.animation.AnimationTimer;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.stage.Stage;
+import monster.Monster;
 import world.TileMap;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.List;
@@ -24,10 +32,9 @@ public class Player extends Entity implements ActionEntityBattle {
     private Rectangle hitBox;
     private double XSpawn;
     private double YSpawn;
-
+    private boolean oneShot;
     public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities) throws FileNotFoundException {
-        // TODO Collision with walls
-        super(name, 35, 35, tileMap);
+        super(name, 30, 30, tileMap);
         spriteData = new SpriteData();
         setName(name);
         setLife(100);
@@ -39,6 +46,8 @@ public class Player extends Entity implements ActionEntityBattle {
         setYSpawn(0);
         setInventory(new Inventory(1));
         setMoney(0);
+        setCollidable(true);
+        setOneShot(false);
         movementPlayer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -46,6 +55,7 @@ public class Player extends Entity implements ActionEntityBattle {
                 double newY = getHitBox().getTranslateY() + (spriteData.velocityY * getSpeed());
                 getHitBox().setTranslateX(newX);
                 getHitBox().setTranslateY(newY);
+
                 try {
                     checkCollision(entities, spriteData);
                 } catch (FileNotFoundException e) {
@@ -55,12 +65,18 @@ public class Player extends Entity implements ActionEntityBattle {
         };
         movementPlayer.start();
 
-        eventMovement(tileMap, spriteData);
+        eventMovement(tileMap, spriteData, entities);
 
 
-        getBoxEntity().setFocusTraversable(true);
-        getBoxEntity().requestFocus();
+        getHitBox().setFocusTraversable(true);
+        //getHitBox().requestFocus();
         eventInteractionItem(tileMap, itemEntities);
+
+    }
+
+    private static void clearConsole() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     private void eventInteractionItem(TileMap tileMap, List<ItemEntity> itemEntities) {
@@ -101,12 +117,6 @@ public class Player extends Entity implements ActionEntityBattle {
         });
     }
 
-
-    private static void clearConsole() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-    }
-
     public double getXSpawn() {
         return XSpawn;
     }
@@ -133,31 +143,20 @@ public class Player extends Entity implements ActionEntityBattle {
         return stackPane;
     }
 
-    public void eventMovement(TileMap map, SpriteData spriteData) {
+    public void eventMovement(TileMap map, SpriteData spriteData, List<Entity> entities) {
         map.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             switch (keyEvent.getCode()) {
-                case Z -> {
-                    spriteData.velocityY = -3;
-                }
-                case Q -> {
-                    spriteData.velocityX = -3;
-                }
-                case D -> {
-                    spriteData.velocityX = 3;
-                }
-                case S -> {
-                    spriteData.velocityY = 3;
-                }
+                case Z -> spriteData.velocityY = -3;
+                case Q -> spriteData.velocityX = -3;
+                case D -> spriteData.velocityX = 3;
+                case S -> spriteData.velocityY = 3;
+                case P -> showInventoryWindow(entities);
             }
         });
         map.addEventFilter(KeyEvent.KEY_RELEASED, keyEvent -> {
             switch (keyEvent.getCode()) {
-                case Z, S -> {
-                    spriteData.velocityY = 0;
-                }
-                case Q, D -> {
-                    spriteData.velocityX = 0;
-                }
+                case Z, S -> spriteData.velocityY = 0;
+                case Q, D -> spriteData.velocityX = 0;
             }
         });
     }
@@ -165,27 +164,32 @@ public class Player extends Entity implements ActionEntityBattle {
     public void checkCollision(List<Entity> bounds, SpriteData spriteData) throws FileNotFoundException {
         for (Entity bound : bounds) {
             if (bound instanceof Wall wall) {
-                //System.out.println(monster.getBoundsMonster());
-
                 Shape intersection = Shape.intersect(getHitBox(), wall.getHitBox());
                 boolean collisionX = intersection.getBoundsInLocal().getMinX() > 0 && intersection.getBoundsInLocal().getMaxX() > 0;
                 boolean collisionY = intersection.getBoundsInLocal().getMinY() > 0 && intersection.getBoundsInLocal().getMaxY() > 0;
-                if (collisionX && collisionY) {
+                if (collisionX && collisionY && wall.isCollidable()) {
                     double newX = getHitBox().getTranslateX() - spriteData.velocityX * getSpeed();
                     double newY = getHitBox().getTranslateY() - spriteData.velocityY * getSpeed();
                     getHitBox().setTranslateX(newX);
                     getHitBox().setTranslateY(newY);
                 }
             } else if (bound instanceof Spike spike) {
-                Shape intersection = Shape.intersect(spike.getHitBox(), getHitBox());
+                Shape intersection = Shape.intersect(getHitBox(), spike.getHitBox());
                 boolean collisionX = intersection.getBoundsInLocal().getMinX() > 0 && intersection.getBoundsInLocal().getMaxX() > 0;
                 boolean collisionY = intersection.getBoundsInLocal().getMinY() > 0 && intersection.getBoundsInLocal().getMaxY() > 0;
-                if (collisionX && collisionY && getLife() > 0) {
+                if (collisionX && collisionY && getLife() > 0 && this.isCollidable()) {
                     setLife(0);
                     setLife(100);
                     System.out.printf("%s is dead%n", getName());
                     getHitBox().setTranslateX(getXSpawn());
                     getHitBox().setTranslateY(getYSpawn());
+                }
+            } else if (bound instanceof Monster monster && isCollidable()) {
+                Shape intersection = Shape.intersect(getHitBox(), monster.getBounds());
+                boolean collisionX = intersection.getBoundsInLocal().getMinX() > 0 && intersection.getBoundsInLocal().getMaxX() > 0;
+                boolean collisionY = intersection.getBoundsInLocal().getMinY() > 0 && intersection.getBoundsInLocal().getMaxY() > 0;
+                if (collisionX && collisionY && getLife() > 0 && monster.isCollidable()) {
+                    monster.attackPlayer();
                 }
             }
 
@@ -202,15 +206,25 @@ public class Player extends Entity implements ActionEntityBattle {
 
     @Override
     public void basicAttack(Entity entity, TileMap map) {
-        System.out.printf("%s attack %s%n", getName(), entity.getName());
-        System.out.printf("Life of %s = %f%n", entity.getName(), entity.getLife());
-        entity.loseLife(this.getDamage());
-        actionAfterDeath(map, entity);
+        /*
+        if (isOneShot()){
+            System.out.printf("%s attack %s%n", getName(), entity.getName());
+            System.out.printf("Life of %s = %f%n", entity.getName(), entity.getLife());
+            //entity.setLife(0);
+            //actionAfterDeath(map, entity);
+        } else {
+            System.out.printf("%s attack %s%n", getName(), entity.getName());
+            System.out.printf("Life of %s = %f%n", entity.getName(), entity.getLife());
+            entity.loseLife(this.getDamage());
+            //actionAfterDeath(map, entity);
+        }*/
+
 
     }
 
     @Override
     public void actionAfterDeath(TileMap map, Entity entity) {
+        /*
         try {
             if (entity.getLife() <= 0) {
                 System.out.printf("%s is dead%n", entity.getName());
@@ -229,10 +243,93 @@ public class Player extends Entity implements ActionEntityBattle {
             map.removeEntity(entity);
             System.out.printf("You receive Directly the %s\n", entity.getInventory().getItemPotion(0).getName());
             entity.giveItem(this, entity.getInventory().getItemPotion(0));
-        }
+        }*/
     }
 
-    public class SpriteData {
+    private void showInventoryWindow(List<Entity> entities) {
+        // Create a new stage for the inventory window
+        Stage inventoryStage = new Stage();
+
+        // Set the title and size of the stage
+        inventoryStage.setTitle("Player Inventory");
+        inventoryStage.setWidth(700);
+        inventoryStage.setHeight(200);
+
+        // Create a grid pane for the inventory items
+        GridPane inventoryGridPane = new GridPane();
+        inventoryGridPane.setHgap(10);
+        inventoryGridPane.setVgap(10);
+
+        // Create labels for the player's name, current money, and life
+        Label nameLabel = new Label("Name: " + getName());
+        Label moneyLabel = new Label("Money: " + getMoney());
+        Label lifeLabel = new Label("Life: " + getLife());
+
+        // Add the labels to the grid pane
+        inventoryGridPane.add(nameLabel, 0, 0);
+        inventoryGridPane.add(moneyLabel, 1, 0);
+        inventoryGridPane.add(lifeLabel, 2, 0);
+
+        int rowIndex = 1;
+        for (ItemPotion potion : getInventory().getItemPotionList()) {
+            try {
+                // Create an ImageView for the inventory item
+                ImageView potionImageView = new ImageView(new Image(new FileInputStream(potion.getSpritePath()[potion.getItemEnum().ordinal()])));
+
+                // Create a Label for the name of the inventory item
+                Label potionNameLabel = new Label(potion.getName());
+
+                // Create a Button for the inventory item
+                Button potionButton = UsePotionButton(potion, potionImageView, entities);
+
+                // Add the Button, the name Label, and the price Label to the grid pane
+                inventoryGridPane.add(potionButton, 0, rowIndex);
+                inventoryGridPane.add(potionNameLabel, 1, rowIndex);
+                rowIndex++;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Set the scene of the stage
+        inventoryStage.setX(0);
+        inventoryStage.setY(300);
+        inventoryStage.setScene(new Scene(inventoryGridPane));
+
+        // Show the stage
+        inventoryStage.show();
+    }
+
+
+    private Button UsePotionButton(ItemPotion potion, ImageView potionImageView, List<Entity> entities) {
+        Button potionButton = new Button();
+        potionButton.setGraphic(potionImageView);
+        potionButton.setOnAction(event -> {
+            boolean potionInInventory = getInventory().getItemPotionList().contains(potion);
+            if (potionInInventory) {
+                if (potion.getName().equals("KILL")){
+                    setOneShot(true);
+                    potion.applyEffectPotion(this);
+                }else {
+                    potion.applyEffectPotion(this);
+                }
+                getInventory().removeItemPotion(potion);
+            } else {
+                System.out.println("You don't have this potion");
+            }
+        });
+        return potionButton;
+    }
+
+    public boolean isOneShot() {
+        return oneShot;
+    }
+
+    public void setOneShot(boolean oneShot) {
+        this.oneShot = oneShot;
+    }
+
+    public static class SpriteData {
         double velocityX;
         double velocityY;
     }

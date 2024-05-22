@@ -5,11 +5,11 @@ import item.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import monster.Monster;
+import monster.MonsterEnum;
 import player.Player;
 import pnj.PotionSeller;
 
@@ -43,12 +43,11 @@ public class TileMap extends GridPane {
     private List<ItemPotion> itemPotions = new ArrayList<ItemPotion>();
     private List<Monster> monsters = new ArrayList<Monster>();
     private List<QuestItem> questItems = new ArrayList<QuestItem>();
-
+    private MonsterEnum monsterEnum;
     public TileMap(String pathToCsv, Stage stage) throws FileNotFoundException {
         //level1(Levels[0], stage);
         setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities()));
         backRoom(getLevels()[2], stage);
-
     }
 
     public String[] getLevels() {
@@ -170,10 +169,14 @@ public class TileMap extends GridPane {
     }
 
     public void moveEntity(Entity entity, int i, int j) {
+        //this.removeEntity(entity);
         GridPane.setRowIndex(entity.getBoxEntity(), i);
         GridPane.setColumnIndex(entity.getBoxEntity(), j);
-        entity.getBoxEntity().setTranslateX(0);
-        entity.getBoxEntity().setTranslateY(0);
+        if (entity instanceof Player player) {
+            player.getHitBox().setTranslateX(0);
+            player.getHitBox().setTranslateY(0);
+        }
+        this.getChildren().add(entity.getBoxEntity());
     }
 
     public void placeItemEntity(ItemEntity itemEntity, int i, int j) {
@@ -189,12 +192,6 @@ public class TileMap extends GridPane {
     public void moveItemEntity(ItemEntity itemEntity, int i, int j) {
         GridPane.setRowIndex(itemEntity.getItemStackPane(), i);
         GridPane.setColumnIndex(itemEntity.getItemStackPane(), j);
-    }
-
-    public void placeWall(StackPane wall, int i, int j) {
-        GridPane.setRowIndex(wall, i);
-        GridPane.setColumnIndex(wall, j);
-        this.getChildren().add(wall);
     }
 
     public Player getPlayer() {
@@ -264,23 +261,22 @@ public class TileMap extends GridPane {
         genMap(getMap());
         showMap(getMap(), this);
 
-        placeEntity(getPlayer(), 14, 1);
 
         // Add three monsters to the map
-        Monster monster1 = new Monster("Monster 1", 20, 20, player, this);
-        Monster monster2 = new Monster("Monster 2", 20, 20, player, this);
-        Monster monster3 = new Monster("Monster 3", 20, 20, player, this);
+        Monster monster1 = new Monster(MonsterEnum.MONSTER_1, player, this);
+        Monster monster2 = new Monster(MonsterEnum.MONSTER_2, player, this);
+        Monster monster3 = new Monster(MonsterEnum.MONSTER_3, player, this);
 
         // Set the position of the monsters
         placeEntity(monster1, 5, 5);
         placeEntity(monster2, 10, 10);
-        placeEntity(monster3, 15, 15);
+        placeEntity(monster3, 14, 14);
 
         // Add the monsters to the list of monsters
         entities.add(monster1);
         entities.add(monster2);
         entities.add(monster3);
-
+        moveEntity(getPlayer(), 14, 1);
         ButtonBackRoom(stage);
     }
 
@@ -297,10 +293,10 @@ public class TileMap extends GridPane {
         genMap(getMap());
         showMap(getMap(), this);
 
-        ItemEntity potionHeal = new ItemPotion("POTION_HEAL", this);
-        ItemEntity potionSpeed = new ItemPotion("POTION_SPEED", this);
-        ItemEntity potionStrength = new ItemPotion("POTION_STRENGTH", this);
-        ItemEntity potionDamage = new ItemPotion("POTION_DAMAGE", this);
+        ItemEntity potionHeal = new ItemPotion("POTION_HEAL", this, getPlayer());
+        ItemEntity potionSpeed = new ItemPotion("POTION_SPEED", this, getPlayer());
+        ItemEntity potionStrength = new ItemPotion("POTION_STRENGTH", this, getPlayer());
+        ItemEntity potionDamage = new ItemPotion("POTION_DAMAGE", this, getPlayer());
         //QuestItem newQuestItem = new QuestItem("GG", this);
         itemEntities.add(potionHeal);
         itemEntities.add(potionSpeed);
@@ -311,7 +307,7 @@ public class TileMap extends GridPane {
 
         //player = new Player("Hadjuse", this, itemEntities, entities);
 
-        placeEntity(getPlayer(), 14, 1);
+        moveEntity(getPlayer(), 14, 1);
         ButtonBackRoom(stage);
     }
 
@@ -332,8 +328,9 @@ public class TileMap extends GridPane {
 
         setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer()));
         placeEntity(getPotionSeller(), 7, 1);
-        placeEntity(getPlayer(), 14, 7);
-        moveEntity(getPlayer(), 5, 3);
+        moveEntity(getPlayer(), 14, 7);
+        getPlayer().getInventory().addItemPotion(new ItemPotion("KILL", this, getPlayer()), 1);
+        getPlayer().getInventory().addItemPotion(new ItemPotion("INVINCIBLE",this, getPlayer()), 1);
         ButtonLevel1(stage);
         ButtonLevel2(stage);
     }
@@ -395,5 +392,13 @@ public class TileMap extends GridPane {
 
     public void setPotionSeller(PotionSeller potionSeller) {
         this.potionSeller = potionSeller;
+    }
+
+    public MonsterEnum getMonsterEnum() {
+        return monsterEnum;
+    }
+
+    public void setMonsterEnum(MonsterEnum monsterEnum) {
+        this.monsterEnum = monsterEnum;
     }
 }

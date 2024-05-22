@@ -27,10 +27,11 @@ public class PotionSeller extends Entity {
         setMoney(100000);
         setBoxEntity(renderSeller());
         setInventory(new Inventory(5));
-        getInventory().addItemPotion(new ItemPotion("POTION_HEAL", map), 1);
-        getInventory().addItemPotion(new ItemPotion("POTION_STRENGTH", map), 1);
-        getInventory().addItemPotion(new ItemPotion("POTION_DAMAGE", map), 1);
-        getBoxEntity().setOnMouseClicked(mouseEvent -> {
+        getInventory().addItemPotion(new ItemPotion("POTION_HEAL", map, player), 1);
+        getInventory().addItemPotion(new ItemPotion("POTION_STRENGTH", map, player), 1);
+       // getInventory().addItemPotion(new ItemPotion("POTION_DAMAGE", map,player), 1);
+        getInventory().addItemPotion(new ItemPotion("POTION_SPEED", map, player), 1);
+        getBoxEntity().setOnMouseClicked(_ -> {
             // Show the mini window with the potions
             showPotionWindow(player);
         });
@@ -42,8 +43,8 @@ public class PotionSeller extends Entity {
 
         // Set the title and size of the stage
         potionStage.setTitle("Potion Seller");
-        potionStage.setWidth(650);
-        potionStage.setHeight(650);
+        potionStage.setWidth(720);
+        potionStage.setHeight(200);
 
         // Create a grid pane for the potions
         GridPane gridPane = new GridPane();
@@ -75,7 +76,7 @@ public class PotionSeller extends Entity {
                 e.printStackTrace();
             }
         });
-        potionStage.setX(1280 / 2);
+        potionStage.setX(0);
         potionStage.setY(0);
         // Set the scene of the stage
         potionStage.setScene(new Scene(gridPane));

@@ -6,11 +6,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import player.Player;
 import world.TileMap;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+
+/*
+Si je veux ajouter un nouvelle item: NE PAS OUBLIEZ LES BREAAAAKS !
+1-Je vais dans itemPotionEnum puis je rajoute une nouvelle constante
+2-Je reviens dans cette classe je rajoutes aux switchs corrspondant les différents info
+3-Je vais dans les classes appropiés à la question pour modifier les caractéristiques
+ */
+// Si je veux ajouter un nouvel Item je modifie ici et je rajoute les actions dans players.
 public class ItemPotion extends ItemEntity {
     private final String directory = String.format("%s/src/images/potion/", System.getProperty("user.dir"));
     private final String[] SpritePath = new String[]{
@@ -30,8 +39,12 @@ public class ItemPotion extends ItemEntity {
     private Rectangle hitBox;
     private ItemPotionEnum itemPotionEnum;
     private String name;
-
-    public ItemPotion(String name, TileMap map) throws FileNotFoundException {
+    private Player player;
+    private Spike spike;
+    public ItemPotion(String name, TileMap map, Entity entity) throws FileNotFoundException {
+        if (entity instanceof Player) {
+            setPlayer((Player) entity);
+        }
         setName(name);
         setItemEnum(ItemPotionEnum.valueOf(getName()));
         switch (getItemEnum()) {
@@ -49,9 +62,7 @@ public class ItemPotion extends ItemEntity {
                 setValueMoney(15);
 
                 break;
-            case POTION_DAMAGE:
-                setDamage(20);
-                setValueMoney(13);
+            case KILL, INVINCIBLE:
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
@@ -111,16 +122,23 @@ public class ItemPotion extends ItemEntity {
     public void applyEffectPotion(Entity entity) {
         switch (getItemEnum()) {
             case POTION_HEAL:
+                System.out.printf("You gain %f Life !%n", getLife());
                 entity.addLife(getLife());
                 break;
             case POTION_STRENGTH:
+                System.out.printf("You gain %f Strength!%n", getStrength());
                 entity.addStrength(getStrength());
                 break;
             case POTION_SPEED:
+                System.out.printf("You gain %f Speed!%n", getSpeed());
                 entity.setSpeed(getSpeed());
                 break;
-            case POTION_DAMAGE:
-                entity.addDamage(getDamage());
+            case KILL:
+                System.out.printf("I can kill all entities");
+                break;
+            case INVINCIBLE:
+                System.out.println("I am Invincible !");
+                getPlayer().setCollidable(false);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
@@ -150,9 +168,13 @@ public class ItemPotion extends ItemEntity {
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
-
-            case POTION_DAMAGE:
-                image = new Image(new FileInputStream(getSpritePath()[3]));
+            case KILL:
+                image = new Image(new FileInputStream(getSpritePath()[4]));
+                imageView = new ImageView(image);
+                getHitBox().setFill(new ImagePattern(image));
+                break;
+            case INVINCIBLE:
+                image = new Image(new FileInputStream(getSpritePath()[5]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
@@ -187,5 +209,21 @@ public class ItemPotion extends ItemEntity {
     @Override
     public void setHitBox(Rectangle hitBox) {
         this.hitBox = hitBox;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Spike getSpike() {
+        return spike;
+    }
+
+    public void setSpike(Spike spike) {
+        this.spike = spike;
     }
 }
