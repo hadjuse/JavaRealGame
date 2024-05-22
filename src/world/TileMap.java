@@ -293,10 +293,10 @@ public class TileMap extends GridPane {
         genMap(getMap());
         showMap(getMap(), this);
 
-        ItemEntity potionHeal = new ItemPotion("POTION_HEAL", this);
-        ItemEntity potionSpeed = new ItemPotion("POTION_SPEED", this);
-        ItemEntity potionStrength = new ItemPotion("POTION_STRENGTH", this);
-        ItemEntity potionDamage = new ItemPotion("POTION_DAMAGE", this);
+        ItemEntity potionHeal = new ItemPotion("POTION_HEAL", this, getPlayer());
+        ItemEntity potionSpeed = new ItemPotion("POTION_SPEED", this, getPlayer());
+        ItemEntity potionStrength = new ItemPotion("POTION_STRENGTH", this, getPlayer());
+        ItemEntity potionDamage = new ItemPotion("POTION_DAMAGE", this, getPlayer());
         //QuestItem newQuestItem = new QuestItem("GG", this);
         itemEntities.add(potionHeal);
         itemEntities.add(potionSpeed);
@@ -329,7 +329,8 @@ public class TileMap extends GridPane {
         setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer()));
         placeEntity(getPotionSeller(), 7, 1);
         moveEntity(getPlayer(), 14, 7);
-        getPlayer().getInventory().addItemPotion(new ItemPotion("KILL", this), 1);
+        getPlayer().getInventory().addItemPotion(new ItemPotion("KILL", this, getPlayer()), 1);
+        getPlayer().getInventory().addItemPotion(new ItemPotion("INVINCIBLE",this, getPlayer()), 1);
         ButtonLevel1(stage);
         ButtonLevel2(stage);
     }

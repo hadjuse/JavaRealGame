@@ -27,10 +27,10 @@ public class PotionSeller extends Entity {
         setMoney(100000);
         setBoxEntity(renderSeller());
         setInventory(new Inventory(5));
-        getInventory().addItemPotion(new ItemPotion("POTION_HEAL", map), 1);
-        getInventory().addItemPotion(new ItemPotion("POTION_STRENGTH", map), 1);
-        getInventory().addItemPotion(new ItemPotion("POTION_DAMAGE", map), 1);
-        getInventory().addItemPotion(new ItemPotion("POTION_SPEED", map), 1);
+        getInventory().addItemPotion(new ItemPotion("POTION_HEAL", map, player), 1);
+        getInventory().addItemPotion(new ItemPotion("POTION_STRENGTH", map, player), 1);
+       // getInventory().addItemPotion(new ItemPotion("POTION_DAMAGE", map,player), 1);
+        getInventory().addItemPotion(new ItemPotion("POTION_SPEED", map, player), 1);
         getBoxEntity().setOnMouseClicked(_ -> {
             // Show the mini window with the potions
             showPotionWindow(player);

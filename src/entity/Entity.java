@@ -41,10 +41,6 @@ public abstract class Entity {
         setBoxEntity(getBoxEntity());
         setInventory(new Inventory(5));
         setName(name);
-        setPotionDamage(new ItemPotion("POTION_HEAL", map));
-        setPotionHeal(new ItemPotion("POTION_STRENGTH", map));
-        setPotionSpeed(new ItemPotion("POTION_SPEED", map));
-        setPotionStrength(new ItemPotion("POTION_DAMAGE", map));
     }
 
     public double getLife() {

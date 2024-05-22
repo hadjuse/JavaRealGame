@@ -34,7 +34,6 @@ public class Player extends Entity implements ActionEntityBattle {
     private double YSpawn;
     private boolean oneShot;
     public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities) throws FileNotFoundException {
-        // TODO Collision with walls
         super(name, 30, 30, tileMap);
         spriteData = new SpriteData();
         setName(name);
@@ -47,6 +46,7 @@ public class Player extends Entity implements ActionEntityBattle {
         setYSpawn(0);
         setInventory(new Inventory(1));
         setMoney(0);
+        setCollidable(true);
         setOneShot(false);
         movementPlayer = new AnimationTimer() {
             @Override
@@ -177,7 +177,7 @@ public class Player extends Entity implements ActionEntityBattle {
                 Shape intersection = Shape.intersect(getHitBox(), spike.getHitBox());
                 boolean collisionX = intersection.getBoundsInLocal().getMinX() > 0 && intersection.getBoundsInLocal().getMaxX() > 0;
                 boolean collisionY = intersection.getBoundsInLocal().getMinY() > 0 && intersection.getBoundsInLocal().getMaxY() > 0;
-                if (collisionX && collisionY && getLife() > 0 && spike.isCollidable()) {
+                if (collisionX && collisionY && getLife() > 0 && this.isCollidable()) {
                     setLife(0);
                     setLife(100);
                     System.out.printf("%s is dead%n", getName());
@@ -189,7 +189,7 @@ public class Player extends Entity implements ActionEntityBattle {
                 boolean collisionX = intersection.getBoundsInLocal().getMinX() > 0 && intersection.getBoundsInLocal().getMaxX() > 0;
                 boolean collisionY = intersection.getBoundsInLocal().getMinY() > 0 && intersection.getBoundsInLocal().getMaxY() > 0;
                 if (collisionX && collisionY && getLife() > 0 && monster.isCollidable()) {
-                    //monster.basicAttack(this, );
+                    monster.attackPlayer();
                 }
             }
 

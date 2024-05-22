@@ -6,23 +6,27 @@ import item.ItemPotion;
 import javafx.animation.Timeline;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import player.Player;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
-import java.util.Random;
 
+/*
+Si je veux modifier des interactions avec les monstres je vais les switchs correspondant
+
+ */
 public class Monster extends Entity implements ActionEntityBattle {
     private Timeline attackTimer;
     private MonsterEnum monsterEnum;
     private Player player;
+
     public Monster(MonsterEnum monsterEnum, Player player, TileMap map) throws FileNotFoundException {
-        super(monsterEnum.name(), monsterEnum.getWidthFactor()*25, monsterEnum.getHeightFactor()*25, map);
+        super(monsterEnum.name(), monsterEnum.getWidthFactor() * 25, monsterEnum.getHeightFactor() * 25, map);
         setLife(monsterEnum.getBaseLife());
         setMoney(50);
         setStrength(30);
@@ -62,21 +66,20 @@ public class Monster extends Entity implements ActionEntityBattle {
     }
 
     @Override
-    public void basicAttack(Entity entity, TileMap map){
-        if (entity instanceof Monster) {
-            Monster monster = (Monster) entity;
+    public void basicAttack(Entity entity, TileMap map) {
+        if (entity instanceof Monster monster) {
             String event = monster.getMonsterEnum().getEvent();
             // Trigger the event specified by the event field
             switch (event) {
                 case "event1":
                     System.out.println("I can one shot you");
                     //getPlayer().setOneShot(true);
-                    if (getPlayer().isOneShot()){
+                    if (getPlayer().isOneShot()) {
                         setLife(0);
-                    }else {
+                    } else {
                         normalAttack(entity);
                     }
-                    actionAfterDeath(map, getPlayer());
+                    //actionAfterDeath(map, getPlayer());
                     break;
                 case "event2":
                     normalAttack(entity);
@@ -94,12 +97,13 @@ public class Monster extends Entity implements ActionEntityBattle {
                     // Code for default behavior
                     break;
             }
+            actionAfterDeath(map, entity);
         }
-        actionAfterDeath(map, entity);
+
     }
 
     private void normalAttack(Entity entity) {
-        System.out.printf("%s attack %s%n", getName(), entity.getName());
+        System.out.printf("%s attack %s%n", getPlayer().getName(), entity.getName());
         System.out.printf("Life of %s = %f%n", entity.getName(), entity.getLife());
         entity.loseLife(this.getDamage());
     }
@@ -107,16 +111,24 @@ public class Monster extends Entity implements ActionEntityBattle {
 
     @Override
     public void actionAfterDeath(TileMap map, Entity entity) {
-        if (entity instanceof Monster){
-            Monster monster = (Monster) entity;
+        if (entity instanceof Monster monster) {
             String event = monster.getMonsterEnum().getEvent();
             // Trigger the event specified by the event field
             switch (event) {
                 case "event1":
-                    actionAfterDeath1(map, entity);
+                    if (entity.getLife() <= 0) {
+                        System.out.printf("%s is dead%n", getName());
+                        System.out.printf("%s earn %f%n", getPlayer().getName(), getMoney());
+                        player.addMoney(getMoney(), getPlayer());
+                        map.removeEntity(entity);
+                        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+                        dialog.setHeaderText(String.format("%s is dead", getName()));
+                        dialog.setContentText("Félicitation tu as tué le monstre");
+                        dialog.showAndWait();
+                    }
                     break;
                 case "event2":
-                    // Code for event 2
+                    actionAfterDeath1(map, entity);
                     break;
                 case "event3":
                     // Code for event 3
@@ -139,7 +151,7 @@ public class Monster extends Entity implements ActionEntityBattle {
         try {
             if (entity.getLife() <= 0) {
                 System.out.printf("%s is dead%n", getName());
-                System.out.println("%s earn %f".formatted(getPlayer().getName(),getMoney()));
+                System.out.printf("%s earn %f%n", getPlayer().getName(), getMoney());
                 ItemPotion itemPotion = entity.getInventory().getItemPotion(0);
                 giveItem(getPlayer(), itemPotion);
                 player.addMoney(getMoney(), getPlayer());
@@ -154,9 +166,16 @@ public class Monster extends Entity implements ActionEntityBattle {
             getPlayer().addMoney(entity.getMoney(), getPlayer());
         } catch (IllegalArgumentException e) {
             map.removeEntity(entity);
-            System.out.printf("You receive Directly the potion");
+            System.out.print("You receive Directly the potion");
             entity.giveItem(this, entity.getInventory().getItemPotion(0));
         }
+    }
+
+    public void attackPlayer() {
+        getPlayer().loseLife(getDamage());
+        System.out.printf("%f%n", getPlayer().getLife());
+        getPlayer().getHitBox().setTranslateX(getPlayer().getXSpawn());
+        getPlayer().getHitBox().setTranslateY(getPlayer().getYSpawn());
     }
 
     public MonsterEnum getMonsterEnum() {
@@ -167,11 +186,11 @@ public class Monster extends Entity implements ActionEntityBattle {
         this.monsterEnum = monsterEnum;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
     public Player getPlayer() {
         return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }
