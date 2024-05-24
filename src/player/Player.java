@@ -34,9 +34,11 @@ public class Player extends Entity implements ActionEntityBattle {
     private double XSpawn;
     private double YSpawn;
     private boolean oneShot;
+    private Stage stage;
     public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities, Stage stage) throws FileNotFoundException {
         super(name, 30, 30, tileMap);
         spriteData = new SpriteData();
+        setStage(stage);
         initInfoPlayer(name);
         movementPlayer = new AnimationTimer() {
             @Override
@@ -186,6 +188,7 @@ public class Player extends Entity implements ActionEntityBattle {
                     setLife(0);
                     setLife(100);
                     System.out.printf("%s is dead%n", getName());
+                    getStage().close();
                     getHitBox().setTranslateX(getXSpawn());
                     getHitBox().setTranslateY(getYSpawn());
                 }
@@ -332,6 +335,14 @@ public class Player extends Entity implements ActionEntityBattle {
 
     public void setOneShot(boolean oneShot) {
         this.oneShot = oneShot;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public static class SpriteData {
