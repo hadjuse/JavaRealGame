@@ -44,7 +44,7 @@ public class TileMap extends GridPane {
     private List<Monster> monsters = new ArrayList<Monster>();
     private List<QuestItem> questItems = new ArrayList<QuestItem>();
     private MonsterEnum monsterEnum;
-    public TileMap(String pathToCsv, Stage stage) throws FileNotFoundException {
+    public TileMap(Stage stage) throws FileNotFoundException {
         //level1(Levels[0], stage);
         setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities()));
         backRoom(getLevels()[2], stage);
@@ -270,12 +270,16 @@ public class TileMap extends GridPane {
         // Set the position of the monsters
         placeEntity(monster1, 5, 5);
         placeEntity(monster2, 10, 10);
-        placeEntity(monster3, 14, 14);
+        placeEntity(monster3, 10, 12);
 
         // Add the monsters to the list of monsters
         entities.add(monster1);
         entities.add(monster2);
         entities.add(monster3);
+
+        // Add item to monster list
+        monster1.getInventory().addItemPotion(new ItemPotion("KILL", this, getPlayer()), 1);
+        System.out.println(monster1.getInventory().getItemPotion(0));
         moveEntity(getPlayer(), 14, 1);
         ButtonBackRoom(stage);
     }
@@ -296,12 +300,10 @@ public class TileMap extends GridPane {
         ItemEntity potionHeal = new ItemPotion("POTION_HEAL", this, getPlayer());
         ItemEntity potionSpeed = new ItemPotion("POTION_SPEED", this, getPlayer());
         ItemEntity potionStrength = new ItemPotion("POTION_STRENGTH", this, getPlayer());
-        ItemEntity potionDamage = new ItemPotion("POTION_DAMAGE", this, getPlayer());
         //QuestItem newQuestItem = new QuestItem("GG", this);
         itemEntities.add(potionHeal);
         itemEntities.add(potionSpeed);
         itemEntities.add(potionStrength);
-        itemEntities.add(potionDamage);
 
         //itemEntities.add(newQuestItem);
 
@@ -339,7 +341,7 @@ public class TileMap extends GridPane {
         Button changeMapButton = new Button("2");
         changeMapButton.setOnAction(event -> {
             try {
-                player.getInventory().clear();
+                //player.getInventory().clear();
                 itemEntities.clear();
                 entities.clear();
                 this.Level2(Levels[1], stage);
@@ -356,7 +358,7 @@ public class TileMap extends GridPane {
         Button changeMapButton = new Button("1");
         changeMapButton.setOnAction(event -> {
             try {
-                player.getInventory().clear();
+                //player.getInventory().clear();
                 itemEntities.clear();
                 entities.clear();
                 this.level1(Levels[0], stage);
@@ -373,7 +375,7 @@ public class TileMap extends GridPane {
         Button changeMapButton = new Button("Back");
         changeMapButton.setOnAction(event -> {
             try {
-                player.getInventory().clear();
+                //player.getInventory().clear();
                 itemEntities.clear();
                 entities.clear();
                 this.backRoom(Levels[2], stage);

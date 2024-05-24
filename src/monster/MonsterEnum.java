@@ -7,8 +7,12 @@ public enum MonsterEnum {
     MONSTER_2(1.5, 1.5, Color.GREEN, 50, 10, "event2"),
     MONSTER_3(2.0, 1.0, Color.BLUE, 60, 15, "event3"),
     MONSTER_4(1.0, 2.0, Color.YELLOW, 80, 20, "event4"),
-    MONSTER_5(2.0, 2.0, Color.PURPLE, 120, 25, "event5");
+    MONSTER_5(2.0, 2.0, Color.PURPLE, 120, 25, "event5"),
+    MONSTER_6(2.0, 2.0, Color.BLACK, 150, 30, "event6"),
+    MONSTER_7(2.0, 2.0, Color.WHITE, 200, 40, "event7"),
+    MONSTER_8(2.0, 2.0, Color.ORANGE, 250, 50, "event8");
 
+    // Add more monsters here
     private final double widthFactor;
     private final double heightFactor;
     private final Color color;
