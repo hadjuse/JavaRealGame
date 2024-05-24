@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import monster.Monster;
 import player.Player;
 import pnj.PnjQuest;
 import world.TileMap;
@@ -16,12 +17,12 @@ import java.util.Scanner;
 
 
 /*
-Si je veux ajouter un nouvelle item: NE PAS OUBLIEZ LES BREAAAAKS !
+Si je veux ajouter un nouvel item : NE PAS OUBLIER LES BREAAAAKS !
 1-Je vais dans itemGeneralEnum puis je rajoute une nouvelle constante
-2-Je reviens dans cette classe je rajoutes aux switchs corrspondant les différents info
+2-Je reviens dans cette classe je rajoute aux switchs corrspondant les différentes informations
 3-Je vais dans les classes appropiés à la question pour modifier les caractéristiques
  */
-// Si je veux ajouter un nouvel Item je modifie ici et je rajoute les actions dans players.
+// Si je veux ajouter un nouvel Item je modifie ici et je rajoute les actions dans la classe player.
 public class ItemGeneral extends ItemEntity {
     private final String directory = String.format("%s/src/images/potion/", System.getProperty("user.dir"));
     private final String[] SpritePath = new String[]{
@@ -45,11 +46,14 @@ public class ItemGeneral extends ItemEntity {
     private Spike spike;
     private TileMap map;
     private PnjQuest pnjQuest;
+    private Monster monster;
     public ItemGeneral(String name, TileMap map, Entity entity) throws FileNotFoundException {
         if (entity instanceof Player) {
             setPlayer((Player) entity);
         } else if (entity instanceof PnjQuest pnjQuest) {
             setPnjQuest(pnjQuest);
+        } else if (entity instanceof Monster monstre) {
+            setMonster(monstre);
         }
         setMap(map);
         setName(name);
@@ -270,5 +274,13 @@ public class ItemGeneral extends ItemEntity {
 
     public void setPnjQuest(PnjQuest pnjQuest) {
         this.pnjQuest = pnjQuest;
+    }
+
+    public Monster getMonster() {
+        return monster;
+    }
+
+    public void setMonster(Monster monster) {
+        this.monster = monster;
     }
 }
