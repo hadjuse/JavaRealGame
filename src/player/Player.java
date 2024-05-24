@@ -35,10 +35,12 @@ public class Player extends Entity implements ActionEntityBattle {
     private double YSpawn;
     private boolean oneShot;
     private Stage stage;
+    private TileMap map;
     public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities, Stage stage) throws FileNotFoundException {
         super(name, 30, 30, tileMap);
         spriteData = new SpriteData();
         setStage(stage);
+        setMap(tileMap);
         initInfoPlayer(name);
         movementPlayer = new AnimationTimer() {
             @Override
@@ -197,7 +199,7 @@ public class Player extends Entity implements ActionEntityBattle {
                 boolean collisionX = intersection.getBoundsInLocal().getMinX() > 0 && intersection.getBoundsInLocal().getMaxX() > 0;
                 boolean collisionY = intersection.getBoundsInLocal().getMinY() > 0 && intersection.getBoundsInLocal().getMaxY() > 0;
                 if (collisionX && collisionY && getLife() > 0 && monster.isCollidable()) {
-                    monster.attackPlayer();
+                    monster.attackPlayer(monster, getMap());
                 }
             }
 
@@ -226,8 +228,6 @@ public class Player extends Entity implements ActionEntityBattle {
             entity.loseLife(this.getDamage());
             //actionAfterDeath(map, entity);
         }*/
-
-
     }
 
     @Override
@@ -343,6 +343,14 @@ public class Player extends Entity implements ActionEntityBattle {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public TileMap getMap() {
+        return map;
+    }
+
+    public void setMap(TileMap map) {
+        this.map = map;
     }
 
     public static class SpriteData {

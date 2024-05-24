@@ -263,9 +263,9 @@ public class TileMap extends GridPane {
 
 
         // Add three monsters to the map
-        Monster monster1 = new Monster(MonsterEnum.MONSTER_1, player, this);
-        Monster monster2 = new Monster(MonsterEnum.MONSTER_2, player, this);
-        Monster monster3 = new Monster(MonsterEnum.MONSTER_3, player, this);
+        Monster monster1 = new Monster(MonsterEnum.MONSTER_1, player, this, stage);
+        Monster monster2 = new Monster(MonsterEnum.MONSTER_2, player, this, stage);
+        Monster monster3 = new Monster(MonsterEnum.MONSTER_3, player, this, stage);
 
         // Set the position of the monsters
         placeEntity(monster1, 5, 5);
