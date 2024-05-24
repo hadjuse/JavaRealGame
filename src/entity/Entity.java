@@ -2,7 +2,7 @@ package entity;
 
 import inventory.Inventory;
 import item.ItemEntity;
-import item.ItemPotion;
+import item.ItemGeneral;
 import item.QuestItem;
 import item.UsableItem;
 import javafx.scene.control.Alert;
@@ -27,10 +27,10 @@ public abstract class Entity {
     private double height;
     private String name;
     private Rectangle bounds;
-    private ItemPotion potionHeal;
-    private ItemPotion potionStrength;
-    private ItemPotion potionSpeed;
-    private ItemPotion potionDamage;
+    private ItemGeneral potionHeal;
+    private ItemGeneral potionStrength;
+    private ItemGeneral potionSpeed;
+    private ItemGeneral potionDamage;
     private QuestItem questItem;
     private boolean collidable;
     private Alert dialog;
@@ -169,7 +169,7 @@ public abstract class Entity {
 
     public void giveItem(Entity entity, ItemEntity item) {
         int quantityInventory = entity.getInventory().getQuantity();
-        if (item instanceof ItemPotion potion) {
+        if (item instanceof ItemGeneral potion) {
             entity.getInventory().addItemPotion(potion, quantityInventory);
             getInventory().removeItemPotion(potion);
         } else if (item instanceof UsableItem usable) {
@@ -182,7 +182,7 @@ public abstract class Entity {
     }
 
     public void takeItem(ItemEntity item) {
-        if (item instanceof ItemPotion potion) {
+        if (item instanceof ItemGeneral potion) {
             getInventory().addItemPotion(potion, getInventory().getQuantity());
         } else if (item instanceof UsableItem usable) {
             getInventory().addUsableItem(usable, getInventory().getQuantity());
@@ -208,10 +208,10 @@ public abstract class Entity {
     }
 
     public void UsePotion() {
-        ItemPotion itemPotion = getInventory().getItemPotion(0);
-        if (itemPotion != null) {
-            itemPotion.applyEffectPotion(this);
-            getInventory().removeItemPotion(itemPotion);
+        ItemGeneral itemGeneral = getInventory().getItemPotion(0);
+        if (itemGeneral != null) {
+            itemGeneral.applyEffectPotion(this);
+            getInventory().removeItemPotion(itemGeneral);
         }
     }
 
@@ -223,35 +223,35 @@ public abstract class Entity {
         this.bounds = bounds;
     }
 
-    public ItemPotion getPotionStrength() {
+    public ItemGeneral getPotionStrength() {
         return potionStrength;
     }
 
-    public void setPotionStrength(ItemPotion potionStrength) {
+    public void setPotionStrength(ItemGeneral potionStrength) {
         this.potionStrength = potionStrength;
     }
 
-    public ItemPotion getPotionSpeed() {
+    public ItemGeneral getPotionSpeed() {
         return potionSpeed;
     }
 
-    public void setPotionSpeed(ItemPotion potionSpeed) {
+    public void setPotionSpeed(ItemGeneral potionSpeed) {
         this.potionSpeed = potionSpeed;
     }
 
-    public ItemPotion getPotionDamage() {
+    public ItemGeneral getPotionDamage() {
         return potionDamage;
     }
 
-    public void setPotionDamage(ItemPotion potionDamage) {
+    public void setPotionDamage(ItemGeneral potionDamage) {
         this.potionDamage = potionDamage;
     }
 
-    public ItemPotion getPotionHeal() {
+    public ItemGeneral getPotionHeal() {
         return potionHeal;
     }
 
-    public void setPotionHeal(ItemPotion potionHeal) {
+    public void setPotionHeal(ItemGeneral potionHeal) {
         this.potionHeal = potionHeal;
     }
 

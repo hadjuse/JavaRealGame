@@ -2,11 +2,10 @@ package monster;
 
 import entity.ActionEntityBattle;
 import entity.Entity;
-import item.ItemPotion;
+import item.ItemGeneral;
 import javafx.animation.Timeline;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
-import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -24,7 +23,6 @@ public class Monster extends Entity implements ActionEntityBattle {
     private Timeline attackTimer;
     private MonsterEnum monsterEnum;
     private Player player;
-
     public Monster(MonsterEnum monsterEnum, Player player, TileMap map) throws FileNotFoundException {
         super(monsterEnum.name(), monsterEnum.getWidthFactor() * 25, monsterEnum.getHeightFactor() * 25, map);
         setLife(monsterEnum.getBaseLife());
@@ -36,11 +34,9 @@ public class Monster extends Entity implements ActionEntityBattle {
         setCollidable(true);
         setPlayer(player);
         setDamage(20 * (1 + getStrength() / 100));
-        //displayDialog("hahah");
-        //getInventory().addItemPotion(new ItemPotion());
         getBoxEntity().setOnMouseClicked(mouseEvent -> {
             if (getBoxEntity().contains(mouseEvent.getX(), mouseEvent.getY()) && isCanBeAttacked()) {
-                basicAttack(this, map);
+                receiveAttackFromEntity(this, map);
             }
         });
         getBoxEntity().setOnMouseEntered(mouseEvent -> {
@@ -66,15 +62,16 @@ public class Monster extends Entity implements ActionEntityBattle {
         return stackPane;
     }
 
+
     @Override
-    public void basicAttack(Entity entity, TileMap map) {
+    public void receiveAttackFromEntity(Entity entity, TileMap map) {
         if (entity instanceof Monster monster) {
             String event = monster.getMonsterEnum().getEvent();
             // Trigger the event specified by the event field
             switch (event) {
                 case "event1":
                     System.out.println("I can one shot you");
-                    getPlayer().setOneShot(true);
+                    //getPlayer().setOneShot(true);
                     if (getPlayer().isOneShot()) {
                         setLife(0);
                     } else {
@@ -83,7 +80,8 @@ public class Monster extends Entity implements ActionEntityBattle {
                     //actionAfterDeath(map, getPlayer());
                     break;
                 case "event2":
-                    normalAttack(entity);
+                    //normalAttack(entity);
+                    setLife(0);
                     break;
                 case "event3":
                     break;
@@ -110,14 +108,6 @@ public class Monster extends Entity implements ActionEntityBattle {
         }
 
     }
-
-    private void normalAttack(Entity entity) {
-        System.out.printf("%s attack %s%n", getPlayer().getName(), entity.getName());
-        System.out.printf("Life of %s = %f%n", entity.getName(), entity.getLife());
-        entity.loseLife(this.getDamage());
-    }
-
-
     @Override
     public void actionAfterDeath(TileMap map, Entity entity) {
         if (entity instanceof Monster monster) {
@@ -126,20 +116,20 @@ public class Monster extends Entity implements ActionEntityBattle {
             switch (event) {
                 case "event1":
                     if (entity.getLife() <= 0) {
-                        ItemPotion itemPotion = entity.getInventory().getItemPotion(0);
+                        ItemGeneral itemGeneral = entity.getInventory().getItemPotion(0);
                         System.out.printf("%s is dead%n", getName());
                         System.out.printf("%s earn %f%n", getPlayer().getName(), getMoney());
                         player.addMoney(getMoney(), getPlayer());
                         map.removeEntity(entity);
-                        giveItem(getPlayer(), itemPotion);
+                        giveItem(getPlayer(), itemGeneral);
                         System.out.printf("%s%n", getPlayer().getInventory());
                         displayDialog("Félicitation tu as tué le monstre !");
-                        System.out.printf("%s receive %s\n", getPlayer().getName(), itemPotion.getName());
+                        System.out.printf("%s receive item %s\n", getPlayer().getName(), itemGeneral.getName());
                         System.out.printf("%s%n", getPlayer().getInventory());
                     }
                     break;
                 case "event2":
-                    actionAfterDeath1(map, entity);
+                    //actionAfterDeath1(map, entity);
                     break;
                 case "event3":
                     // Code for event 3
@@ -166,18 +156,26 @@ public class Monster extends Entity implements ActionEntityBattle {
         }
 
     }
+    private void normalAttack(Entity entity) {
+        System.out.printf("%s attack %s%n", getPlayer().getName(), entity.getName());
+        System.out.printf("Life of %s = %f%n", entity.getName(), entity.getLife());
+        entity.loseLife(getPlayer().getDamage());
+    }
+
+
+
 
     private void actionAfterDeath1(TileMap map, Entity entity) {
         try {
             if (entity.getLife() <= 0) {
                 System.out.printf("%s is dead%n", getName());
                 System.out.printf("%s earn %f%n", getPlayer().getName(), getMoney());
-                ItemPotion itemPotion = entity.getInventory().getItemPotion(0);
-                giveItem(getPlayer(), itemPotion);
+                ItemGeneral itemGeneral = entity.getInventory().getItemPotion(0);
+                giveItem(getPlayer(), itemGeneral);
                 player.addMoney(getMoney(), getPlayer());
                 map.removeEntity(entity);
                 setDead(true);
-                System.out.printf("%s receive %s\n", getPlayer().getName(), itemPotion.getName());
+                System.out.printf("%s receive %s\n", getPlayer().getName(), itemGeneral.getName());
                 System.out.printf("%s%n", getPlayer().getInventory());
             }
         } catch (IndexOutOfBoundsException e) {

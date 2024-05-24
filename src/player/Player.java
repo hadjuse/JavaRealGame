@@ -8,6 +8,7 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -33,21 +34,10 @@ public class Player extends Entity implements ActionEntityBattle {
     private double XSpawn;
     private double YSpawn;
     private boolean oneShot;
-    public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities) throws FileNotFoundException {
+    public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities, Stage stage) throws FileNotFoundException {
         super(name, 30, 30, tileMap);
         spriteData = new SpriteData();
-        setName(name);
-        setLife(100);
-        setSpeed(1.2);
-        setStrength(10);
-        setDamage(20 * (1 + getStrength() / 100));
-        setBoxEntity(boxEntity());
-        setXSpawn(0);
-        setYSpawn(0);
-        setInventory(new Inventory(1));
-        setMoney(0);
-        setCollidable(true);
-        setOneShot(false);
+        initInfoPlayer(name);
         movementPlayer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -71,12 +61,23 @@ public class Player extends Entity implements ActionEntityBattle {
         getHitBox().setFocusTraversable(true);
         //getHitBox().requestFocus();
         eventInteractionItem(tileMap, itemEntities);
-
+        getInventory().addItemPotion(new ItemGeneral("INVINCIBLE",tileMap, this),1);
+        getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this), 1);
     }
 
-    private static void clearConsole() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+    private void initInfoPlayer(String name) throws FileNotFoundException {
+        setName(name);
+        setLife(100);
+        setSpeed(1.2);
+        setStrength(10);
+        setDamage(20 * (1 + getStrength() / 100));
+        setBoxEntity(boxEntity());
+        setXSpawn(0);
+        setYSpawn(0);
+        setInventory(new Inventory(10));
+        setMoney(0);
+        setCollidable(true);
+        setOneShot(false);
     }
 
     private void eventInteractionItem(TileMap tileMap, List<ItemEntity> itemEntities) {
@@ -88,7 +89,7 @@ public class Player extends Entity implements ActionEntityBattle {
                     ItemEntity itemEntity = iterator.next();
                     Shape intersect = Shape.intersect(getHitBox(), itemEntity.getHitBox());
                     if (intersect.getBoundsInLocal().getMinX() > 0) {
-                        if (itemEntity instanceof ItemPotion potion) {
+                        if (itemEntity instanceof ItemGeneral potion) {
                             boolean potionInInventory = getInventory().getItemPotionList().contains(itemEntity);
                             boolean enoughSpace = getInventory().getItemPotionList().size() < getInventory().getQuantity();
                             if (!potionInInventory && enoughSpace) {
@@ -150,7 +151,11 @@ public class Player extends Entity implements ActionEntityBattle {
                 case Q -> spriteData.velocityX = -3;
                 case D -> spriteData.velocityX = 3;
                 case S -> spriteData.velocityY = 3;
-                case P -> showInventoryWindow(entities);
+                case P ->{
+                    showInventoryWindow(entities);
+                    spriteData.velocityX=0;
+                    spriteData.velocityY=0;
+                }
             }
         });
         map.addEventFilter(KeyEvent.KEY_RELEASED, keyEvent -> {
@@ -205,7 +210,7 @@ public class Player extends Entity implements ActionEntityBattle {
     }
 
     @Override
-    public void basicAttack(Entity entity, TileMap map) {
+    public void receiveAttackFromEntity(Entity entity, TileMap map) {
         /*
         if (isOneShot()){
             System.out.printf("%s attack %s%n", getName(), entity.getName());
@@ -228,7 +233,7 @@ public class Player extends Entity implements ActionEntityBattle {
         try {
             if (entity.getLife() <= 0) {
                 System.out.printf("%s is dead%n", entity.getName());
-                ItemPotion itemPotion = entity.getInventory().getItemPotion(0);
+                ItemGeneral itemPotion = entity.getInventory().getItemPotion(0);
                 entity.giveItem(this, itemPotion);
                 addMoney(entity.getMoney());
                 map.removeEntity(entity);
@@ -271,7 +276,7 @@ public class Player extends Entity implements ActionEntityBattle {
         inventoryGridPane.add(lifeLabel, 2, 0);
 
         int rowIndex = 1;
-        for (ItemPotion potion : getInventory().getItemPotionList()) {
+        for (ItemGeneral potion : getInventory().getItemPotionList()) {
             try {
                 // Create an ImageView for the inventory item
                 ImageView potionImageView = new ImageView(new Image(new FileInputStream(potion.getSpritePath()[potion.getItemEnum().ordinal()])));
@@ -291,17 +296,22 @@ public class Player extends Entity implements ActionEntityBattle {
             }
         }
 
+        // Wrap the grid pane in a scroll pane
+        ScrollPane scrollPane = new ScrollPane(inventoryGridPane);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+
         // Set the scene of the stage
         inventoryStage.setX(0);
         inventoryStage.setY(300);
-        inventoryStage.setScene(new Scene(inventoryGridPane));
+        inventoryStage.setScene(new Scene(scrollPane));
 
         // Show the stage
         inventoryStage.show();
     }
 
 
-    private Button UsePotionButton(ItemPotion potion, ImageView potionImageView, List<Entity> entities) {
+    private Button UsePotionButton(ItemGeneral potion, ImageView potionImageView, List<Entity> entities) {
         Button potionButton = new Button();
         potionButton.setGraphic(potionImageView);
         potionButton.setOnAction(event -> {
