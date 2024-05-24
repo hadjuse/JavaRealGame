@@ -31,7 +31,7 @@ public class PotionSeller extends Entity {
         getInventory().addItemPotion(new ItemPotion("POTION_STRENGTH", map, player), 1);
        // getInventory().addItemPotion(new ItemPotion("POTION_DAMAGE", map,player), 1);
         getInventory().addItemPotion(new ItemPotion("POTION_SPEED", map, player), 1);
-        getBoxEntity().setOnMouseClicked(_ -> {
+        getBoxEntity().setOnMouseClicked(event -> {
             // Show the mini window with the potions
             showPotionWindow(player);
         });

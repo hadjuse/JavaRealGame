@@ -5,12 +5,12 @@ import item.ItemEntity;
 import item.ItemPotion;
 import item.QuestItem;
 import item.UsableItem;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
-import java.util.List;
 
 public abstract class Entity {
     private double life;
@@ -33,7 +33,8 @@ public abstract class Entity {
     private ItemPotion potionDamage;
     private QuestItem questItem;
     private boolean collidable;
-
+    private Alert dialog;
+    private boolean open;
     public Entity(String name, double width, double height, TileMap map) throws FileNotFoundException {
         setMoney(0);
         setWidth(width);
@@ -276,5 +277,28 @@ public abstract class Entity {
 
     public void setCollidable(boolean collidable) {
         this.collidable = collidable;
+    }
+
+    public void displayDialog(String dialog){
+        setDialog(new Alert(Alert.AlertType.INFORMATION));
+        getDialog().setHeaderText(String.format("%s dialog", getName()));
+        getDialog().setContentText(dialog);
+        getDialog().showAndWait();
+    }
+
+    public Alert getDialog() {
+        return dialog;
+    }
+
+    public void setDialog(Alert dialog) {
+        this.dialog = dialog;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
     }
 }

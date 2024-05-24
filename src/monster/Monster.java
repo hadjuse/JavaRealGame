@@ -36,7 +36,8 @@ public class Monster extends Entity implements ActionEntityBattle {
         setCollidable(true);
         setPlayer(player);
         setDamage(20 * (1 + getStrength() / 100));
-
+        //displayDialog("hahah");
+        //getInventory().addItemPotion(new ItemPotion());
         getBoxEntity().setOnMouseClicked(mouseEvent -> {
             if (getBoxEntity().contains(mouseEvent.getX(), mouseEvent.getY()) && isCanBeAttacked()) {
                 basicAttack(this, map);
@@ -51,7 +52,7 @@ public class Monster extends Entity implements ActionEntityBattle {
             }
         });
 
-        getBoxEntity().setOnMouseExited(_ -> {
+        getBoxEntity().setOnMouseExited(event -> {
             map.setCursor(Cursor.DEFAULT);
         });
     }
@@ -73,7 +74,7 @@ public class Monster extends Entity implements ActionEntityBattle {
             switch (event) {
                 case "event1":
                     System.out.println("I can one shot you");
-                    //getPlayer().setOneShot(true);
+                    getPlayer().setOneShot(true);
                     if (getPlayer().isOneShot()) {
                         setLife(0);
                     } else {
@@ -85,13 +86,21 @@ public class Monster extends Entity implements ActionEntityBattle {
                     normalAttack(entity);
                     break;
                 case "event3":
-                    // Code for event 3
                     break;
                 case "event4":
                     // Code for event 4
                     break;
                 case "event5":
                     // Code for event 5
+                    break;
+                case "event6":
+                    // Code for event 6
+                    break;
+                case "event7":
+                    // Code for event 7
+                    break;
+                case "event8":
+                    // Code for event 8
                     break;
                 default:
                     // Code for default behavior
@@ -117,14 +126,16 @@ public class Monster extends Entity implements ActionEntityBattle {
             switch (event) {
                 case "event1":
                     if (entity.getLife() <= 0) {
+                        ItemPotion itemPotion = entity.getInventory().getItemPotion(0);
                         System.out.printf("%s is dead%n", getName());
                         System.out.printf("%s earn %f%n", getPlayer().getName(), getMoney());
                         player.addMoney(getMoney(), getPlayer());
                         map.removeEntity(entity);
-                        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-                        dialog.setHeaderText(String.format("%s is dead", getName()));
-                        dialog.setContentText("Félicitation tu as tué le monstre");
-                        dialog.showAndWait();
+                        giveItem(getPlayer(), itemPotion);
+                        System.out.printf("%s%n", getPlayer().getInventory());
+                        displayDialog("Félicitation tu as tué le monstre !");
+                        System.out.printf("%s receive %s\n", getPlayer().getName(), itemPotion.getName());
+                        System.out.printf("%s%n", getPlayer().getInventory());
                     }
                     break;
                 case "event2":
@@ -138,6 +149,15 @@ public class Monster extends Entity implements ActionEntityBattle {
                     break;
                 case "event5":
                     // Code for event 5
+                    break;
+                case "event6":
+                    // Code for event 6
+                    break;
+                case "event7":
+                    // Code for event 7
+                    break;
+                case "event8":
+                    // Code for event 8
                     break;
                 default:
                     // Code for default behavior
@@ -155,7 +175,6 @@ public class Monster extends Entity implements ActionEntityBattle {
                 ItemPotion itemPotion = entity.getInventory().getItemPotion(0);
                 giveItem(getPlayer(), itemPotion);
                 player.addMoney(getMoney(), getPlayer());
-
                 map.removeEntity(entity);
                 setDead(true);
                 System.out.printf("%s receive %s\n", getPlayer().getName(), itemPotion.getName());

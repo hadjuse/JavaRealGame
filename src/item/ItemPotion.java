@@ -135,6 +135,7 @@ public class ItemPotion extends ItemEntity {
                 break;
             case KILL:
                 System.out.printf("I can kill all entities");
+                getPlayer().setOneShot(true);
                 break;
             case INVINCIBLE:
                 System.out.println("I am Invincible !");

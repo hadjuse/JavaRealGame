@@ -307,12 +307,7 @@ public class Player extends Entity implements ActionEntityBattle {
         potionButton.setOnAction(event -> {
             boolean potionInInventory = getInventory().getItemPotionList().contains(potion);
             if (potionInInventory) {
-                if (potion.getName().equals("KILL")){
-                    setOneShot(true);
-                    potion.applyEffectPotion(this);
-                }else {
-                    potion.applyEffectPotion(this);
-                }
+                potion.applyEffectPotion(this);
                 getInventory().removeItemPotion(potion);
             } else {
                 System.out.println("You don't have this potion");
