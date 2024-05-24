@@ -7,20 +7,22 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import player.Player;
+import pnj.PnjQuest;
 import world.TileMap;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 
 /*
 Si je veux ajouter un nouvelle item: NE PAS OUBLIEZ LES BREAAAAKS !
-1-Je vais dans itemPotionEnum puis je rajoute une nouvelle constante
+1-Je vais dans itemGeneralEnum puis je rajoute une nouvelle constante
 2-Je reviens dans cette classe je rajoutes aux switchs corrspondant les différents info
 3-Je vais dans les classes appropiés à la question pour modifier les caractéristiques
  */
 // Si je veux ajouter un nouvel Item je modifie ici et je rajoute les actions dans players.
-public class ItemPotion extends ItemEntity {
+public class ItemGeneral extends ItemEntity {
     private final String directory = String.format("%s/src/images/potion/", System.getProperty("user.dir"));
     private final String[] SpritePath = new String[]{
             String.format("%sflask_big_blue.png", directory),
@@ -37,36 +39,21 @@ public class ItemPotion extends ItemEntity {
     private double speed;
     private double damage;
     private Rectangle hitBox;
-    private ItemPotionEnum itemPotionEnum;
+    private ItemGeneralEnum itemGeneralEnum;
     private String name;
     private Player player;
     private Spike spike;
-    public ItemPotion(String name, TileMap map, Entity entity) throws FileNotFoundException {
+    private TileMap map;
+    private PnjQuest pnjQuest;
+    public ItemGeneral(String name, TileMap map, Entity entity) throws FileNotFoundException {
         if (entity instanceof Player) {
             setPlayer((Player) entity);
+        } else if (entity instanceof PnjQuest pnjQuest) {
+            setPnjQuest(pnjQuest);
         }
+        setMap(map);
         setName(name);
-        setItemEnum(ItemPotionEnum.valueOf(getName()));
-        switch (getItemEnum()) {
-            case POTION_HEAL:
-                setLife(20);
-                setValueMoney(10);
-                break;
-            case POTION_STRENGTH:
-                setStrength(15);
-                setValueMoney(20);
-
-                break;
-            case POTION_SPEED:
-                setSpeed(2);
-                setValueMoney(15);
-
-                break;
-            case KILL, INVINCIBLE:
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
-        }
+        setItemEnum(ItemGeneralEnum.valueOf(getName()));
         setItemStackPane(renderItem());
     }
 
@@ -103,12 +90,12 @@ public class ItemPotion extends ItemEntity {
         this.damage = damage;
     }
 
-    public ItemPotionEnum getItemEnum() {
-        return itemPotionEnum;
+    public ItemGeneralEnum getItemEnum() {
+        return itemGeneralEnum;
     }
 
-    public void setItemEnum(ItemPotionEnum itemPotionEnum) {
-        this.itemPotionEnum = itemPotionEnum;
+    public void setItemEnum(ItemGeneralEnum itemGeneralEnum) {
+        this.itemGeneralEnum = itemGeneralEnum;
     }
 
     public String getName() {
@@ -122,14 +109,17 @@ public class ItemPotion extends ItemEntity {
     public void applyEffectPotion(Entity entity) {
         switch (getItemEnum()) {
             case POTION_HEAL:
+                setLife(20);
                 System.out.printf("You gain %f Life !%n", getLife());
                 entity.addLife(getLife());
                 break;
             case POTION_STRENGTH:
+                setStrength(10);
                 System.out.printf("You gain %f Strength!%n", getStrength());
                 entity.addStrength(getStrength());
                 break;
             case POTION_SPEED:
+                setSpeed(2);
                 System.out.printf("You gain %f Speed!%n", getSpeed());
                 entity.setSpeed(getSpeed());
                 break;
@@ -141,9 +131,31 @@ public class ItemPotion extends ItemEntity {
                 System.out.println("I am Invincible !");
                 getPlayer().setCollidable(false);
                 break;
+            case TELEPORTATION:
+                teleportation();
+                break;
+            case POTION_WHO_OPEN_DOOR:
+                getPlayer().setOpen(true);
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
         }
+    }
+
+    private void teleportation() {
+        System.out.println("I can teleport");
+        Scanner scanner = new Scanner(System.in);
+        int x,y;
+        do {
+            System.out.print("Enter the x-coordinate of the desired location: ");
+            x = scanner.nextInt();
+            System.out.print("Enter the y-coordinate of the desired location: ");
+            y = scanner.nextInt();
+            getMap().moveEntity(getPlayer(), x, y);
+        }while (x<1 || x>15 || y<1 || y>15);
+        System.out.println("The player is teleport to the desired location");
+        scanner.close();
+        return;
     }
 
     @Override
@@ -154,28 +166,44 @@ public class ItemPotion extends ItemEntity {
         ImageView imageView;
         switch (getItemEnum()) {
             case POTION_HEAL:
+                setValueMoney(10);
                 image = new Image(new FileInputStream(getSpritePath()[0]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
             case POTION_STRENGTH:
+                setValueMoney(10);
                 image = new Image(new FileInputStream(getSpritePath()[1]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
-
             case POTION_SPEED:
+                setValueMoney(10);
                 image = new Image(new FileInputStream(getSpritePath()[2]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
             case KILL:
+                setValueMoney(10);
                 image = new Image(new FileInputStream(getSpritePath()[4]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
             case INVINCIBLE:
+                setValueMoney(10);
                 image = new Image(new FileInputStream(getSpritePath()[5]));
+                imageView = new ImageView(image);
+                getHitBox().setFill(new ImagePattern(image));
+                break;
+            case TELEPORTATION:
+                setValueMoney(10);
+                image = new Image(new FileInputStream(getSpritePath()[6]));
+                imageView = new ImageView(image);
+                getHitBox().setFill(new ImagePattern(image));
+                break;
+            case POTION_WHO_OPEN_DOOR:
+                setValueMoney(10);
+                image = new Image(new FileInputStream(getSpritePath()[7]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
@@ -193,7 +221,7 @@ public class ItemPotion extends ItemEntity {
 
     @Override
     public String toString() {
-        return "ItemPotion{" +
+        return "ItemGeneral{" +
                 "name='" + name + '\'' +
                 ", life=" + life +
                 ", strength=" + strength +
@@ -226,5 +254,21 @@ public class ItemPotion extends ItemEntity {
 
     public void setSpike(Spike spike) {
         this.spike = spike;
+    }
+
+    public TileMap getMap() {
+        return map;
+    }
+
+    public void setMap(TileMap map) {
+        this.map = map;
+    }
+
+    public PnjQuest getPnjQuest() {
+        return pnjQuest;
+    }
+
+    public void setPnjQuest(PnjQuest pnjQuest) {
+        this.pnjQuest = pnjQuest;
     }
 }

@@ -2,10 +2,11 @@ package pnj;
 
 import entity.Entity;
 import inventory.Inventory;
-import item.ItemPotion;
+import item.ItemGeneral;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -20,19 +21,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class PotionSeller extends Entity {
-
+    private Player player;
     // TODO configure transaction and place him in the beginning Map
     public PotionSeller(String name, double width, double height, TileMap map, Player player) throws FileNotFoundException {
         super(name, width, height, map);
         setMoney(100000);
+        setPlayer(player);
         setBoxEntity(renderSeller());
         setInventory(new Inventory(5));
-        getInventory().addItemPotion(new ItemPotion("POTION_HEAL", map, player), 1);
-        getInventory().addItemPotion(new ItemPotion("POTION_STRENGTH", map, player), 1);
-       // getInventory().addItemPotion(new ItemPotion("POTION_DAMAGE", map,player), 1);
-        getInventory().addItemPotion(new ItemPotion("POTION_SPEED", map, player), 1);
+        getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player), 1);
+        getInventory().addItemPotion(new ItemGeneral("POTION_STRENGTH", map, player), 1);
+        getInventory().addItemPotion(new ItemGeneral("POTION_SPEED", map, player), 1);
+        getInventory().addItemPotion(new ItemGeneral("POTION_WHO_OPEN_DOOR", map, player), 1);
         getBoxEntity().setOnMouseClicked(event -> {
-            // Show the mini window with the potions
             showPotionWindow(player);
         });
     }
@@ -46,13 +47,14 @@ public class PotionSeller extends Entity {
         potionStage.setWidth(720);
         potionStage.setHeight(200);
 
-        // Create a grid pane for the potions
+        // Create a GridPane to contain the potion buttons and labels
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(10);
 
-        // Add the potions to the grid pane
-        getInventory().getItemPotionList().forEach(potion -> {
+        // Add the potions to the GridPane
+        int rowIndex = 0;
+        for (ItemGeneral potion : getInventory().getItemPotionList()) {
             try {
                 // Create an ImageView for the potion
                 ImageView potionImageView = new ImageView(new Image(new FileInputStream(potion.getSpritePath()[potion.getItemEnum().ordinal()])));
@@ -68,32 +70,40 @@ public class PotionSeller extends Entity {
                 potionButton.setGraphic(potionImageView);
                 potionButton.setOnAction(event -> handlePotionPurchase(player, potion));
 
-                // Add the Button, the name Label, and the price Label to the grid pane
-                gridPane.add(potionButton, gridPane.getColumnCount(), 0);
-                gridPane.add(potionNameLabel, gridPane.getColumnCount(), 1);
-                gridPane.add(potionPriceLabel, gridPane.getColumnCount(), 2);
+                // Add the Button, the name Label, and the price Label to the GridPane
+                gridPane.add(potionButton, 0, rowIndex);
+                gridPane.add(potionNameLabel, 1, rowIndex);
+                gridPane.add(potionPriceLabel, 2, rowIndex);
+
+                rowIndex++;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        });
-        potionStage.setX(0);
-        potionStage.setY(0);
-        // Set the scene of the stage
-        potionStage.setScene(new Scene(gridPane));
+        }
+
+        // If there are more potions than can fit in the window, add the GridPane to a ScrollPane
+        if (rowIndex * 30 > potionStage.getHeight()) { // assuming each row is 30 pixels tall
+            ScrollPane scrollPane = new ScrollPane(gridPane);
+            scrollPane.setFitToWidth(true);
+            potionStage.setScene(new Scene(scrollPane));
+        } else {
+            potionStage.setScene(new Scene(gridPane));
+        }
 
         // Show the stage
         potionStage.show();
     }
 
 
-    private void handlePotionPurchase(Player player, ItemPotion potion) {
+
+    private void handlePotionPurchase(Player player, ItemGeneral potion) {
         // Check if the player has enough money to buy the potion
         if (player.getMoney() < potion.getValueMoney()) {
             System.out.println("Not enough money to buy the potion.");
             return;
         }
         boolean potionInInventory = player.getInventory().getItemPotionList().contains(potion);
-        boolean enoughSpace = player.getInventory().getItemPotionList().size() < getInventory().getQuantity();
+        boolean enoughSpace = player.getInventory().getItemPotionList().size() <= getPlayer().getInventory().getQuantity();
         // Deduct the price of the potion from the player's money
         if (!potionInInventory && enoughSpace) {
             player.setMoney(player.getMoney() - potion.getValueMoney());
@@ -119,4 +129,11 @@ public class PotionSeller extends Entity {
         return stackPane;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 }

@@ -1,6 +1,6 @@
 package inventory;
 
-import item.ItemPotion;
+import item.ItemGeneral;
 import item.QuestItem;
 import item.UsableItem;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class Inventory {
     private List<QuestItem> questItemList;
     private List<UsableItem> usableItemList;
-    private List<ItemPotion> itemPotionList;
+    private List<ItemGeneral> itemGeneralList;
     private int quantity;
 
     public Inventory(int quantity) throws FileNotFoundException {
@@ -37,12 +37,12 @@ public class Inventory {
         this.usableItemList = usableItemList;
     }
 
-    public List<ItemPotion> getItemPotionList() {
-        return itemPotionList;
+    public List<ItemGeneral> getItemPotionList() {
+        return itemGeneralList;
     }
 
-    public void setItemPotionList(List<ItemPotion> itemPotionList) {
-        this.itemPotionList = itemPotionList;
+    public void setItemPotionList(List<ItemGeneral> itemGeneralList) {
+        this.itemGeneralList = itemGeneralList;
     }
 
     public void addQuestItem(QuestItem questItem, int quantity) {
@@ -53,8 +53,8 @@ public class Inventory {
         usableItemList.add(usableItem);
     }
 
-    public void addItemPotion(ItemPotion itemPotion, int quantity) {
-        itemPotionList.add(itemPotion);
+    public void addItemPotion(ItemGeneral itemGeneral, int quantity) {
+        itemGeneralList.add(itemGeneral);
     }
 
     public void removeConsumableItem(QuestItem questItem) {
@@ -65,14 +65,14 @@ public class Inventory {
         usableItemList.remove(usableItem);
     }
 
-    public void removeItemPotion(ItemPotion itemPotion) {
-        itemPotionList.remove(itemPotion);
+    public void removeItemPotion(ItemGeneral itemGeneral) {
+        itemGeneralList.remove(itemGeneral);
     }
 
     public void clear() {
         questItemList.clear();
         usableItemList.clear();
-        itemPotionList.clear();
+        itemGeneralList.clear();
     }
 
     public int getConsumableItemCount() {
@@ -84,7 +84,7 @@ public class Inventory {
     }
 
     public int getItemPotionCount() {
-        return itemPotionList.size();
+        return itemGeneralList.size();
     }
 
     public QuestItem getConsumableItem(int index) {
@@ -95,8 +95,8 @@ public class Inventory {
         return usableItemList.get(index);
     }
 
-    public ItemPotion getItemPotion(int index) {
-        return itemPotionList.get(index);
+    public ItemGeneral getItemPotion(int index) {
+        return itemGeneralList.get(index);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class Inventory {
         return "Inventory{" +
                 "questItemList=" + questItemList +
                 ", usableItemList=" + usableItemList +
-                ", itemPotionList=" + itemPotionList +
+                ", itemGeneralList=" + itemGeneralList +
                 '}';
     }
 
