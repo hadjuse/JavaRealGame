@@ -12,6 +12,7 @@ import pnj.PnjQuest;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -47,8 +48,8 @@ public class ItemGeneral extends ItemEntity {
     private TileMap map;
     private PnjQuest pnjQuest;
     private Monster monster;
-
-    public ItemGeneral(String name, TileMap map, Entity entity) throws FileNotFoundException {
+    private List<Entity> entities;
+    public ItemGeneral(String name, TileMap map, Entity entity, List<Entity> entities) throws FileNotFoundException {
         if (entity instanceof Player) {
             setPlayer((Player) entity);
         } else if (entity instanceof PnjQuest pnjQuest) {
@@ -56,6 +57,7 @@ public class ItemGeneral extends ItemEntity {
         } else if (entity instanceof Monster monstre) {
             setMonster(monstre);
         }
+        setEntities(entities);
         setMap(map);
         setName(name);
         setItemEnum(ItemGeneralEnum.valueOf(getName()));
@@ -281,5 +283,13 @@ public class ItemGeneral extends ItemEntity {
 
     public void setMonster(Monster monster) {
         this.monster = monster;
+    }
+
+    public List<Entity> getEntities() {
+        return entities;
+    }
+
+    public void setEntities(List<Entity> entities) {
+        this.entities = entities;
     }
 }

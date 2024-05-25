@@ -228,11 +228,8 @@ public class Monster extends Entity implements ActionEntityBattle {
         if (entity instanceof Monster monster) {
             String event = monster.getMonsterEnum().getEvent();
             switch (event) {
-                case "event1", "event2":
+                case "event1", "event2", "event3":
                     attack();
-                    break;
-                case "event3":
-                    // Code for event 3
                     break;
                 case "event4":
                     // Code for event 4

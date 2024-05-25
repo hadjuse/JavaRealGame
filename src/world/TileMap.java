@@ -272,9 +272,9 @@ public class TileMap extends GridPane {
         genMap(getMap());
         showMap(getMap(), this);
 
-        ItemEntity potionHeal = new ItemGeneral("POTION_HEAL", this, getPlayer());
-        ItemEntity potionSpeed = new ItemGeneral("POTION_SPEED", this, getPlayer());
-        ItemEntity potionStrength = new ItemGeneral("POTION_STRENGTH", this, getPlayer());
+        ItemEntity potionHeal = new ItemGeneral("POTION_HEAL", this, getPlayer(), entities);
+        ItemEntity potionSpeed = new ItemGeneral("POTION_SPEED", this, getPlayer(), entities);
+        ItemEntity potionStrength = new ItemGeneral("POTION_STRENGTH", this, getPlayer(), entities);
         //QuestItem newQuestItem = new QuestItem("GG", this);
         itemEntities.add(potionHeal);
         itemEntities.add(potionSpeed);
@@ -316,10 +316,9 @@ public class TileMap extends GridPane {
         entities.add(monster3);
 
         // Add item to monster list
-        ItemGeneral potion = new ItemGeneral("KILL", this, getPlayer());
+        ItemGeneral potion = new ItemGeneral("KILL", this, getPlayer(), entities);
         itemEntities.add(potion);
         monster1.getInventory().addItemPotion(potion, 1);
-        System.out.println(monster1.getInventory().getItemPotion(0));
         moveEntity(getPlayer(), 14, 1);
         ButtonBackRoom(stage);
     }
@@ -335,8 +334,8 @@ public class TileMap extends GridPane {
         genMap(getMap());
         showMap(getMap(), this);
 
-        ItemGeneral potion1 = new ItemGeneral("TELEPORTATION", this, getPlayer());
-        ItemGeneral potion2 = new ItemGeneral("POTION_HEAL", this, getPlayer());
+        ItemGeneral potion1 = new ItemGeneral("TELEPORTATION", this, getPlayer(), entities);
+        ItemGeneral potion2 = new ItemGeneral("POTION_HEAL", this, getPlayer(), entities);
         itemEntities.add(potion1);
         itemEntities.add(potion2);
         placeItemEntity(potion1, 1, 1);
@@ -360,7 +359,7 @@ public class TileMap extends GridPane {
         showMap(getMap(), this);
 
 
-        setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer()));
+        setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer(), entities));
         placeEntity(getPotionSeller(), 7, 1);
         moveEntity(getPlayer(), 14, 7);
         //getPlayer().getInventory().addItemPotion(new ItemGeneral("KILL", this, getPlayer()), 1);
