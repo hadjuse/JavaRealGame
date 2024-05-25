@@ -35,6 +35,7 @@ public abstract class Entity {
     private boolean collidable;
     private Alert dialog;
     private boolean open;
+
     public Entity(String name, double width, double height, TileMap map) throws FileNotFoundException {
         setMoney(0);
         setWidth(width);
@@ -279,7 +280,7 @@ public abstract class Entity {
         this.collidable = collidable;
     }
 
-    public void displayDialog(String dialog){
+    public void displayDialog(String dialog) {
         setDialog(new Alert(Alert.AlertType.INFORMATION));
         getDialog().setHeaderText(String.format("%s dialog", getName()));
         getDialog().setContentText(dialog);

@@ -36,6 +36,7 @@ public class Player extends Entity implements ActionEntityBattle {
     private boolean oneShot;
     private Stage stage;
     private TileMap map;
+
     public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities, Stage stage) throws FileNotFoundException {
         super(name, 30, 30, tileMap);
         spriteData = new SpriteData();
@@ -65,7 +66,7 @@ public class Player extends Entity implements ActionEntityBattle {
         getHitBox().setFocusTraversable(true);
         //getHitBox().requestFocus();
         eventInteractionItem(tileMap, itemEntities);
-        getInventory().addItemPotion(new ItemGeneral("INVINCIBLE",tileMap, this),1);
+        getInventory().addItemPotion(new ItemGeneral("INVINCIBLE", tileMap, this), 1);
         getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this), 1);
         getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this), 1);
     }
@@ -157,10 +158,10 @@ public class Player extends Entity implements ActionEntityBattle {
                 case Q -> spriteData.velocityX = -3;
                 case D -> spriteData.velocityX = 3;
                 case S -> spriteData.velocityY = 3;
-                case P ->{
+                case P -> {
                     showInventoryWindow(entities);
-                    spriteData.velocityX=0;
-                    spriteData.velocityY=0;
+                    spriteData.velocityX = 0;
+                    spriteData.velocityY = 0;
                 }
             }
         });

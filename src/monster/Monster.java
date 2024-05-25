@@ -6,7 +6,6 @@ import item.ItemGeneral;
 import javafx.animation.Timeline;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -28,6 +27,7 @@ public class Monster extends Entity implements ActionEntityBattle {
     private Player player;
     private Stage stage;
     private TileMap map;
+
     public Monster(MonsterEnum monsterEnum, Player player, TileMap map, Stage stage) throws FileNotFoundException {
         super(monsterEnum.name(), monsterEnum.getWidthFactor() * 25, monsterEnum.getHeightFactor() * 25, map);
         setLife(monsterEnum.getBaseLife());
@@ -102,11 +102,11 @@ public class Monster extends Entity implements ActionEntityBattle {
                             "Indice: Il me faut 1 homme et 1 femme:\n");
                     do {
                         System.out.println("Combien Fait 1+1:\n" +
-                        "Indice: Il me faut 1 homme et 1 femme:\n");
+                                "Indice: Il me faut 1 homme et 1 femme:\n");
                         solution = scanner.nextInt();
-                        System.out.println("%s vie restant: %f".formatted(getPlayer().getName(), getPlayer().getLife()));
+                        System.out.printf("%s vie restant: %f%n", getPlayer().getName(), getPlayer().getLife());
                         getPlayer().loseLife(getDamage());
-                    }while (solution != 3);
+                    } while (solution != 3);
                     loseLife(getPlayer().getDamage());
                     System.out.println("Bonne réponse !\n" +
                             "%s vie restant: %f\n".formatted(getName(), getLife()));
@@ -135,6 +135,7 @@ public class Monster extends Entity implements ActionEntityBattle {
         }
 
     }
+
     @Override
     public void actionAfterDeath(TileMap map, Entity entity) {
         if (entity instanceof Monster monster) {
@@ -183,6 +184,7 @@ public class Monster extends Entity implements ActionEntityBattle {
         }
 
     }
+
     private void normalAttackFromPlayer(Entity entity) {
         System.out.printf("%s attack %s%n", getPlayer().getName(), entity.getName());
         System.out.printf("Life of %s = %f%n", entity.getName(), entity.getLife());
@@ -251,7 +253,6 @@ public class Monster extends Entity implements ActionEntityBattle {
             entity.giveItem(this, entity.getInventory().getItemPotion(0));
         }
     }
-
 
 
     public MonsterEnum getMonsterEnum() {
