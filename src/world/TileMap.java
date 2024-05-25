@@ -30,6 +30,9 @@ public class TileMap extends GridPane {
     private String[] Levels = new String[]{
             String.format("%s/src/world/Level/level1.csv", System.getProperty("user.dir")),
             String.format("%s/src/world/Level/level2.csv", System.getProperty("user.dir")),
+            String.format("%s/src/world/Level/level3.csv", System.getProperty("user.dir")),
+            String.format("%s/src/world/Level/level4.csv", System.getProperty("user.dir")),
+            String.format("%s/src/world/Level/level5.csv", System.getProperty("user.dir")),
             String.format("%s/src/world/Level/backroom.csv", System.getProperty("user.dir")),
     };
     private List<List<String>> map;
@@ -47,7 +50,7 @@ public class TileMap extends GridPane {
     public TileMap(Stage stage) throws FileNotFoundException {
         //level1(Levels[0], stage);
         setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities(), stage));
-        backRoom(getLevels()[2], stage);
+        backRoom(getLevels()[5], stage);
     }
 
     public String[] getLevels() {
@@ -250,6 +253,34 @@ public class TileMap extends GridPane {
         this.questItems = questItems;
     }
 
+    public void level1(String string, Stage stage) throws FileNotFoundException {
+        this.setOnKeyPressed(null);
+        for (ItemEntity item : itemGenerals) {
+            removeItemEntity(item);
+        }
+        getChildren().clear();
+        setPathToCsv(string);
+        setMap(new ArrayList<>());
+        this.setVgap(-1);
+        this.setHgap(-1);
+        genMap(getMap());
+        showMap(getMap(), this);
+
+        ItemEntity potionHeal = new ItemGeneral("POTION_HEAL", this, getPlayer());
+        ItemEntity potionSpeed = new ItemGeneral("POTION_SPEED", this, getPlayer());
+        ItemEntity potionStrength = new ItemGeneral("POTION_STRENGTH", this, getPlayer());
+        //QuestItem newQuestItem = new QuestItem("GG", this);
+        itemEntities.add(potionHeal);
+        itemEntities.add(potionSpeed);
+        itemEntities.add(potionStrength);
+
+        //itemEntities.add(newQuestItem);
+
+        //player = new Player("Hadjuse", this, itemEntities, entities);
+
+        moveEntity(getPlayer(), 14, 1);
+        ButtonBackRoom(stage);
+    }
     public void Level2(String pathToCsv, Stage stage) throws FileNotFoundException {
         this.setOnKeyPressed(null);
         for (ItemEntity item : itemGenerals) {
@@ -284,32 +315,24 @@ public class TileMap extends GridPane {
         ButtonBackRoom(stage);
     }
 
-    public void level1(String string, Stage stage) throws FileNotFoundException {
+    public void level3(String pathToCsv, Stage stage) throws FileNotFoundException {
         this.setOnKeyPressed(null);
         for (ItemEntity item : itemGenerals) {
             removeItemEntity(item);
         }
-        getChildren().clear();
-        setPathToCsv(string);
+        getChildren().clear(); // Clear the existing map
+        setPathToCsv(pathToCsv);
         setMap(new ArrayList<>());
-        this.setVgap(-1);
-        this.setHgap(-1);
         genMap(getMap());
         showMap(getMap(), this);
 
-        ItemEntity potionHeal = new ItemGeneral("POTION_HEAL", this, getPlayer());
-        ItemEntity potionSpeed = new ItemGeneral("POTION_SPEED", this, getPlayer());
-        ItemEntity potionStrength = new ItemGeneral("POTION_STRENGTH", this, getPlayer());
-        //QuestItem newQuestItem = new QuestItem("GG", this);
-        itemEntities.add(potionHeal);
-        itemEntities.add(potionSpeed);
-        itemEntities.add(potionStrength);
-
-        //itemEntities.add(newQuestItem);
-
-        //player = new Player("Hadjuse", this, itemEntities, entities);
-
-        moveEntity(getPlayer(), 14, 1);
+        ItemGeneral potion1  = new ItemGeneral("TELEPORTATION", this, getPlayer());
+        ItemGeneral potion2  = new ItemGeneral("POTION_HEAL", this, getPlayer());
+        itemEntities.add(potion1);
+        itemEntities.add(potion2);
+        placeItemEntity(potion1,1,1);
+        placeItemEntity(potion2,1,2);
+        moveEntity(getPlayer(), 14,1);
         ButtonBackRoom(stage);
     }
 
@@ -335,6 +358,24 @@ public class TileMap extends GridPane {
 
         ButtonLevel1(stage);
         ButtonLevel2(stage);
+        ButtonLevel3(stage);
+    }
+
+    private void ButtonLevel3(Stage stage) {
+        Button changeMapButton = new Button("3");
+        changeMapButton.setOnAction(event -> {
+            try {
+                //player.getInventory().clear();
+                itemEntities.clear();
+                entities.clear();
+                this.level3(Levels[2], stage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+        GridPane.setColumnIndex(changeMapButton, 10);
+        GridPane.setRowIndex(changeMapButton, 0);
+        this.getChildren().add(changeMapButton);
     }
 
     private void ButtonLevel2(Stage stage) {
@@ -379,7 +420,7 @@ public class TileMap extends GridPane {
                 //player.getInventory().clear();
                 itemEntities.clear();
                 entities.clear();
-                this.backRoom(Levels[2], stage);
+                this.backRoom(Levels[5], stage);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

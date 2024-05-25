@@ -6,6 +6,7 @@ import item.ItemGeneral;
 import javafx.animation.Timeline;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -15,6 +16,7 @@ import player.Player;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 /*
 Si je veux modifier des interactions avec les monstres je vais les switchs correspondant
@@ -25,9 +27,11 @@ public class Monster extends Entity implements ActionEntityBattle {
     private MonsterEnum monsterEnum;
     private Player player;
     private Stage stage;
+    private TileMap map;
     public Monster(MonsterEnum monsterEnum, Player player, TileMap map, Stage stage) throws FileNotFoundException {
         super(monsterEnum.name(), monsterEnum.getWidthFactor() * 25, monsterEnum.getHeightFactor() * 25, map);
         setLife(monsterEnum.getBaseLife());
+        setMap(map);
         setMoney(50);
         setStage(stage);
         setStrength(30);
@@ -42,14 +46,19 @@ public class Monster extends Entity implements ActionEntityBattle {
                 receiveAttackFromEntity(this, map);
             }
         });
+
         getBoxEntity().setOnMouseEntered(mouseEvent -> {
             if (getBoxEntity().contains(mouseEvent.getX(), mouseEvent.getY())) {
                 Image cursor = new Image("images/sword/weapon_golden_sword.png");
                 ImageView cursorView = new ImageView(cursor);
                 cursorView.setRotate(-45);
                 map.setCursor(new ImageCursor(cursorView.snapshot(null, null)));
+
+                // Display the name
+
             }
         });
+
 
         getBoxEntity().setOnMouseExited(event -> {
             map.setCursor(Cursor.DEFAULT);
@@ -83,10 +92,25 @@ public class Monster extends Entity implements ActionEntityBattle {
                     //actionAfterDeath(map, getPlayer());
                     break;
                 case "event2":
-                    //normalAttackFromPlayer(entity);
-                    setLife(0);
+                    normalAttackFromPlayer(entity);
+                    //setLife(0);
                     break;
                 case "event3":
+                    Scanner scanner = new Scanner(System.in);
+                    int solution;
+                    displayDialog("Combien Fait 1+1:\n" +
+                            "Indice: Il me faut 1 homme et 1 femme:\n");
+                    do {
+                        System.out.println("Combien Fait 1+1:\n" +
+                        "Indice: Il me faut 1 homme et 1 femme:\n");
+                        solution = scanner.nextInt();
+                        System.out.println("%s vie restant: %f".formatted(getPlayer().getName(), getPlayer().getLife()));
+                        getPlayer().loseLife(getDamage());
+                    }while (solution != 3);
+                    loseLife(getPlayer().getDamage());
+                    System.out.println("Bonne réponse !\n" +
+                            "%s vie restant: %f\n".formatted(getName(), getLife()));
+                    //scanner.close();
                     break;
                 case "event4":
                     // Code for event 4
@@ -128,11 +152,11 @@ public class Monster extends Entity implements ActionEntityBattle {
                         System.out.printf("%s%n", getPlayer().getInventory());
                         displayDialog("Félicitation tu as tué le monstre !");
                         System.out.printf("%s receive item %s\n", getPlayer().getName(), itemGeneral.getName());
-                        getStage().close();
+                        //getStage().close();
                     }
                     break;
                 case "event2":
-                    //actionAfterDeath1(map, entity);
+                    actionAfterDeath1(map, entity);
                     break;
                 case "event3":
                     // Code for event 3
@@ -252,5 +276,13 @@ public class Monster extends Entity implements ActionEntityBattle {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public TileMap getMap() {
+        return map;
+    }
+
+    public void setMap(TileMap map) {
+        this.map = map;
     }
 }

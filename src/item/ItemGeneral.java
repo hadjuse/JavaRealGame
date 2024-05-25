@@ -19,10 +19,10 @@ import java.util.Scanner;
 /*
 Si je veux ajouter un nouvel item : NE PAS OUBLIER LES BREAAAAKS !
 1-Je vais dans itemGeneralEnum puis je rajoute une nouvelle constante
-2-Je reviens dans cette classe je rajoute aux switchs corrspondant les différentes informations
-3-Je vais dans les classes appropiés à la question pour modifier les caractéristiques
+2-Je reviens dans cette classe, je rajoute aux switchs corrspondant les différentes informations
+3-Je vais dans les classes appropriées à la question pour modifier les caractéristiques
  */
-// Si je veux ajouter un nouvel Item je modifie ici et je rajoute les actions dans la classe player.
+// Si je veux ajouter un nouvel Item, je modifie ici et je rajoute les actions dans la classe player.
 public class ItemGeneral extends ItemEntity {
     private final String directory = String.format("%s/src/images/potion/", System.getProperty("user.dir"));
     private final String[] SpritePath = new String[]{
@@ -156,10 +156,8 @@ public class ItemGeneral extends ItemEntity {
             System.out.print("Enter the y-coordinate of the desired location: ");
             y = scanner.nextInt();
             getMap().moveEntity(getPlayer(), x, y);
-        }while (x<1 || x>15 || y<1 || y>15);
+        }while (x<1 || x>14 || y<1 || y>14);
         System.out.println("The player is teleport to the desired location");
-        scanner.close();
-        return;
     }
 
     @Override
