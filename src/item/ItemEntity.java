@@ -11,6 +11,7 @@ public abstract class ItemEntity {
     private int quantity;
     private Rectangle hitBox;
     private boolean collidable;
+
     public ItemEntity() {
         setHitBox(new Rectangle(50, 50));
     }

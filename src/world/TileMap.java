@@ -16,16 +16,12 @@ import pnj.PotionSeller;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Stream;
-import java.util.stream.Collectors;
 
 public class TileMap extends GridPane {
     public Random randomX = new Random();
@@ -53,6 +49,7 @@ public class TileMap extends GridPane {
     private List<Monster> monsters = new ArrayList<Monster>();
     private List<QuestItem> questItems = new ArrayList<QuestItem>();
     private MonsterEnum monsterEnum;
+
     public TileMap(Stage stage) throws FileNotFoundException {
         //level1(Levels[0], stage);
         setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities(), stage));
@@ -106,26 +103,11 @@ public class TileMap extends GridPane {
     public void setPathToCsv(String pathToCsv) {
         this.pathToCsv = pathToCsv;
     }
-    /*
+
     public void genMap(List<List<String>> map) {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(getPathToCsv()));
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(getPathToCsv())))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                map.add(Arrays.asList(values));
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }*/
-    public void genMap(List<List<String>> map){
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(getPathToCsv()))))
-        {
-            String line;
-            while ((line = br.readLine())!= null) {
                 String[] values = line.split(",");
                 map.add(Arrays.asList(values));
             }
@@ -333,6 +315,7 @@ public class TileMap extends GridPane {
         moveEntity(getPlayer(), 14, 1);
         ButtonBackRoom(stage);
     }
+
     public void Level2(String pathToCsv, Stage stage) throws FileNotFoundException {
         this.setOnKeyPressed(null);
         for (ItemEntity item : itemGenerals) {
@@ -378,13 +361,13 @@ public class TileMap extends GridPane {
         genMap(getMap());
         showMap(getMap(), this);
 
-        ItemGeneral potion1  = new ItemGeneral("TELEPORTATION", this, getPlayer());
-        ItemGeneral potion2  = new ItemGeneral("POTION_HEAL", this, getPlayer());
+        ItemGeneral potion1 = new ItemGeneral("TELEPORTATION", this, getPlayer());
+        ItemGeneral potion2 = new ItemGeneral("POTION_HEAL", this, getPlayer());
         itemEntities.add(potion1);
         itemEntities.add(potion2);
-        placeItemEntity(potion1,1,1);
-        placeItemEntity(potion2,1,2);
-        moveEntity(getPlayer(), 14,1);
+        placeItemEntity(potion1, 1, 1);
+        placeItemEntity(potion2, 1, 2);
+        moveEntity(getPlayer(), 14, 1);
         ButtonBackRoom(stage);
     }
 
@@ -451,7 +434,7 @@ public class TileMap extends GridPane {
         Button changeMapButton = new Button("1");
         changeMapButton.setOnAction(event -> {
             try {
-                if (getPlayer().isOpen()){
+                if (getPlayer().isOpen()) {
                     itemEntities.clear();
                     entities.clear();
                     this.level1(Levels[0], stage);

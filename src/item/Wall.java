@@ -11,14 +11,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import world.TileMap;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class Wall extends Entity {
     private final String[] idlePath = {
-            String.format("/images/tile/wallAnim/wall_fountain_mid_blue_anim_f0.png"),
-            String.format("/images/tile/wallAnim/wall_fountain_mid_blue_anim_f1.png"),
-            String.format("/images/tile/wallAnim/wall_fountain_mid_blue_anim_f2.png"),
+            "/images/tile/wallAnim/wall_fountain_mid_blue_anim_f0.png",
+            "/images/tile/wallAnim/wall_fountain_mid_blue_anim_f1.png",
+            "/images/tile/wallAnim/wall_fountain_mid_blue_anim_f2.png",
     };
     private Rectangle hitBox;
     private int frameIndex;

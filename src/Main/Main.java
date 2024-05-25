@@ -1,12 +1,10 @@
 package Main;
 
-import item.ItemEntity;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import world.TileMap;
 
-import java.util.List;
 // A la fin du projet ne pas oublier de changer les chemins pour le jar
 public class Main extends Application {
     public static void main(String[] args) {

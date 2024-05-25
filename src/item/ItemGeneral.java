@@ -11,7 +11,6 @@ import player.Player;
 import pnj.PnjQuest;
 import world.TileMap;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
@@ -48,6 +47,7 @@ public class ItemGeneral extends ItemEntity {
     private TileMap map;
     private PnjQuest pnjQuest;
     private Monster monster;
+
     public ItemGeneral(String name, TileMap map, Entity entity) throws FileNotFoundException {
         if (entity instanceof Player) {
             setPlayer((Player) entity);
@@ -130,7 +130,7 @@ public class ItemGeneral extends ItemEntity {
                 entity.setSpeed(getSpeed());
                 break;
             case KILL:
-                System.out.printf("I can kill all entities");
+                System.out.print("I can kill all entities");
                 getPlayer().setOneShot(true);
                 break;
             case INVINCIBLE:
@@ -151,14 +151,14 @@ public class ItemGeneral extends ItemEntity {
     private void teleportation() {
         System.out.println("I can teleport");
         Scanner scanner = new Scanner(System.in);
-        int x,y;
+        int x, y;
         do {
             System.out.print("Enter the x-coordinate of the desired location: ");
             x = scanner.nextInt();
             System.out.print("Enter the y-coordinate of the desired location: ");
             y = scanner.nextInt();
             getMap().moveEntity(getPlayer(), x, y);
-        }while (x<1 || x>14 || y<1 || y>14);
+        } while (x < 1 || x > 14 || y < 1 || y > 14);
         System.out.println("The player is teleport to the desired location");
     }
 
