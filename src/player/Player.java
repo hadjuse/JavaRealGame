@@ -36,12 +36,13 @@ public class Player extends Entity implements ActionEntityBattle {
     private boolean oneShot;
     private Stage stage;
     private TileMap map;
-
+    private List<Entity> entities;
     public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities, Stage stage) throws FileNotFoundException {
         super(name, 30, 30, tileMap);
         spriteData = new SpriteData();
         setStage(stage);
         setMap(tileMap);
+        setEntities(entities);
         initInfoPlayer(name);
         movementPlayer = new AnimationTimer() {
             @Override
@@ -66,9 +67,9 @@ public class Player extends Entity implements ActionEntityBattle {
         getHitBox().setFocusTraversable(true);
         //getHitBox().requestFocus();
         eventInteractionItem(tileMap, itemEntities);
-        getInventory().addItemPotion(new ItemGeneral("INVINCIBLE", tileMap, this), 1);
-        getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this), 1);
-        getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this), 1);
+        getInventory().addItemPotion(new ItemGeneral("INVINCIBLE", tileMap, this, getEntities()), 1);
+        getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this, getEntities()), 1);
+        getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this, getEntities()), 1);
     }
 
     private void initInfoPlayer(String name) throws FileNotFoundException {
@@ -287,22 +288,18 @@ public class Player extends Entity implements ActionEntityBattle {
 
         int rowIndex = 1;
         for (ItemGeneral potion : getInventory().getItemPotionList()) {
-            try {
-                // Create an ImageView for the inventory item
-                ImageView potionImageView = new ImageView(new Image(new FileInputStream(potion.getSpritePath()[potion.getItemEnum().ordinal()])));
+            // Create an ImageView for the inventory item
+            ImageView potionImageView = new ImageView(new Image(getClass().getResourceAsStream(potion.getSpritePath()[potion.getItemEnum().ordinal()])));
 
-                // Create a Label for the name of the inventory item
-                Label potionNameLabel = new Label(potion.getName());
+            // Create a Label for the name of the inventory item
+            Label potionNameLabel = new Label(potion.getName());
 
-                // Create a Button for the inventory item
-                Button potionButton = UsePotionButton(potion, potionImageView, entities, inventoryStage);
-                // Add the Button, the name Label, and the price Label to the grid pane
-                inventoryGridPane.add(potionButton, 0, rowIndex);
-                inventoryGridPane.add(potionNameLabel, 1, rowIndex);
-                rowIndex++;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            // Create a Button for the inventory item
+            Button potionButton = UsePotionButton(potion, potionImageView, entities, inventoryStage);
+            // Add the Button, the name Label, and the price Label to the grid pane
+            inventoryGridPane.add(potionButton, 0, rowIndex);
+            inventoryGridPane.add(potionNameLabel, 1, rowIndex);
+            rowIndex++;
         }
 
         // Wrap the grid pane in a scroll pane
@@ -360,6 +357,14 @@ public class Player extends Entity implements ActionEntityBattle {
 
     public void setMap(TileMap map) {
         this.map = map;
+    }
+
+    public List<Entity> getEntities() {
+        return entities;
+    }
+
+    public void setEntities(List<Entity> entities) {
+        this.entities = entities;
     }
 
     public static class SpriteData {

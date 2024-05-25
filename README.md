@@ -9,12 +9,15 @@ dans différent monde qu'on peut accéder en cliquant sur des
 Des PNJ et attaquer des monstres
 ## Installation, Configuration et Environnement
 Plusieurs solutions d'installation.
-Le fichier jar est compilé sous **open-jdk-20** file 64.0 <br>
+Si le fichier jar ne veut pas s'exécuter.
+
 1) Télécharger le zip et extraire le dossier
 2) Créer un dossier et écrire la commande :
 ```bash
 git clone https://github.com/hadjuse/JavaRealGame.git
 ```
+Le fichier jar est compilé sous **open-jdk-20** file 64.0 <br>
+Ceci le lien javafx-22-sdk que j'utilise : https://jdk.java.net/javafx22/
 Il existe déjà un exécutable JavaRealGame.jar contenu dans le repo
 - Se placer dans le dossier contenant le fichier jar
   (Donc normalement le dossier actuel)
@@ -62,5 +65,7 @@ Il y en a 2 :
 - Attaque : Aucun ;
 - Inventaire : Accessible en cliquant sur le PNJ (marchant Actuellement) ;
 
+### Items
+Différents items présents sur le jeu.
 Si le jeu ne s'exécute pas, c'est forcément un problème de chemin
 Relatif.
