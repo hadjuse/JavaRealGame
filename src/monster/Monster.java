@@ -4,18 +4,23 @@ import entity.ActionEntityBattle;
 import entity.Entity;
 import item.ItemGeneral;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import player.Player;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
-import java.util.Scanner;
 
 /*
 Si je veux modifier des interactions avec les monstres je vais les switchs correspondant
@@ -96,21 +101,7 @@ public class Monster extends Entity implements ActionEntityBattle {
                     //setLife(0);
                     break;
                 case "event3":
-                    Scanner scanner = new Scanner(System.in);
-                    int solution;
-                    displayDialog("Combien Fait 1+1:\n" +
-                            "Indice: Il me faut 1 homme et 1 femme:\n");
-                    do {
-                        System.out.println("Combien Fait 1+1:\n" +
-                                "Indice: Il me faut 1 homme et 1 femme:\n");
-                        solution = scanner.nextInt();
-                        System.out.printf("%s vie restant: %f%n", getPlayer().getName(), getPlayer().getLife());
-                        getPlayer().loseLife(getDamage());
-                    } while (solution != 3);
-                    loseLife(getPlayer().getDamage());
-                    System.out.println("Bonne réponse !\n" +
-                            "%s vie restant: %f\n".formatted(getName(), getLife()));
-                    //scanner.close();
+                    questionAttack();
                     break;
                 case "event4":
                     // Code for event 4
@@ -136,6 +127,44 @@ public class Monster extends Entity implements ActionEntityBattle {
 
     }
 
+    public void questionAttack() {
+        Stage stage = new Stage();
+
+        stage.setTitle("Dialog with this monster: " + getName());
+        TextField textField = new TextField("initialText");
+        textField.setPrefColumnCount(7);
+        TilePane tilePane = new TilePane();
+        Label question = new Label("Combien font 3+3");
+        Label l = new Label("no text");
+        Scene scene = new Scene(tilePane, 200, 200);
+        EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                l.setText(textField.getText());
+                if (l.getText().equals("6")) {
+                    displayDialog("Bonne réponse!");
+                    //getPlayer().setOneShot(true);
+                    loseLife(getPlayer().getDamage());
+                    System.out.printf("%s vie restant: %f%n", getName(), getLife());
+
+                } else {
+                    displayDialog("Mauvaise réponse Tu perds de la vie!");
+                    loseLife(getPlayer().getDamage());
+                    System.out.printf("%s vie restant: %f%n", getPlayer().getName(), getPlayer().getLife());
+                }
+            }
+        };
+        textField.setOnAction(event);
+        tilePane.getChildren().add(question);
+        tilePane.getChildren().add(textField);
+        tilePane.getChildren().add(l);
+        stage.setScene(scene);
+        stage.show();
+        if (getLife() <= 0) {
+            stage.close();
+            getMap().removeEntity(this);
+        }
+    }
+
     @Override
     public void actionAfterDeath(TileMap map, Entity entity) {
         if (entity instanceof Monster monster) {
@@ -149,10 +178,11 @@ public class Monster extends Entity implements ActionEntityBattle {
                         System.out.printf("%s earn %f%n", getPlayer().getName(), getMoney());
                         player.addMoney(getMoney(), getPlayer());
                         map.removeEntity(entity);
-                        giveItem(getPlayer(), itemGeneral);
+                        map.moveItemEntity(entity.getInventory().getItemPotion(0), 14, 10);
+                        //giveItem(getPlayer(), itemGeneral);
                         System.out.printf("%s%n", getPlayer().getInventory());
                         displayDialog("Félicitation tu as tué le monstre !");
-                        System.out.printf("%s receive item %s\n", getPlayer().getName(), itemGeneral.getName());
+                        //System.out.printf("%s receive item %s\n", getPlayer().getName(), itemGeneral.getName());
                         //getStage().close();
                     }
                     break;
@@ -160,7 +190,10 @@ public class Monster extends Entity implements ActionEntityBattle {
                     actionAfterDeath1(map, entity);
                     break;
                 case "event3":
-                    // Code for event 3
+                    if (entity.getLife() <= 0) {
+                        System.out.println("Dead");
+                        map.removeEntity(this);
+                    }
                     break;
                 case "event4":
                     // Code for event 4
@@ -195,15 +228,8 @@ public class Monster extends Entity implements ActionEntityBattle {
         if (entity instanceof Monster monster) {
             String event = monster.getMonsterEnum().getEvent();
             switch (event) {
-                case "event1":
-                    System.out.printf("%s attack %s%n", getName(), getPlayer().getName());
-                    System.out.printf("Life of %s = %f%n", getPlayer().getName(), getPlayer().getLife());
-                    getPlayer().loseLife(getDamage());
-                    getPlayer().getHitBox().setTranslateX(0);
-                    getPlayer().getHitBox().setTranslateY(0);
-                    break;
-                case "event2":
-                    // Code for event 2
+                case "event1", "event2":
+                    attack();
                     break;
                 case "event3":
                     // Code for event 3
@@ -228,6 +254,14 @@ public class Monster extends Entity implements ActionEntityBattle {
                     break;
             }
         }
+    }
+
+    private void attack() {
+        System.out.printf("%s attack %s%n", getName(), getPlayer().getName());
+        System.out.printf("Life of %s = %f%n", getPlayer().getName(), getPlayer().getLife());
+        getPlayer().loseLife(getDamage());
+        getPlayer().getHitBox().setTranslateX(0);
+        getPlayer().getHitBox().setTranslateY(0);
     }
 
 

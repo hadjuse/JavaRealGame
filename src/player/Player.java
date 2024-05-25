@@ -255,6 +255,10 @@ public class Player extends Entity implements ActionEntityBattle {
             System.out.printf("You receive Directly the %s\n", entity.getInventory().getItemPotion(0).getName());
             entity.giveItem(this, entity.getInventory().getItemPotion(0));
         }*/
+        if (this.getLife() <= 0) {
+            System.out.println("Game over");
+            getStage().close();
+        }
     }
 
     private void showInventoryWindow(List<Entity> entities) {
