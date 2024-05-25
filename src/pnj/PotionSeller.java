@@ -68,7 +68,7 @@ public class PotionSeller extends Entity {
                 // Create a Button for the potion
                 Button potionButton = new Button();
                 potionButton.setGraphic(potionImageView);
-                potionButton.setOnAction(event -> handlePotionPurchase(player, potion));
+                potionButton.setOnAction(event -> handlePotionPurchase(player, potion, potionStage));
 
                 // Add the Button, the name Label, and the price Label to the GridPane
                 gridPane.add(potionButton, 0, rowIndex);
@@ -96,10 +96,11 @@ public class PotionSeller extends Entity {
 
 
 
-    private void handlePotionPurchase(Player player, ItemGeneral potion) {
+    private void handlePotionPurchase(Player player, ItemGeneral potion, Stage stage) {
         // Check if the player has enough money to buy the potion
         if (player.getMoney() < potion.getValueMoney()) {
             System.out.println("Not enough money to buy the potion.");
+            stage.close();
             return;
         }
         boolean potionInInventory = player.getInventory().getItemPotionList().contains(potion);
@@ -116,7 +117,7 @@ public class PotionSeller extends Entity {
         } else {
             System.out.println("Cannot add Item potion not enough space");
         }
-
+        stage.close();
     }
 
     public StackPane renderSeller() {

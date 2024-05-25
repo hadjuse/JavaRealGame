@@ -35,10 +35,12 @@ public class Player extends Entity implements ActionEntityBattle {
     private double YSpawn;
     private boolean oneShot;
     private Stage stage;
+    private TileMap map;
     public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities, Stage stage) throws FileNotFoundException {
         super(name, 30, 30, tileMap);
         spriteData = new SpriteData();
         setStage(stage);
+        setMap(tileMap);
         initInfoPlayer(name);
         movementPlayer = new AnimationTimer() {
             @Override
@@ -65,6 +67,7 @@ public class Player extends Entity implements ActionEntityBattle {
         eventInteractionItem(tileMap, itemEntities);
         getInventory().addItemPotion(new ItemGeneral("INVINCIBLE",tileMap, this),1);
         getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this), 1);
+        getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this), 1);
     }
 
     private void initInfoPlayer(String name) throws FileNotFoundException {
@@ -80,6 +83,7 @@ public class Player extends Entity implements ActionEntityBattle {
         setMoney(0);
         setCollidable(true);
         setOneShot(false);
+        setMoney(50);
     }
 
     private void eventInteractionItem(TileMap tileMap, List<ItemEntity> itemEntities) {
@@ -197,7 +201,7 @@ public class Player extends Entity implements ActionEntityBattle {
                 boolean collisionX = intersection.getBoundsInLocal().getMinX() > 0 && intersection.getBoundsInLocal().getMaxX() > 0;
                 boolean collisionY = intersection.getBoundsInLocal().getMinY() > 0 && intersection.getBoundsInLocal().getMaxY() > 0;
                 if (collisionX && collisionY && getLife() > 0 && monster.isCollidable()) {
-                    monster.attackPlayer();
+                    monster.attackPlayer(monster, getMap());
                 }
             }
 
@@ -226,8 +230,6 @@ public class Player extends Entity implements ActionEntityBattle {
             entity.loseLife(this.getDamage());
             //actionAfterDeath(map, entity);
         }*/
-
-
     }
 
     @Override
@@ -288,8 +290,7 @@ public class Player extends Entity implements ActionEntityBattle {
                 Label potionNameLabel = new Label(potion.getName());
 
                 // Create a Button for the inventory item
-                Button potionButton = UsePotionButton(potion, potionImageView, entities);
-
+                Button potionButton = UsePotionButton(potion, potionImageView, entities, inventoryStage);
                 // Add the Button, the name Label, and the price Label to the grid pane
                 inventoryGridPane.add(potionButton, 0, rowIndex);
                 inventoryGridPane.add(potionNameLabel, 1, rowIndex);
@@ -314,15 +315,18 @@ public class Player extends Entity implements ActionEntityBattle {
     }
 
 
-    private Button UsePotionButton(ItemGeneral potion, ImageView potionImageView, List<Entity> entities) {
+    private Button UsePotionButton(ItemGeneral potion, ImageView potionImageView, List<Entity> entities, Stage stage) {
         Button potionButton = new Button();
         potionButton.setGraphic(potionImageView);
         potionButton.setOnAction(event -> {
             boolean potionInInventory = getInventory().getItemPotionList().contains(potion);
             if (potionInInventory) {
+                stage.close();
                 potion.applyEffectPotion(this);
                 getInventory().removeItemPotion(potion);
+
             } else {
+                stage.close();
                 System.out.println("You don't have this potion");
             }
         });
@@ -343,6 +347,14 @@ public class Player extends Entity implements ActionEntityBattle {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public TileMap getMap() {
+        return map;
+    }
+
+    public void setMap(TileMap map) {
+        this.map = map;
     }
 
     public static class SpriteData {

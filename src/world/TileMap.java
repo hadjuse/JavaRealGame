@@ -30,6 +30,9 @@ public class TileMap extends GridPane {
     private String[] Levels = new String[]{
             String.format("%s/src/world/Level/level1.csv", System.getProperty("user.dir")),
             String.format("%s/src/world/Level/level2.csv", System.getProperty("user.dir")),
+            String.format("%s/src/world/Level/level3.csv", System.getProperty("user.dir")),
+            String.format("%s/src/world/Level/level4.csv", System.getProperty("user.dir")),
+            String.format("%s/src/world/Level/level5.csv", System.getProperty("user.dir")),
             String.format("%s/src/world/Level/backroom.csv", System.getProperty("user.dir")),
     };
     private List<List<String>> map;
@@ -47,7 +50,7 @@ public class TileMap extends GridPane {
     public TileMap(Stage stage) throws FileNotFoundException {
         //level1(Levels[0], stage);
         setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities(), stage));
-        backRoom(getLevels()[2], stage);
+        backRoom(getLevels()[5], stage);
     }
 
     public String[] getLevels() {
@@ -250,40 +253,6 @@ public class TileMap extends GridPane {
         this.questItems = questItems;
     }
 
-    public void Level2(String pathToCsv, Stage stage) throws FileNotFoundException {
-        this.setOnKeyPressed(null);
-        for (ItemEntity item : itemGenerals) {
-            removeItemEntity(item);
-        }
-        getChildren().clear(); // Clear the existing map
-        setPathToCsv(pathToCsv);
-        setMap(new ArrayList<>());
-        genMap(getMap());
-        showMap(getMap(), this);
-
-
-        // Add three monsters to the map
-        Monster monster1 = new Monster(MonsterEnum.MONSTER_1, player, this);
-        Monster monster2 = new Monster(MonsterEnum.MONSTER_2, player, this);
-        Monster monster3 = new Monster(MonsterEnum.MONSTER_3, player, this);
-
-        // Set the position of the monsters
-        placeEntity(monster1, 5, 5);
-        placeEntity(monster2, 10, 10);
-        placeEntity(monster3, 10, 12);
-
-        // Add the monsters to the list of monsters
-        entities.add(monster1);
-        entities.add(monster2);
-        entities.add(monster3);
-
-        // Add item to monster list
-        monster1.getInventory().addItemPotion(new ItemGeneral("KILL", this, getPlayer()), 1);
-        System.out.println(monster1.getInventory().getItemPotion(0));
-        moveEntity(getPlayer(), 14, 1);
-        ButtonBackRoom(stage);
-    }
-
     public void level1(String string, Stage stage) throws FileNotFoundException {
         this.setOnKeyPressed(null);
         for (ItemEntity item : itemGenerals) {
@@ -312,6 +281,60 @@ public class TileMap extends GridPane {
         moveEntity(getPlayer(), 14, 1);
         ButtonBackRoom(stage);
     }
+    public void Level2(String pathToCsv, Stage stage) throws FileNotFoundException {
+        this.setOnKeyPressed(null);
+        for (ItemEntity item : itemGenerals) {
+            removeItemEntity(item);
+        }
+        getChildren().clear(); // Clear the existing map
+        setPathToCsv(pathToCsv);
+        setMap(new ArrayList<>());
+        genMap(getMap());
+        showMap(getMap(), this);
+
+
+        // Add three monsters to the map
+        Monster monster1 = new Monster(MonsterEnum.MONSTER_1, player, this, stage);
+        Monster monster2 = new Monster(MonsterEnum.MONSTER_2, player, this, stage);
+        Monster monster3 = new Monster(MonsterEnum.MONSTER_3, player, this, stage);
+
+        // Set the position of the monsters
+        placeEntity(monster1, 5, 5);
+        placeEntity(monster2, 10, 10);
+        placeEntity(monster3, 10, 12);
+
+        // Add the monsters to the list of monsters
+        entities.add(monster1);
+        entities.add(monster2);
+        entities.add(monster3);
+
+        // Add item to monster list
+        monster1.getInventory().addItemPotion(new ItemGeneral("KILL", this, getPlayer()), 1);
+        System.out.println(monster1.getInventory().getItemPotion(0));
+        moveEntity(getPlayer(), 14, 1);
+        ButtonBackRoom(stage);
+    }
+
+    public void level3(String pathToCsv, Stage stage) throws FileNotFoundException {
+        this.setOnKeyPressed(null);
+        for (ItemEntity item : itemGenerals) {
+            removeItemEntity(item);
+        }
+        getChildren().clear(); // Clear the existing map
+        setPathToCsv(pathToCsv);
+        setMap(new ArrayList<>());
+        genMap(getMap());
+        showMap(getMap(), this);
+
+        ItemGeneral potion1  = new ItemGeneral("TELEPORTATION", this, getPlayer());
+        ItemGeneral potion2  = new ItemGeneral("POTION_HEAL", this, getPlayer());
+        itemEntities.add(potion1);
+        itemEntities.add(potion2);
+        placeItemEntity(potion1,1,1);
+        placeItemEntity(potion2,1,2);
+        moveEntity(getPlayer(), 14,1);
+        ButtonBackRoom(stage);
+    }
 
     public void backRoom(String pathToCsv, Stage stage) throws FileNotFoundException {
         this.setOnKeyPressed(null);
@@ -335,6 +358,24 @@ public class TileMap extends GridPane {
 
         ButtonLevel1(stage);
         ButtonLevel2(stage);
+        ButtonLevel3(stage);
+    }
+
+    private void ButtonLevel3(Stage stage) {
+        Button changeMapButton = new Button("3");
+        changeMapButton.setOnAction(event -> {
+            try {
+                //player.getInventory().clear();
+                itemEntities.clear();
+                entities.clear();
+                this.level3(Levels[2], stage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+        GridPane.setColumnIndex(changeMapButton, 10);
+        GridPane.setRowIndex(changeMapButton, 0);
+        this.getChildren().add(changeMapButton);
     }
 
     private void ButtonLevel2(Stage stage) {
@@ -379,7 +420,7 @@ public class TileMap extends GridPane {
                 //player.getInventory().clear();
                 itemEntities.clear();
                 entities.clear();
-                this.backRoom(Levels[2], stage);
+                this.backRoom(Levels[5], stage);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

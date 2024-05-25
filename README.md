@@ -7,10 +7,10 @@ dans différent monde qu'on peut accéder en cliquant sur des
 **boutons** numérotés en fonction du monde. On peut également intéragir avec uhn marchand,
 Des PNJ et attaquer des monstres
 ## Installation, Configuration et Environnement
-
+Plusieurs solutions d'installation.
 Le fichier jar est compilé sous **open-jdk-20** file 64.0 <br>
-- Créer un dossier contenant le repository.
-- Se placer dans le repo est exécuté cette commande
+1) Télécharger le zip et extraire le dossier
+2) Créer un dossier et se p asser une commande:
 ```bash
 git clone https://github.com/hadjuse/JavaRealGame.git
 ```
