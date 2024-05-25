@@ -16,9 +16,9 @@ import java.io.FileNotFoundException;
 
 public class Wall extends Entity {
     private final String[] idlePath = {
-            String.format("%s/src/images/tile/wallAnim/wall_fountain_mid_blue_anim_f0.png", System.getProperty("user.dir")),
-            String.format("%s/src/images/tile/wallAnim/wall_fountain_mid_blue_anim_f1.png", System.getProperty("user.dir")),
-            String.format("%s/src/images/tile/wallAnim/wall_fountain_mid_blue_anim_f2.png", System.getProperty("user.dir")),
+            String.format("/images/tile/wallAnim/wall_fountain_mid_blue_anim_f0.png"),
+            String.format("/images/tile/wallAnim/wall_fountain_mid_blue_anim_f1.png"),
+            String.format("/images/tile/wallAnim/wall_fountain_mid_blue_anim_f2.png"),
     };
     private Rectangle hitBox;
     private int frameIndex;
@@ -30,7 +30,7 @@ public class Wall extends Entity {
         setBoxEntity(Wall());
         setCollidable(true);
         if (name.equals("fountain")) {
-            spriteImage = new ImageView(new Image(new FileInputStream(idlePath[0])));
+            spriteImage = new ImageView(new Image(getClass().getResourceAsStream(idlePath[0])));
             spriteImage.setFitWidth(width);
             spriteImage.setFitHeight(height);
             getBoxEntity().getChildren().add(spriteImage);
@@ -62,11 +62,7 @@ public class Wall extends Entity {
     }
 
     public void idle() {
-        try {
-            frameIndex = (frameIndex + 1) % idlePath.length;
-            spriteImage.setImage(new Image(new FileInputStream(idlePath[frameIndex])));
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        }
+        frameIndex = (frameIndex + 1) % idlePath.length;
+        spriteImage.setImage(new Image(getClass().getResourceAsStream(idlePath[frameIndex])));
     }
 }

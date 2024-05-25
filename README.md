@@ -1,6 +1,7 @@
 # JavaRealGame
 ## Présentation du jeu
 
+Projet programmé sur intellij.<br>
 C'est un jeu prototype dans lequel on incarne un petit ange 
 qui se retrouve dans un donjon et qui doit battre des monstres
 dans différent monde qu'on peut accéder en cliquant sur des
@@ -21,7 +22,7 @@ Il existe déjà un exécutable JavaRealGame.jar contenu dans le repo
 ```bash
 java --module-path "PATH_TO_javafx-sdk-22\javafx-sdk-22\lib" --add-modules javafx.controls,javafx.fxml,javafx.swing,javafx.base,javafx.graphics,javafx.media,javafx.web -jar JavaRealGame.jar
 ```
-
+Le mien est installé dans ce dossier : ```H:\javafx-sdk-22\lib```
 ## Comment jouer
 
 Voici une liste des entités présentes sur le jeu et les intéractions possibles.
