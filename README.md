@@ -17,7 +17,7 @@ Si le fichier jar ne veut pas s'exécuter.
 git clone https://github.com/hadjuse/JavaRealGame.git
 ```
 Le fichier jar est compilé sous **open-jdk-20** file 64.0 <br>
-Ceci le lien javafx-22-sdk que j'utilise : https://jdk.java.net/javafx22/
+Ceci le lien javafx-22-sdk que j'utilise : https://gluonhq.com/products/javafx/
 Il existe déjà un exécutable JavaRealGame.jar contenu dans le repo
 - Se placer dans le dossier contenant le fichier jar
   (Donc normalement le dossier actuel)
