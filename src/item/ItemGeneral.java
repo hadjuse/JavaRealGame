@@ -24,7 +24,7 @@ Si je veux ajouter un nouvel item : NE PAS OUBLIER LES BREAAAAKS !
  */
 // Si je veux ajouter un nouvel Item, je modifie ici et je rajoute les actions dans la classe player.
 public class ItemGeneral extends ItemEntity {
-    private final String directory = String.format("%s/src/images/potion/", System.getProperty("user.dir"));
+    private final String directory = String.format("/images/potion/", System.getProperty("user.dir"));
     private final String[] SpritePath = new String[]{
             String.format("%sflask_big_blue.png", directory),
             String.format("%sflask_big_green.png", directory),
@@ -35,6 +35,7 @@ public class ItemGeneral extends ItemEntity {
             String.format("%sflask_red.png", directory),
             String.format("%sflask_yellow.png", directory),
     };
+
     private double life;
     private double strength;
     private double speed;
@@ -59,6 +60,7 @@ public class ItemGeneral extends ItemEntity {
         setName(name);
         setItemEnum(ItemGeneralEnum.valueOf(getName()));
         setItemStackPane(renderItem());
+
     }
 
 
@@ -169,43 +171,43 @@ public class ItemGeneral extends ItemEntity {
         switch (getItemEnum()) {
             case POTION_HEAL:
                 setValueMoney(10);
-                image = new Image(new FileInputStream(getSpritePath()[0]));
+                image = new Image(getClass().getResourceAsStream(getSpritePath()[0]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
             case POTION_STRENGTH:
                 setValueMoney(10);
-                image = new Image(new FileInputStream(getSpritePath()[1]));
+                image = new Image(getClass().getResourceAsStream(getSpritePath()[1]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
             case POTION_SPEED:
                 setValueMoney(10);
-                image = new Image(new FileInputStream(getSpritePath()[2]));
+                image = new Image(getClass().getResourceAsStream(getSpritePath()[2]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
             case KILL:
                 setValueMoney(10);
-                image = new Image(new FileInputStream(getSpritePath()[4]));
+                image = new Image(getClass().getResourceAsStream(getSpritePath()[3]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
             case INVINCIBLE:
                 setValueMoney(10);
-                image = new Image(new FileInputStream(getSpritePath()[5]));
+                image = new Image(getClass().getResourceAsStream(getSpritePath()[4]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
             case TELEPORTATION:
                 setValueMoney(10);
-                image = new Image(new FileInputStream(getSpritePath()[6]));
+                image = new Image(getClass().getResourceAsStream(getSpritePath()[5]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
             case POTION_WHO_OPEN_DOOR:
                 setValueMoney(10);
-                image = new Image(new FileInputStream(getSpritePath()[7]));
+                image = new Image(getClass().getResourceAsStream(getSpritePath()[6]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
@@ -219,7 +221,6 @@ public class ItemGeneral extends ItemEntity {
     public String[] getSpritePath() {
         return SpritePath;
     }
-
 
     @Override
     public String toString() {

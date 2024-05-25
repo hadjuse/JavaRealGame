@@ -13,14 +13,19 @@ import monster.MonsterEnum;
 import player.Player;
 import pnj.PotionSeller;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 public class TileMap extends GridPane {
     public Random randomX = new Random();
@@ -28,13 +33,14 @@ public class TileMap extends GridPane {
     List<ItemEntity> itemEntities = new ArrayList<>();
     List<Entity> entities = new ArrayList<Entity>();
     private String[] Levels = new String[]{
-            String.format("%s/src/world/Level/level1.csv", System.getProperty("user.dir")),
-            String.format("%s/src/world/Level/level2.csv", System.getProperty("user.dir")),
-            String.format("%s/src/world/Level/level3.csv", System.getProperty("user.dir")),
-            String.format("%s/src/world/Level/level4.csv", System.getProperty("user.dir")),
-            String.format("%s/src/world/Level/level5.csv", System.getProperty("user.dir")),
-            String.format("%s/src/world/Level/backroom.csv", System.getProperty("user.dir")),
+            "level1.csv",
+            "level2.csv",
+            "level3.csv",
+            "level4.csv",
+            "level5.csv",
+            "backroom.csv"
     };
+
     private List<List<String>> map;
     private String pathToCsv;
     private Player player;
@@ -100,7 +106,7 @@ public class TileMap extends GridPane {
     public void setPathToCsv(String pathToCsv) {
         this.pathToCsv = pathToCsv;
     }
-
+    /*
     public void genMap(List<List<String>> map) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(getPathToCsv()));
@@ -114,7 +120,53 @@ public class TileMap extends GridPane {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }*/
+    public void genMap(List<List<String>> map){
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(getPathToCsv()))))
+        {
+            String line;
+            while ((line = br.readLine())!= null) {
+                String[] values = line.split(",");
+                map.add(Arrays.asList(values));
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    private File getFileFromResource(String resourceName) throws IOException {
+        URL resourceUrl = getClass().getResource(resourceName);
+        if (resourceUrl == null) {
+            throw new RuntimeException("Resource not found: " + resourceName);
+        }
+        if (resourceUrl.getProtocol().equals("jar")) {
+            // The resource is inside a JAR file
+            String jarFilePath = resourceUrl.getPath().substring(5, resourceUrl.getPath().indexOf("!"));
+            JarFile jarFile = new JarFile(jarFilePath);
+            JarEntry jarEntry = jarFile.getJarEntry(resourceUrl.getPath().substring(resourceUrl.getPath().indexOf("!") + 1));
+            InputStream inputStream = jarFile.getInputStream(jarEntry);
+            File tempFile = File.createTempFile("temp", null);
+            tempFile.deleteOnExit();
+            try (OutputStream outputStream = new FileOutputStream(tempFile)) {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+            }
+            return tempFile;
+        } else {
+            // The resource is not inside a JAR file
+            try {
+                return new File(resourceUrl.toURI());
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 
     public void showMap(List<List<String>> map, TileMap tileMap) throws FileNotFoundException {
         for (int i = 0; i < map.size(); i++) {

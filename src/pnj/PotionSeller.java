@@ -22,11 +22,13 @@ import java.io.FileNotFoundException;
 
 public class PotionSeller extends Entity {
     private Player player;
+    private TileMap map;
     // TODO configure transaction and place him in the beginning Map
     public PotionSeller(String name, double width, double height, TileMap map, Player player) throws FileNotFoundException {
         super(name, width, height, map);
         setMoney(100000);
         setPlayer(player);
+        setMap(map);
         setBoxEntity(renderSeller());
         setInventory(new Inventory(5));
         getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player), 1);
@@ -136,5 +138,13 @@ public class PotionSeller extends Entity {
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public TileMap getMap() {
+        return map;
+    }
+
+    public void setMap(TileMap map) {
+        this.map = map;
     }
 }
