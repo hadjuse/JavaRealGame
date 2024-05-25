@@ -13,15 +13,14 @@ import monster.MonsterEnum;
 import player.Player;
 import pnj.PotionSeller;
 
-import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 public class TileMap extends GridPane {
     public Random randomX = new Random();
@@ -118,37 +117,6 @@ public class TileMap extends GridPane {
         }
     }
 
-    private File getFileFromResource(String resourceName) throws IOException {
-        URL resourceUrl = getClass().getResource(resourceName);
-        if (resourceUrl == null) {
-            throw new RuntimeException("Resource not found: " + resourceName);
-        }
-        if (resourceUrl.getProtocol().equals("jar")) {
-            // The resource is inside a JAR file
-            String jarFilePath = resourceUrl.getPath().substring(5, resourceUrl.getPath().indexOf("!"));
-            JarFile jarFile = new JarFile(jarFilePath);
-            JarEntry jarEntry = jarFile.getJarEntry(resourceUrl.getPath().substring(resourceUrl.getPath().indexOf("!") + 1));
-            InputStream inputStream = jarFile.getInputStream(jarEntry);
-            File tempFile = File.createTempFile("temp", null);
-            tempFile.deleteOnExit();
-            try (OutputStream outputStream = new FileOutputStream(tempFile)) {
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
-                }
-            }
-            return tempFile;
-        } else {
-            // The resource is not inside a JAR file
-            try {
-                return new File(resourceUrl.toURI());
-            } catch (URISyntaxException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
 
     public void showMap(List<List<String>> map, TileMap tileMap) throws FileNotFoundException {
         for (int i = 0; i < map.size(); i++) {
@@ -227,8 +195,12 @@ public class TileMap extends GridPane {
     }
 
     public void moveItemEntity(ItemEntity itemEntity, int i, int j) {
+        this.removeItemEntity(itemEntity);
         GridPane.setRowIndex(itemEntity.getItemStackPane(), i);
         GridPane.setColumnIndex(itemEntity.getItemStackPane(), j);
+        itemEntity.getHitBox().setTranslateX(0);
+        itemEntity.getHitBox().setTranslateY(0);
+        this.getChildren().add(itemEntity.getItemStackPane());
     }
 
     public Player getPlayer() {
@@ -344,7 +316,9 @@ public class TileMap extends GridPane {
         entities.add(monster3);
 
         // Add item to monster list
-        monster1.getInventory().addItemPotion(new ItemGeneral("KILL", this, getPlayer()), 1);
+        ItemGeneral potion = new ItemGeneral("KILL", this, getPlayer());
+        itemEntities.add(potion);
+        monster1.getInventory().addItemPotion(potion, 1);
         System.out.println(monster1.getInventory().getItemPotion(0));
         moveEntity(getPlayer(), 14, 1);
         ButtonBackRoom(stage);
