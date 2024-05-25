@@ -10,7 +10,7 @@ Des PNJ et attaquer des monstres
 Plusieurs solutions d'installation.
 Le fichier jar est compilé sous **open-jdk-20** file 64.0 <br>
 1) Télécharger le zip et extraire le dossier
-2) Créer un dossier et se p asser une commande:
+2) Créer un dossier et écrire la commande :
 ```bash
 git clone https://github.com/hadjuse/JavaRealGame.git
 ```
