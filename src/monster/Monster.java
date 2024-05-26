@@ -184,9 +184,9 @@ public class Monster extends Entity implements ActionEntityBattle {
                         System.out.printf("%s earn %f%n", getPlayer().getName(), getMoney());
                         player.addMoney(getMoney(), getPlayer());
                         map.removeEntity(entity);
-                        map.moveItemEntity(entity.getInventory().getItemPotion(0), getI(), getJ());
+                        map.moveItemEntity(itemGeneral, getI(), getJ());
+                        getEntities().remove(entity);
                         //giveItem(getPlayer(), itemGeneral);
-                        System.out.printf("%s%n", getPlayer().getInventory());
                         displayDialog("Félicitation tu as tué le monstre !");
                         //System.out.printf("%s receive item %s\n", getPlayer().getName(), itemGeneral.getName());
                         //getStage().close();
@@ -277,6 +277,7 @@ public class Monster extends Entity implements ActionEntityBattle {
                 giveItem(getPlayer(), itemGeneral);
                 player.addMoney(getMoney(), getPlayer());
                 map.removeEntity(entity);
+                getEntities().remove(entity);
                 setDead(true);
                 System.out.printf("%s receive %s\n", getPlayer().getName(), itemGeneral.getName());
                 System.out.printf("%s%n", getPlayer().getInventory());
