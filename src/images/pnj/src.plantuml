@@ -1,0 +1,37 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+interface ActionEntityBattle << interface >>
+class Entity
+class Inventory
+class ItemEntity
+class ItemGeneral
+enum ItemGeneralEnum << enumeration >>
+class Main
+class Monster
+enum MonsterEnum << enumeration >>
+class Player
+class PnjQuest
+class PotionSeller
+enum QuestEnum << enumeration >>
+class QuestItem
+class Spike
+class TileMap
+class UsableItem
+class Wall
+
+ItemGeneral         -[#000082,plain]-^  ItemEntity         
+Monster             -[#008200,dashed]-^  ActionEntityBattle 
+Monster             -[#000082,plain]-^  Entity             
+Player              -[#008200,dashed]-^  ActionEntityBattle 
+Player              -[#000082,plain]-^  Entity             
+PnjQuest            -[#000082,plain]-^  Entity             
+PotionSeller        -[#000082,plain]-^  Entity             
+QuestItem           -[#000082,plain]-^  ItemEntity         
+Spike               -[#000082,plain]-^  Entity             
+UsableItem          -[#000082,plain]-^  ItemEntity         
+Wall                -[#000082,plain]-^  Entity             
+@enduml
