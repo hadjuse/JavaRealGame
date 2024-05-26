@@ -86,52 +86,58 @@ public class Monster extends Entity implements ActionEntityBattle {
     }
 
 
-    @Override
-    public void receiveAttackFromEntity(Entity entity, TileMap map) {
-        if (entity instanceof Monster monster) {
-            String event = monster.getMonsterEnum().getEvent();
-            // Trigger the event specified by the event field
-            switch (event) {
-                case "event1":
-                    System.out.println("I can one shot you");
-                    //getPlayer().setOneShot(true);
-                    if (getPlayer().isOneShot()) {
-                        setLife(0);
-                    } else {
-                        normalAttackFromPlayer(entity);
-                    }
-                    //actionAfterDeath(map, getPlayer());
-                    break;
-                case "event2":
+    /**
+ * This method is responsible for handling the attack from a player entity.
+ * It checks the event associated with the attacking monster and performs the corresponding action.
+ *
+ * @param entity The entity attacking the monster.
+ * @param map The tile map where the entities are located.
+ */
+@Override
+public void receiveAttackFromEntity(Entity entity, TileMap map) {
+    if (entity instanceof Monster monster) {
+        String event = monster.getMonsterEnum().getEvent();
+        // Trigger the event specified by the event field
+        switch (event) {
+            case "event1":
+                System.out.println("I can one shot you");
+                //getPlayer().setOneShot(true);
+                if (getPlayer().isOneShot()) {
+                    setLife(0);
+                } else {
                     normalAttackFromPlayer(entity);
-                    //setLife(0);
-                    break;
-                case "event3":
-                    questionAttack();
-                    break;
-                case "event4":
-                    // Code for event 4
-                    break;
-                case "event5":
-                    // Code for event 5
-                    break;
-                case "event6":
-                    // Code for event 6
-                    break;
-                case "event7":
-                    // Code for event 7
-                    break;
-                case "event8":
-                    // Code for event 8
-                    break;
-                default:
-                    // Code for default behavior
-                    break;
-            }
-            actionAfterDeath(map, entity);
+                }
+                //actionAfterDeath(map, getPlayer());
+                break;
+            case "event2":
+                normalAttackFromPlayer(entity);
+                //setLife(0);
+                break;
+            case "event3":
+                questionAttack();
+                break;
+            case "event4":
+                // Code for event 4
+                break;
+            case "event5":
+                // Code for event 5
+                break;
+            case "event6":
+                // Code for event 6
+                break;
+            case "event7":
+                // Code for event 7
+                break;
+            case "event8":
+                // Code for event 8
+                break;
+            default:
+                // Code for default behavior
+                break;
         }
-
+        actionAfterDeath(map, entity);
     }
+}
 
     public void questionAttack() {
         Stage stage = new Stage();
@@ -171,58 +177,64 @@ public class Monster extends Entity implements ActionEntityBattle {
         }
     }
 
-    @Override
-    public void actionAfterDeath(TileMap map, Entity entity) {
-        if (entity instanceof Monster monster) {
-            String event = monster.getMonsterEnum().getEvent();
-            // Trigger the event specified by the event field
-            switch (event) {
-                case "event1":
-                    if (entity.getLife() <= 0) {
-                        ItemGeneral itemGeneral = entity.getInventory().getItemPotion(0);
-                        System.out.printf("%s is dead%n", getName());
-                        System.out.printf("%s earn %f%n", getPlayer().getName(), getMoney());
-                        player.addMoney(getMoney(), getPlayer());
-                        map.removeEntity(entity);
-                        map.moveItemEntity(itemGeneral, getI(), getJ());
-                        getEntities().remove(entity);
-                        //giveItem(getPlayer(), itemGeneral);
-                        displayDialog("Félicitation tu as tué le monstre !");
-                        //System.out.printf("%s receive item %s\n", getPlayer().getName(), itemGeneral.getName());
-                        //getStage().close();
-                    }
-                    break;
-                case "event2":
-                    actionAfterDeath1(map, entity);
-                    break;
-                case "event3":
-                    if (entity.getLife() <= 0) {
-                        System.out.println("Dead");
-                        map.removeEntity(this);
-                    }
-                    break;
-                case "event4":
-                    // Code for event 4
-                    break;
-                case "event5":
-                    // Code for event 5
-                    break;
-                case "event6":
-                    // Code for event 6
-                    break;
-                case "event7":
-                    // Code for event 7
-                    break;
-                case "event8":
-                    // Code for event 8
-                    break;
-                default:
-                    // Code for default behavior
-                    break;
-            }
+    /**
+ * This method is responsible for handling the action after the death of a monster.
+ * It checks the event associated with the dying monster and performs the corresponding action.
+ *
+ * @param map The tile map where the entities are located.
+ * @param entity The entity that has died.
+ */
+@Override
+public void actionAfterDeath(TileMap map, Entity entity) {
+    if (entity instanceof Monster monster) {
+        String event = monster.getMonsterEnum().getEvent();
+        // Trigger the event specified by the event field
+        switch (event) {
+            case "event1":
+                if (entity.getLife() <= 0) {
+                    ItemGeneral itemGeneral = entity.getInventory().getItemPotion(0);
+                    System.out.printf("%s is dead%n", getName());
+                    System.out.printf("%s earn %f%n", getPlayer().getName(), getMoney());
+                    player.addMoney(getMoney(), getPlayer());
+                    map.removeEntity(entity);
+                    map.moveItemEntity(itemGeneral, getI(), getJ());
+                    getEntities().remove(entity);
+                    //giveItem(getPlayer(), itemGeneral);
+                    displayDialog("Félicitation tu as tué le monstre !");
+                    //System.out.printf("%s receive item %s\n", getPlayer().getName(), itemGeneral.getName());
+                    //getStage().close();
+                }
+                break;
+            case "event2":
+                actionAfterDeath1(map, entity);
+                break;
+            case "event3":
+                if (entity.getLife() <= 0) {
+                    System.out.println("Dead");
+                    map.removeEntity(this);
+                }
+                break;
+            case "event4":
+                // Code for event 4
+                break;
+            case "event5":
+                // Code for event 5
+                break;
+            case "event6":
+                // Code for event 6
+                break;
+            case "event7":
+                // Code for event 7
+                break;
+            case "event8":
+                // Code for event 8
+                break;
+            default:
+                // Code for default behavior
+                break;
         }
-
     }
+}
 
     private void normalAttackFromPlayer(Entity entity) {
         System.out.printf("%s attack %s%n", getPlayer().getName(), entity.getName());
