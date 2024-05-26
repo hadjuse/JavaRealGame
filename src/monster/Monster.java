@@ -21,6 +21,7 @@ import player.Player;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 /*
 Si je veux modifier des interactions avec les monstres je vais les switchs correspondant
@@ -32,19 +33,26 @@ public class Monster extends Entity implements ActionEntityBattle {
     private Player player;
     private Stage stage;
     private TileMap map;
+    private int i;
+    private int j;
+    private List<Entity> entities;
 
-    public Monster(MonsterEnum monsterEnum, Player player, TileMap map, Stage stage) throws FileNotFoundException {
+    public Monster(MonsterEnum monsterEnum, Player player, TileMap map, Stage stage, int i, int j, List<Entity> entities) throws FileNotFoundException {
         super(monsterEnum.name(), monsterEnum.getWidthFactor() * 25, monsterEnum.getHeightFactor() * 25, map);
+        setEntities(entities);
         setLife(monsterEnum.getBaseLife());
         setMap(map);
         setMoney(50);
         setStage(stage);
         setStrength(30);
+        setI(i);
+        setJ(j);
         setMonsterEnum(monsterEnum);
         setBoxEntity(boxMonster());
         setCanBeAttacked(true);
         setCollidable(true);
         setPlayer(player);
+        getMap().moveEntity(this, i, j);
         setDamage(20 * (1 + getStrength() / 100));
         getBoxEntity().setOnMouseClicked(mouseEvent -> {
             if (getBoxEntity().contains(mouseEvent.getX(), mouseEvent.getY()) && isCanBeAttacked()) {
@@ -58,9 +66,6 @@ public class Monster extends Entity implements ActionEntityBattle {
                 ImageView cursorView = new ImageView(cursor);
                 cursorView.setRotate(-45);
                 map.setCursor(new ImageCursor(cursorView.snapshot(null, null)));
-
-                // Display the name
-
             }
         });
 
@@ -68,6 +73,7 @@ public class Monster extends Entity implements ActionEntityBattle {
         getBoxEntity().setOnMouseExited(event -> {
             map.setCursor(Cursor.DEFAULT);
         });
+        getEntities().add(this);
     }
 
     public StackPane boxMonster() {
@@ -178,7 +184,7 @@ public class Monster extends Entity implements ActionEntityBattle {
                         System.out.printf("%s earn %f%n", getPlayer().getName(), getMoney());
                         player.addMoney(getMoney(), getPlayer());
                         map.removeEntity(entity);
-                        map.moveItemEntity(entity.getInventory().getItemPotion(0), 14, 10);
+                        map.moveItemEntity(entity.getInventory().getItemPotion(0), getI(), getJ());
                         //giveItem(getPlayer(), itemGeneral);
                         System.out.printf("%s%n", getPlayer().getInventory());
                         displayDialog("Félicitation tu as tué le monstre !");
@@ -316,5 +322,29 @@ public class Monster extends Entity implements ActionEntityBattle {
 
     public void setMap(TileMap map) {
         this.map = map;
+    }
+
+    public int getI() {
+        return i;
+    }
+
+    public void setI(int i) {
+        this.i = i;
+    }
+
+    public int getJ() {
+        return j;
+    }
+
+    public void setJ(int j) {
+        this.j = j;
+    }
+
+    public List<Entity> getEntities() {
+        return entities;
+    }
+
+    public void setEntities(List<Entity> entities) {
+        this.entities = entities;
     }
 }

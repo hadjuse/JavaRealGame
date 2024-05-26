@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import monster.Monster;
 import world.TileMap;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.List;
@@ -37,13 +36,19 @@ public class Player extends Entity implements ActionEntityBattle {
     private Stage stage;
     private TileMap map;
     private List<Entity> entities;
-    public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities, Stage stage) throws FileNotFoundException {
+    private int i;
+    private int j;
+
+    public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities, Stage stage, int i, int j) throws FileNotFoundException {
         super(name, 30, 30, tileMap);
         spriteData = new SpriteData();
         setStage(stage);
         setMap(tileMap);
+        setI(i);
+        setJ(j);
         setEntities(entities);
         initInfoPlayer(name);
+        getMap().moveEntity(this, getI(), getJ());
         movementPlayer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -365,6 +370,22 @@ public class Player extends Entity implements ActionEntityBattle {
 
     public void setEntities(List<Entity> entities) {
         this.entities = entities;
+    }
+
+    public int getI() {
+        return i;
+    }
+
+    public void setI(int i) {
+        this.i = i;
+    }
+
+    public int getJ() {
+        return j;
+    }
+
+    public void setJ(int j) {
+        this.j = j;
     }
 
     public static class SpriteData {

@@ -49,6 +49,7 @@ public class ItemGeneral extends ItemEntity {
     private PnjQuest pnjQuest;
     private Monster monster;
     private List<Entity> entities;
+
     public ItemGeneral(String name, TileMap map, Entity entity, List<Entity> entities) throws FileNotFoundException {
         if (entity instanceof Player) {
             setPlayer((Player) entity);
@@ -159,7 +160,9 @@ public class ItemGeneral extends ItemEntity {
             x = scanner.nextInt();
             System.out.print("Enter the y-coordinate of the desired location: ");
             y = scanner.nextInt();
-            getMap().moveEntity(getPlayer(), x, y);
+            getPlayer().setI(x);
+            getPlayer().setJ(y);
+            getMap().moveEntity(getPlayer(), getPlayer().getI(), getPlayer().getJ());
         } while (x < 1 || x > 14 || y < 1 || y > 14);
         System.out.println("The player is teleport to the desired location");
     }
