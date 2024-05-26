@@ -1,7 +1,7 @@
 # JavaRealGame
 ## Présentation du jeu
 
-Projet programmé sur intellij.<br>
+Projet programmé sur intellij et sous l'os **Windows**.<br>
 C'est un jeu prototype dans lequel on incarne un petit ange 
 qui se retrouve dans un donjon et qui doit battre des monstres
 dans différent monde qu'on peut accéder en cliquant sur des
