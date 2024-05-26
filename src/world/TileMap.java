@@ -5,12 +5,12 @@ import item.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import monster.Monster;
 import monster.MonsterEnum;
 import player.Player;
+import pnj.PnjQuest;
 import pnj.PotionSeller;
 
 import java.io.BufferedReader;
@@ -42,13 +42,12 @@ public class TileMap extends GridPane {
     private Monster monster;
     private PotionSeller potionSeller;
     private ItemEntity itemPotion;
-    private Rectangle hitBoxWall;
     private List<Shape> bounds = new ArrayList<Shape>();
     private List<ItemGeneral> itemGenerals = new ArrayList<ItemGeneral>();
     private List<Monster> monsters = new ArrayList<Monster>();
     private List<QuestItem> questItems = new ArrayList<QuestItem>();
     private MonsterEnum monsterEnum;
-
+    private PnjQuest quest;
     public TileMap(Stage stage) throws FileNotFoundException {
         //level1(Levels[0], stage);
         backRoom(getLevels()[5], stage);
@@ -76,14 +75,6 @@ public class TileMap extends GridPane {
 
     public void setItemEntities(List<ItemEntity> itemEntities) {
         this.itemEntities = itemEntities;
-    }
-
-    public Rectangle getHitBoxWall() {
-        return hitBoxWall;
-    }
-
-    public void setHitBoxWall(Rectangle hitBoxWall) {
-        this.hitBoxWall = hitBoxWall;
     }
 
     public List<List<String>> getMap() {
@@ -351,10 +342,11 @@ public class TileMap extends GridPane {
         setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities(), stage, 14, 1));
 
         setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer(), entities));
+        setQuest(new PnjQuest("pnjQuest", 30, 50, this, getPlayer(), 8,1, entities, stage));
         placeEntity(getPotionSeller(), 7, 1);
+        entities.add(getPotionSeller());
         //moveEntity(getPlayer(), 14, 7);
         //getPlayer().getInventory().addItemPotion(new ItemGeneral("KILL", this, getPlayer()), 1);
-
         ButtonLevel1(stage);
         ButtonLevel2(stage);
         ButtonLevel3(stage);
@@ -443,5 +435,13 @@ public class TileMap extends GridPane {
 
     public void setMonsterEnum(MonsterEnum monsterEnum) {
         this.monsterEnum = monsterEnum;
+    }
+
+    public PnjQuest getQuest() {
+        return quest;
+    }
+
+    public void setQuest(PnjQuest quest) {
+        this.quest = quest;
     }
 }
