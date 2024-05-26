@@ -59,46 +59,6 @@ public class TileMap extends GridPane {
 
     }
 
-    public String[] getLevels() {
-        return Levels;
-    }
-
-    public void setLevels(String[] levels) {
-        Levels = levels;
-    }
-
-    public List<Entity> getEntities() {
-        return entities;
-    }
-
-    public void setEntities(List<Entity> entities) {
-        this.entities = entities;
-    }
-
-    public List<ItemEntity> getItemEntities() {
-        return itemEntities;
-    }
-
-    public void setItemEntities(List<ItemEntity> itemEntities) {
-        this.itemEntities = itemEntities;
-    }
-
-    public List<List<String>> getMap() {
-        return map;
-    }
-
-    public void setMap(List<List<String>> map) {
-        this.map = map;
-    }
-
-    public String getPathToCsv() {
-        return pathToCsv;
-    }
-
-    public void setPathToCsv(String pathToCsv) {
-        this.pathToCsv = pathToCsv;
-    }
-
     public void genMap(List<List<String>> map) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(getPathToCsv())))) {
             String line;
@@ -197,62 +157,6 @@ public class TileMap extends GridPane {
         itemEntity.getHitBox().setTranslateX(0);
         itemEntity.getHitBox().setTranslateY(0);
         this.getChildren().add(itemEntity.getItemStackPane());
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public Monster getMonster() {
-        return monster;
-    }
-
-    public void setMonster(Monster monster) {
-        this.monster = monster;
-    }
-
-    public ItemEntity getItemPotion() {
-        return itemPotion;
-    }
-
-    public void setItemPotion(ItemEntity itemPotion) {
-        this.itemPotion = itemPotion;
-    }
-
-    public List<Shape> getBounds() {
-        return bounds;
-    }
-
-    public void setBounds(List<Shape> bounds) {
-        this.bounds = bounds;
-    }
-
-    public List<ItemGeneral> getItemPotions() {
-        return itemGenerals;
-    }
-
-    public void setItemPotions(List<ItemGeneral> itemGenerals) {
-        this.itemGenerals = itemGenerals;
-    }
-
-    public List<Monster> getMonsters() {
-        return monsters;
-    }
-
-    public void setMonsters(List<Monster> monsters) {
-        this.monsters = monsters;
-    }
-
-    public List<QuestItem> getQuestItems() {
-        return questItems;
-    }
-
-    public void setQuestItems(List<QuestItem> questItems) {
-        this.questItems = questItems;
     }
 
     public void level1(String string, Stage stage) throws FileNotFoundException {
@@ -443,5 +347,99 @@ public class TileMap extends GridPane {
 
     public void setQuest(PnjQuest quest) {
         this.quest = quest;
+    }
+    public String[] getLevels() {
+        return Levels;
+    }
+
+    public void setLevels(String[] levels) {
+        Levels = levels;
+    }
+
+    public List<Entity> getEntities() {
+        return entities;
+    }
+
+    public void setEntities(List<Entity> entities) {
+        this.entities = entities;
+    }
+
+    public List<ItemEntity> getItemEntities() {
+        return itemEntities;
+    }
+
+    public void setItemEntities(List<ItemEntity> itemEntities) {
+        this.itemEntities = itemEntities;
+    }
+
+    public List<List<String>> getMap() {
+        return map;
+    }
+
+    public void setMap(List<List<String>> map) {
+        this.map = map;
+    }
+
+    public String getPathToCsv() {
+        return pathToCsv;
+    }
+
+    public void setPathToCsv(String pathToCsv) {
+        this.pathToCsv = pathToCsv;
+    }
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Monster getMonster() {
+        return monster;
+    }
+
+    public void setMonster(Monster monster) {
+        this.monster = monster;
+    }
+
+    public ItemEntity getItemPotion() {
+        return itemPotion;
+    }
+
+    public void setItemPotion(ItemEntity itemPotion) {
+        this.itemPotion = itemPotion;
+    }
+
+    public List<Shape> getBounds() {
+        return bounds;
+    }
+
+    public void setBounds(List<Shape> bounds) {
+        this.bounds = bounds;
+    }
+
+    public List<ItemGeneral> getItemPotions() {
+        return itemGenerals;
+    }
+
+    public void setItemPotions(List<ItemGeneral> itemGenerals) {
+        this.itemGenerals = itemGenerals;
+    }
+
+    public List<Monster> getMonsters() {
+        return monsters;
+    }
+
+    public void setMonsters(List<Monster> monsters) {
+        this.monsters = monsters;
+    }
+
+    public List<QuestItem> getQuestItems() {
+        return questItems;
+    }
+
+    public void setQuestItems(List<QuestItem> questItems) {
+        this.questItems = questItems;
     }
 }

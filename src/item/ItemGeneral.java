@@ -67,54 +67,6 @@ public class ItemGeneral extends ItemEntity {
     }
 
 
-    public double getLife() {
-        return life;
-    }
-
-    public void setLife(double life) {
-        this.life = life;
-    }
-
-    public double getStrength() {
-        return strength;
-    }
-
-    public void setStrength(double strength) {
-        this.strength = strength;
-    }
-
-    public double getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
-
-    public double getDamage() {
-        return damage;
-    }
-
-    public void setDamage(double damage) {
-        this.damage = damage;
-    }
-
-    public ItemGeneralEnum getItemEnum() {
-        return itemGeneralEnum;
-    }
-
-    public void setItemEnum(ItemGeneralEnum itemGeneralEnum) {
-        this.itemGeneralEnum = itemGeneralEnum;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void applyEffectPotion(Entity entity) {
         switch (getItemEnum()) {
             case POTION_HEAL:
@@ -294,5 +246,52 @@ public class ItemGeneral extends ItemEntity {
 
     public void setEntities(List<Entity> entities) {
         this.entities = entities;
+    }
+    public double getLife() {
+        return life;
+    }
+
+    public void setLife(double life) {
+        this.life = life;
+    }
+
+    public double getStrength() {
+        return strength;
+    }
+
+    public void setStrength(double strength) {
+        this.strength = strength;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public double getDamage() {
+        return damage;
+    }
+
+    public void setDamage(double damage) {
+        this.damage = damage;
+    }
+
+    public ItemGeneralEnum getItemEnum() {
+        return itemGeneralEnum;
+    }
+
+    public void setItemEnum(ItemGeneralEnum itemGeneralEnum) {
+        this.itemGeneralEnum = itemGeneralEnum;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
