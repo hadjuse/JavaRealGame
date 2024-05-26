@@ -50,7 +50,13 @@ public class TileMap extends GridPane {
     private PnjQuest quest;
     public TileMap(Stage stage) throws FileNotFoundException {
         //level1(Levels[0], stage);
+        setPathToCsv("backroom.csv");
+        setMap(new ArrayList<>());
+        genMap(getMap());
+        showMap(getMap(), this);
+        setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities(), stage, 14, 1));
         backRoom(getLevels()[5], stage);
+
     }
 
     public String[] getLevels() {
@@ -338,9 +344,7 @@ public class TileMap extends GridPane {
         setMap(new ArrayList<>());
         genMap(getMap());
         showMap(getMap(), this);
-
-        setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities(), stage, 14, 1));
-
+        moveEntity(getPlayer(), 14, 1);
         setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer(), entities));
         setQuest(new PnjQuest("pnjQuest", 30, 50, this, getPlayer(), 8,1, entities, stage));
         placeEntity(getPotionSeller(), 7, 1);
