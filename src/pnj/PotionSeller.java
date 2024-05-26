@@ -2,7 +2,6 @@ package pnj;
 
 import entity.Entity;
 import inventory.Inventory;
-import item.ItemEntity;
 import item.ItemGeneral;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -18,7 +17,6 @@ import javafx.stage.Stage;
 import player.Player;
 import world.TileMap;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
 
@@ -26,6 +24,7 @@ public class PotionSeller extends Entity {
     private Player player;
     private TileMap map;
     private List<Entity> entities;
+
     // TODO configure transaction and place him in the beginning Map
     public PotionSeller(String name, double width, double height, TileMap map, Player player, List<Entity> entities) throws FileNotFoundException {
         super(name, width, height, map);

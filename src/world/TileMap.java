@@ -51,7 +51,6 @@ public class TileMap extends GridPane {
 
     public TileMap(Stage stage) throws FileNotFoundException {
         //level1(Levels[0], stage);
-        setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities(), stage));
         backRoom(getLevels()[5], stage);
     }
 
@@ -301,19 +300,10 @@ public class TileMap extends GridPane {
 
 
         // Add three monsters to the map
-        Monster monster1 = new Monster(MonsterEnum.MONSTER_1, player, this, stage);
-        Monster monster2 = new Monster(MonsterEnum.MONSTER_2, player, this, stage);
-        Monster monster3 = new Monster(MonsterEnum.MONSTER_3, player, this, stage);
+        Monster monster1 = new Monster(MonsterEnum.MONSTER_1, player, this, stage, 5, 5, entities);
+        Monster monster2 = new Monster(MonsterEnum.MONSTER_2, player, this, stage, 10, 10, entities);
+        Monster monster3 = new Monster(MonsterEnum.MONSTER_3, player, this, stage, 10, 12, entities);
 
-        // Set the position of the monsters
-        placeEntity(monster1, 5, 5);
-        placeEntity(monster2, 10, 10);
-        placeEntity(monster3, 10, 12);
-
-        // Add the monsters to the list of monsters
-        entities.add(monster1);
-        entities.add(monster2);
-        entities.add(monster3);
 
         // Add item to monster list
         ItemGeneral potion = new ItemGeneral("KILL", this, getPlayer(), entities);
@@ -358,10 +348,11 @@ public class TileMap extends GridPane {
         genMap(getMap());
         showMap(getMap(), this);
 
+        setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities(), stage, 14, 1));
 
         setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer(), entities));
         placeEntity(getPotionSeller(), 7, 1);
-        moveEntity(getPlayer(), 14, 7);
+        //moveEntity(getPlayer(), 14, 7);
         //getPlayer().getInventory().addItemPotion(new ItemGeneral("KILL", this, getPlayer()), 1);
 
         ButtonLevel1(stage);
