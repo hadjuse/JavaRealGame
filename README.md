@@ -70,3 +70,5 @@ Il y en a 2 :
 Différents items présents sur le jeu.
 Si le jeu ne s'exécute pas, c'est forcément un problème de chemin
 Relatif.
+Le mieux de séparer le terminal et le jeu.
+![img.png](img.png)
