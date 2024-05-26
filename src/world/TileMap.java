@@ -285,15 +285,7 @@ public class TileMap extends GridPane {
     }
 
     public void Level2(String pathToCsv, Stage stage) throws FileNotFoundException {
-        this.setOnKeyPressed(null);
-        for (ItemEntity item : itemGenerals) {
-            removeItemEntity(item);
-        }
-        getChildren().clear(); // Clear the existing map
-        setPathToCsv(pathToCsv);
-        setMap(new ArrayList<>());
-        genMap(getMap());
-        showMap(getMap(), this);
+        generation(pathToCsv);
 
 
         // Add three monsters to the map
@@ -311,15 +303,7 @@ public class TileMap extends GridPane {
     }
 
     public void level3(String pathToCsv, Stage stage) throws FileNotFoundException {
-        this.setOnKeyPressed(null);
-        for (ItemEntity item : itemGenerals) {
-            removeItemEntity(item);
-        }
-        getChildren().clear(); // Clear the existing map
-        setPathToCsv(pathToCsv);
-        setMap(new ArrayList<>());
-        genMap(getMap());
-        showMap(getMap(), this);
+        generation(pathToCsv);
 
         ItemGeneral potion1 = new ItemGeneral("TELEPORTATION", this, getPlayer(), entities);
         ItemGeneral potion2 = new ItemGeneral("POTION_HEAL", this, getPlayer(), entities);
@@ -329,6 +313,18 @@ public class TileMap extends GridPane {
         placeItemEntity(potion2, 1, 2);
         moveEntity(getPlayer(), 14, 1);
         ButtonBackRoom(stage);
+    }
+
+    private void generation(String pathToCsv) throws FileNotFoundException {
+        this.setOnKeyPressed(null);
+        for (ItemEntity item : itemGenerals) {
+            removeItemEntity(item);
+        }
+        getChildren().clear(); // Clear the existing map
+        setPathToCsv(pathToCsv);
+        setMap(new ArrayList<>());
+        genMap(getMap());
+        showMap(getMap(), this);
     }
 
     public void backRoom(String pathToCsv, Stage stage) throws FileNotFoundException {
