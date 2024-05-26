@@ -33,13 +33,14 @@ Voici une liste des entités présentes sur le jeu et les intéractions possible
 
 - Déplacement : Les claviers ZQSD ;
 - Attaque : Cliquer sur les monstres ;
-- Inventaire : Apppuyer sur P pour ouvrir l'inventaire
+- Inventaire : Appuyer sur P pour ouvrir l'inventaire
 - Porte bouton : Parfois, il faudra une potion spéciale pour ouvrir
 des portes, mais sinon il faut cliquer sur les boutons pour changer de monde ;
 
 ### Monstres
 
 - Déplacement : aucun
+- skin: rectangle coloré
 - Attaque : Si le joueur touche un monstre, le joueur perd de la vie en fonction des différents dégâts
 des différents types de monstres.
 - Inventaire : Accessible seulement par les intéractions
