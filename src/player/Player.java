@@ -74,7 +74,9 @@ public class Player extends Entity implements ActionEntityBattle {
         eventInteractionItem(tileMap, itemEntities);
         getInventory().addItemPotion(new ItemGeneral("INVINCIBLE", tileMap, this, getEntities()), 1);
         getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this, getEntities()), 1);
+        getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", tileMap, this, getEntities()), 1);
+        getInventory().addItemPotion(new ItemGeneral("POTION_STRENGTH", tileMap, this, getEntities()), 1);
+        getInventory().addItemPotion(new ItemGeneral("POTION_SPEED", tileMap, this, getEntities()), 1);
     }
 
     private void initInfoPlayer(String name) throws FileNotFoundException {
@@ -86,7 +88,7 @@ public class Player extends Entity implements ActionEntityBattle {
         setBoxEntity(boxEntity());
         setXSpawn(0);
         setYSpawn(0);
-        setInventory(new Inventory(10));
+        setInventory(new Inventory(5));
         setMoney(0);
         setCollidable(true);
         setOneShot(false);

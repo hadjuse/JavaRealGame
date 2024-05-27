@@ -1,0 +1,6 @@
+Hadj Rabearimanana GIA 2 LEVEL One
+
+Exo 1
+a) L'implementation pour vérifier si il y a assez d'espace est déjà faite dans la Class
+Il y a 5 item dejà ajouter dans le sac à dos, donc il y a 5 emplacements occupées.
+Player situé dans la méthode eventInteractionItem().
