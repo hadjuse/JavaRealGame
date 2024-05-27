@@ -80,8 +80,9 @@ public class Player extends Entity implements ActionEntityBattle {
         //getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", tileMap, this, getEntities()), 1);
         //getInventory().addItemPotion(new ItemGeneral("POTION_STRENGTH", tileMap, this, getEntities()), 1);
         //getInventory().addItemPotion(new ItemGeneral("POTION_SPEED", tileMap, this, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("ITEM1", tileMap, this, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("ITEM2", tileMap, this, getEntities()), 1);
+        getInventory().addItemPotion(new ItemGeneral("ITEM1", tileMap, this, getEntities(), getStage()), 1);
+        getInventory().addItemPotion(new ItemGeneral("ITEM2", tileMap, this, getEntities(), getStage()), 1);
+        getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this, getEntities(), getStage()), 1);
     }
 
     private void initInfoPlayer(String name) throws FileNotFoundException {
@@ -373,7 +374,7 @@ private Button UsePotionButton(ItemGeneral potion, ImageView potionImageView, Li
         boolean potionInInventory = getInventory().getItemPotionList().contains(potion);
         if (potionInInventory) {
             stage.close();
-            //potion.applyEffectPotion(this);
+            //
             if (potion.getName().equals("ITEM1")){
                 //System.out.println("I am a potion seller");
                 for (Entity entity : entities){
@@ -383,8 +384,12 @@ private Button UsePotionButton(ItemGeneral potion, ImageView potionImageView, Li
                         System.out.println("Je ne peux pas utilisé l'item car pnj non rencontre");
                     }
                 }
+            }else {
+                potion.applyEffectPotion(this);
             }
-            getInventory().removeItemPotion(potion);
+            if (!potion.getName().equals("TELEPORTATION")){
+                getInventory().removeItemPotion(potion);
+            }
 
         } else {
             stage.close();

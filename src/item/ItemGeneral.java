@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import monster.Monster;
 import player.Player;
 import pnj.PnjQuest;
@@ -36,7 +37,12 @@ public class ItemGeneral extends ItemEntity {
             String.format("%sflask_red.png", directory),
             String.format("%sflask_yellow.png", directory),
     };
-
+    private String[] Levels = new String[]{
+            "level1.csv",
+            "level2.csv",
+            "level3.csv",
+            "backroom.csv"
+    };
     private double life;
     private double strength;
     private double speed;
@@ -50,8 +56,8 @@ public class ItemGeneral extends ItemEntity {
     private PnjQuest pnjQuest;
     private Monster monster;
     private List<Entity> entities;
-
-    public ItemGeneral(String name, TileMap map, Entity entity, List<Entity> entities) throws FileNotFoundException {
+    private Stage stage;
+    public ItemGeneral(String name, TileMap map, Entity entity, List<Entity> entities, Stage stage) throws FileNotFoundException {
         if (entity instanceof Player) {
             setPlayer((Player) entity);
         } else if (entity instanceof PnjQuest pnjQuest) {
@@ -59,6 +65,7 @@ public class ItemGeneral extends ItemEntity {
         } else if (entity instanceof Monster monstre) {
             setMonster(monstre);
         }
+        setStage(stage);
         setEntities(entities);
         setMap(map);
         setName(name);
@@ -104,19 +111,20 @@ public class ItemGeneral extends ItemEntity {
     }
 
     private void teleportation() {
-        System.out.println("I can teleport");
-        Scanner scanner = new Scanner(System.in);
-        int x, y;
-        do {
-            System.out.print("Enter the x-coordinate of the desired location: ");
-            x = scanner.nextInt();
-            System.out.print("Enter the y-coordinate of the desired location: ");
-            y = scanner.nextInt();
-            getPlayer().setI(x);
-            getPlayer().setJ(y);
-            getMap().moveEntity(getPlayer(), getPlayer().getI(), getPlayer().getJ());
-        } while (x < 1 || x > 14 || y < 1 || y > 14);
-        System.out.println("The player is teleport to the desired location");
+        try{
+            int levelRandom = (int) (Math.random() * getLevels().length);
+            if (levelRandom == 0){
+                getMap().backRoom(Levels[3], getStage());
+            }else if (levelRandom == 1){
+                getMap().level1(Levels[0], getStage());
+            }else if (levelRandom == 2){
+                getMap().Level2(Levels[1], getStage());
+            } else if (levelRandom == 3) {
+                getMap().level3(Levels[2], getStage());
+            }
+        }catch (Exception e){
+            System.out.println("The player is teleport to the desired location");
+        }
     }
 
     @Override
@@ -293,5 +301,21 @@ public class ItemGeneral extends ItemEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String[] getLevels() {
+        return Levels;
+    }
+
+    public void setLevels(String[] levels) {
+        Levels = levels;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }

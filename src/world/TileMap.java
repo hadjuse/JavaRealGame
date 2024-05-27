@@ -164,6 +164,8 @@ public class TileMap extends GridPane {
         for (ItemEntity item : itemGenerals) {
             removeItemEntity(item);
         }
+        itemEntities.clear();
+        entities.clear();
         getChildren().clear();
         setPathToCsv(string);
         setMap(new ArrayList<>());
@@ -172,9 +174,9 @@ public class TileMap extends GridPane {
         genMap(getMap());
         showMap(getMap(), this);
 
-        ItemEntity potionHeal = new ItemGeneral("POTION_HEAL", this, getPlayer(), entities);
-        ItemEntity potionSpeed = new ItemGeneral("POTION_SPEED", this, getPlayer(), entities);
-        ItemEntity potionStrength = new ItemGeneral("POTION_STRENGTH", this, getPlayer(), entities);
+        ItemEntity potionHeal = new ItemGeneral("POTION_HEAL", this, getPlayer(), entities, stage);
+        ItemEntity potionSpeed = new ItemGeneral("POTION_SPEED", this, getPlayer(), entities, stage);
+        ItemEntity potionStrength = new ItemGeneral("POTION_STRENGTH", this, getPlayer(), entities, stage);
         //QuestItem newQuestItem = new QuestItem("GG", this);
         itemEntities.add(potionHeal);
         itemEntities.add(potionSpeed);
@@ -199,7 +201,7 @@ public class TileMap extends GridPane {
 
 
         // Add item to monster list
-        ItemGeneral potion = new ItemGeneral("KILL", this, getPlayer(), entities);
+        ItemGeneral potion = new ItemGeneral("KILL", this, getPlayer(), entities, stage);
         itemEntities.add(potion);
         monster1.getInventory().addItemPotion(potion, 1);
         moveEntity(getPlayer(), 14, 1);
@@ -208,9 +210,10 @@ public class TileMap extends GridPane {
 
     public void level3(String pathToCsv, Stage stage) throws FileNotFoundException {
         generation(pathToCsv);
-
-        ItemGeneral potion1 = new ItemGeneral("TELEPORTATION", this, getPlayer(), entities);
-        ItemGeneral potion2 = new ItemGeneral("POTION_HEAL", this, getPlayer(), entities);
+        itemEntities.clear();
+        entities.clear();
+        ItemGeneral potion1 = new ItemGeneral("TELEPORTATION", this, getPlayer(), entities, stage);
+        ItemGeneral potion2 = new ItemGeneral("POTION_HEAL", this, getPlayer(), entities, stage);
         itemEntities.add(potion1);
         itemEntities.add(potion2);
         placeItemEntity(potion1, 1, 1);
@@ -233,6 +236,8 @@ public class TileMap extends GridPane {
 
     public void backRoom(String pathToCsv, Stage stage) throws FileNotFoundException {
         this.setOnKeyPressed(null);
+        itemEntities.clear();
+        entities.clear();
         //System.out.println(getPlayer().getMoney());
         for (ItemEntity item : itemGenerals) {
             removeItemEntity(item);
@@ -247,7 +252,7 @@ public class TileMap extends GridPane {
         moveEntity(getPlayer(), 14, 1);
         setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer(), entities));
         PotionSeller potionSeller2 = new PotionSeller("PotionSeller2", 35, 35, this, getPlayer(), entities);
-        getPotionSeller().getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", this, getPlayer(), entities), 1);
+        getPotionSeller().getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", this, getPlayer(), entities, stage), 1);
         setQuest(new PnjQuest("pnjQuest", 30, 50, this, getPlayer(), 8,1, entities, stage));
         setQuest(new PnjQuest("pnjQuest", 30, 50, this, getPlayer(), 8,2, entities, stage));
         placeEntity(getPotionSeller(), 7, 1);
@@ -255,8 +260,8 @@ public class TileMap extends GridPane {
         entities.add(getPotionSeller());
         //moveEntity(getPlayer(), 14, 7);
         //getPlayer().getInventory().addItemPotion(new ItemGeneral("KILL", this, getPlayer()), 1);
-        ItemGeneral item1 = new ItemGeneral("ITEM1", this, getPlayer(), entities);
-        ItemGeneral item2 = new ItemGeneral("ITEM2", this, getPlayer(), entities);
+        ItemGeneral item1 = new ItemGeneral("ITEM1", this, getPlayer(), entities, stage);
+        ItemGeneral item2 = new ItemGeneral("ITEM2", this, getPlayer(), entities, stage);
         itemEntities.add(item1);
         itemEntities.add(item2);
         placeItemEntity(item1, 14, 3);

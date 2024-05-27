@@ -44,8 +44,8 @@ public class PnjQuest extends Entity {
         setBoxEntity(renderPNJ());
         getMap().moveEntity(this, getI(), getJ());
         getEntities().add(this);
-        getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player, getEntities()), 1);
+        getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player, getEntities(), getStage()), 1);
+        getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player, getEntities(), getStage()), 1);
         getBoxEntity().setOnMouseClicked(event -> {
             showPotionWindow(player);
         });
