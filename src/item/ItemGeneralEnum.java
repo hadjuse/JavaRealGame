@@ -5,7 +5,8 @@ public enum ItemGeneralEnum {
     KILL,
     INVINCIBLE,
     TELEPORTATION,
-    POTION_WHO_OPEN_DOOR,
     ITEM1,
     ITEM2,
+    ITEM4,
+    ITEM5,
 }

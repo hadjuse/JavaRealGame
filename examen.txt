@@ -26,3 +26,5 @@ et aussi la méthode useEffectPotion() dans la classe Player pour les items.
 EXO 3 ITEM3
 Pour cette EXO j'ai modifié l'ITEM teleportation dans dans ItemGeneral
 et adapter la fonction usePotion() dans la classe player pour l'utiliser indéfiniment.
+
+Exo 3 ITEM4

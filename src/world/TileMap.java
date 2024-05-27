@@ -309,11 +309,9 @@ public class TileMap extends GridPane {
         Button changeMapButton = new Button("1");
         changeMapButton.setOnAction(event -> {
             try {
-                if (getPlayer().isOpen()) {
-                    itemEntities.clear();
-                    entities.clear();
-                    this.level1(Levels[0], stage);
-                }
+                itemEntities.clear();
+                entities.clear();
+                this.level1(Levels[0], stage);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

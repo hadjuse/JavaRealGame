@@ -93,9 +93,6 @@ public class ItemGeneral extends ItemEntity {
             case TELEPORTATION:
                 teleportation();
                 break;
-            case POTION_WHO_OPEN_DOOR:
-                getPlayer().setOpen(true);
-                break;
             case ITEM1:
                 if (entity instanceof PotionSeller potionSeller ){
                     potionSeller.showPotionWindow(getPlayer());
@@ -105,6 +102,8 @@ public class ItemGeneral extends ItemEntity {
                 break;
             case ITEM2:
                 break;
+            case ITEM4:
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
         }
@@ -113,14 +112,15 @@ public class ItemGeneral extends ItemEntity {
     private void teleportation() {
         try{
             int levelRandom = (int) (Math.random() * getLevels().length);
+            System.out.println("Tele");
             if (levelRandom == 0){
-                getMap().backRoom(Levels[3], getStage());
+                getMap().moveEntity(getPlayer(), 1, 1);
             }else if (levelRandom == 1){
-                getMap().level1(Levels[0], getStage());
+                getMap().moveEntity(getPlayer(),1,6 );
             }else if (levelRandom == 2){
-                getMap().Level2(Levels[1], getStage());
+                getMap().moveEntity(getPlayer(), 1, 9);
             } else if (levelRandom == 3) {
-                getMap().level3(Levels[2], getStage());
+                getMap().moveEntity(getPlayer(), 1, 10);
             }
         }catch (Exception e){
             System.out.println("The player is teleport to the desired location");
@@ -134,13 +134,13 @@ public class ItemGeneral extends ItemEntity {
         Image image;
         ImageView imageView;
         switch (getItemEnum()) {
-            case POTION_HEAL:
+            case POTION_HEAL, ITEM4:
                 setValueMoney(10);
                 image = new Image(getClass().getResourceAsStream(getSpritePath()[0]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
-            case KILL:
+            case KILL,ITEM5:
                 setValueMoney(10);
                 image = new Image(getClass().getResourceAsStream(getSpritePath()[3]));
                 imageView = new ImageView(image);
@@ -155,12 +155,6 @@ public class ItemGeneral extends ItemEntity {
             case TELEPORTATION:
                 setValueMoney(10);
                 image = new Image(getClass().getResourceAsStream(getSpritePath()[5]));
-                imageView = new ImageView(image);
-                getHitBox().setFill(new ImagePattern(image));
-                break;
-            case POTION_WHO_OPEN_DOOR:
-                setValueMoney(10);
-                image = new Image(getClass().getResourceAsStream(getSpritePath()[6]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;

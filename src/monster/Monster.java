@@ -36,7 +36,7 @@ public class Monster extends Entity implements ActionEntityBattle {
     private int i;
     private int j;
     private List<Entity> entities;
-
+    private double attacked;
     public Monster(MonsterEnum monsterEnum, Player player, TileMap map, Stage stage, int i, int j, List<Entity> entities) throws FileNotFoundException {
         super(monsterEnum.name(), monsterEnum.getWidthFactor() * 25, monsterEnum.getHeightFactor() * 25, map);
         setEntities(entities);
@@ -47,6 +47,7 @@ public class Monster extends Entity implements ActionEntityBattle {
         setStrength(30);
         setI(i);
         setJ(j);
+        setAttacked(false);
         setMonsterEnum(monsterEnum);
         setBoxEntity(boxMonster());
         setCanBeAttacked(true);
@@ -56,6 +57,7 @@ public class Monster extends Entity implements ActionEntityBattle {
         setDamage(20 * (1 + getStrength() / 100));
         getBoxEntity().setOnMouseClicked(mouseEvent -> {
             if (getBoxEntity().contains(mouseEvent.getX(), mouseEvent.getY()) && isCanBeAttacked()) {
+                setAttacked(true);
                 receiveAttackFromEntity(this, map);
             }
         });
@@ -359,5 +361,13 @@ public void actionAfterDeath(TileMap map, Entity entity) {
 
     public void setEntities(List<Entity> entities) {
         this.entities = entities;
+    }
+
+    public double getAttacked() {
+        return attacked;
+    }
+
+    public void setAttacked(double attacked) {
+        this.attacked = attacked;
     }
 }
