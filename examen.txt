@@ -33,7 +33,7 @@ Exo 3 ITEM2
 J'utilise la class PNJQUest pour le test de cette question.
 On peut voler le pnjQuest1 qui s'appelle pnjQuest1 et c'est le premier sorcier blanc pas le 2ème.
 Mais de manière général on peut voler n'importe quel pnjQuest qui possède un item.
-J'ai essayé de modifier la classe ItemGeneral.
+J'ai essayé de modifier la classe ItemGeneral mais je n'ai pas réussi.
 
 EXO3 5 ITEM5:
 Pour le code cette ITEM il faut aller dans ITEMGeneral et dans les method applyEffectPotion()
