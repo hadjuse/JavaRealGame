@@ -8,7 +8,11 @@ Player situé dans la méthode eventInteractionItem().
 b) Le pnj utilisé pour répondre à cette question est la classe PnjQuest.
 qui est situé dans le package pnj, pour répondre à cette question,
 J'ai créé 2 instances de PnjQuest dans la classe Tilemap, qui sont des sorciers blancs et qui possèdent 2 items:
-POTION_HEAL et POTION_STRENGTH.
-J'ai modifié la classe ItemGeneral pour ajouter les item1 et item2. et je les ai placé
+POTION_HEALX2.
+J'ai modifié la classe ItemGeneral pour ajouter les item1 et item2. et je les ai placé et supprimer des items inutiles.
 sur la map dans la classe TileMap. à 2 cases. ils sont représenté par des fioles oranges.
 Pour vérifier si les 2 pnj ont des items il faut cliquer sur eux.
+
+Ex0 2
+
+

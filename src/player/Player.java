@@ -72,11 +72,13 @@ public class Player extends Entity implements ActionEntityBattle {
         getHitBox().setFocusTraversable(true);
         //getHitBox().requestFocus();
         eventInteractionItem(tileMap, itemEntities);
-        getInventory().addItemPotion(new ItemGeneral("INVINCIBLE", tileMap, this, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", tileMap, this, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("POTION_STRENGTH", tileMap, this, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("POTION_SPEED", tileMap, this, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("INVINCIBLE", tileMap, this, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", tileMap, this, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("POTION_STRENGTH", tileMap, this, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("POTION_SPEED", tileMap, this, getEntities()), 1);
+        getInventory().addItemPotion(new ItemGeneral("ITEM1", tileMap, this, getEntities()), 1);
+        getInventory().addItemPotion(new ItemGeneral("ITEM2", tileMap, this, getEntities()), 1);
     }
 
     private void initInfoPlayer(String name) throws FileNotFoundException {

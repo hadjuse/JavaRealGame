@@ -74,16 +74,6 @@ public class ItemGeneral extends ItemEntity {
                 System.out.printf("You gain %f Life !%n", getLife());
                 entity.addLife(getLife());
                 break;
-            case POTION_STRENGTH:
-                setStrength(10);
-                System.out.printf("You gain %f Strength!%n", getStrength());
-                entity.addStrength(getStrength());
-                break;
-            case POTION_SPEED:
-                setSpeed(2);
-                System.out.printf("You gain %f Speed!%n", getSpeed());
-                entity.setSpeed(getSpeed());
-                break;
             case KILL:
                 System.out.print("I can kill all entities");
                 getPlayer().setOneShot(true);
@@ -133,18 +123,6 @@ public class ItemGeneral extends ItemEntity {
             case POTION_HEAL:
                 setValueMoney(10);
                 image = new Image(getClass().getResourceAsStream(getSpritePath()[0]));
-                imageView = new ImageView(image);
-                getHitBox().setFill(new ImagePattern(image));
-                break;
-            case POTION_STRENGTH:
-                setValueMoney(10);
-                image = new Image(getClass().getResourceAsStream(getSpritePath()[1]));
-                imageView = new ImageView(image);
-                getHitBox().setFill(new ImagePattern(image));
-                break;
-            case POTION_SPEED:
-                setValueMoney(10);
-                image = new Image(getClass().getResourceAsStream(getSpritePath()[2]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
