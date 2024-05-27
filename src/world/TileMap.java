@@ -175,12 +175,12 @@ public class TileMap extends GridPane {
         showMap(getMap(), this);
 
         ItemEntity potionHeal = new ItemGeneral("POTION_HEAL", this, getPlayer(), entities, stage);
-        ItemEntity potionSpeed = new ItemGeneral("POTION_SPEED", this, getPlayer(), entities, stage);
-        ItemEntity potionStrength = new ItemGeneral("POTION_STRENGTH", this, getPlayer(), entities, stage);
+        //ItemEntity potionSpeed = new ItemGeneral("POTION_SPEED", this, getPlayer(), entities, stage);
+        //ItemEntity potionStrength = new ItemGeneral("POTION_STRENGTH", this, getPlayer(), entities, stage);
         //QuestItem newQuestItem = new QuestItem("GG", this);
         itemEntities.add(potionHeal);
-        itemEntities.add(potionSpeed);
-        itemEntities.add(potionStrength);
+        //itemEntities.add(potionSpeed);
+        //itemEntities.add(potionStrength);
 
         //itemEntities.add(newQuestItem);
 
@@ -253,8 +253,8 @@ public class TileMap extends GridPane {
         setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer(), entities));
         PotionSeller potionSeller2 = new PotionSeller("PotionSeller2", 35, 35, this, getPlayer(), entities);
         getPotionSeller().getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", this, getPlayer(), entities, stage), 1);
-        setQuest(new PnjQuest("pnjQuest", 30, 50, this, getPlayer(), 8,1, entities, stage));
-        setQuest(new PnjQuest("pnjQuest", 30, 50, this, getPlayer(), 8,2, entities, stage));
+        setQuest(new PnjQuest("pnjQuest1", 30, 50, this, getPlayer(), 8,1, entities, stage));
+        setQuest(new PnjQuest("pnjQuest2", 30, 50, this, getPlayer(), 8,2, entities, stage));
         placeEntity(getPotionSeller(), 7, 1);
         placeEntity(potionSeller2, 7, 2);
         entities.add(getPotionSeller());

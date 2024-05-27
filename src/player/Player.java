@@ -83,6 +83,7 @@ public class Player extends Entity implements ActionEntityBattle {
         getInventory().addItemPotion(new ItemGeneral("ITEM1", tileMap, this, getEntities(), getStage()), 1);
         getInventory().addItemPotion(new ItemGeneral("ITEM2", tileMap, this, getEntities(), getStage()), 1);
         getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this, getEntities(), getStage()), 1);
+        getInventory().addItemPotion(new ItemGeneral("ITEM5", tileMap, this, getEntities(), getStage()), 1);
     }
 
     private void initInfoPlayer(String name) throws FileNotFoundException {

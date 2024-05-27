@@ -101,8 +101,22 @@ public class ItemGeneral extends ItemEntity {
                 }
                 break;
             case ITEM2:
+                for (Entity entity1: entities){
+                    //System.out.println(entity1.getName());
+                    if (entity1 instanceof PotionSeller pnjQuest ){
+                        if (pnjQuest.getName().equals("pnjQuest1")){
+                            System.out.println("I steal the item");
+                        }
+                        break;
+                    }
+                }
                 break;
             case ITEM4:
+                System.out.println("I absorb the life of the monster");
+                break;
+            case ITEM5:
+                System.out.println("Victory ! endGame");
+                getStage().close();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
@@ -112,9 +126,8 @@ public class ItemGeneral extends ItemEntity {
     private void teleportation() {
         try{
             int levelRandom = (int) (Math.random() * getLevels().length);
-            System.out.println("Tele");
             if (levelRandom == 0){
-                getMap().moveEntity(getPlayer(), 1, 1);
+                getMap().moveEntity(getPlayer(), getPlayer().getI(), getPlayer().getJ());
             }else if (levelRandom == 1){
                 getMap().moveEntity(getPlayer(),1,6 );
             }else if (levelRandom == 2){

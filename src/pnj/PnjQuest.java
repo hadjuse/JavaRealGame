@@ -45,7 +45,7 @@ public class PnjQuest extends Entity {
         getMap().moveEntity(this, getI(), getJ());
         getEntities().add(this);
         getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player, getEntities(), getStage()), 1);
-        getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player, getEntities(), getStage()), 1);
+        getInventory().addItemPotion(new ItemGeneral("INVINCIBLE", map, player, getEntities(), getStage()), 1);
         getBoxEntity().setOnMouseClicked(event -> {
             showPotionWindow(player);
         });
@@ -54,7 +54,7 @@ public class PnjQuest extends Entity {
 
     public void showPotionWindow(Player player) {
         // Create a new stage for the mini window
-        setPnjRencontre(true);
+        //setPnjRencontre(true);
         Stage potionStage = new Stage();
 
         // Set the title and size of the stage
@@ -82,7 +82,7 @@ public class PnjQuest extends Entity {
             // Create a Button for the potion
             Button potionButton = new Button();
             potionButton.setGraphic(potionImageView);
-            //potionButton.setOnAction(event -> handlePotionPurchase(player, potion, potionStage));
+            potionButton.setOnAction(event -> stealItem(player, potion, potionStage));
 
             // Add the Button, the name Label, and the price Label to the GridPane
             gridPane.add(potionButton, 0, rowIndex);
@@ -103,6 +103,19 @@ public class PnjQuest extends Entity {
 
         // Show the stage
         potionStage.show();
+    }
+
+    private void stealItem(Player player, ItemGeneral potion, Stage potionStage) {
+        boolean enoughSpace = player.getInventory().getItemPotionList().size() <= getPlayer().getInventory().getQuantity();
+        if (enoughSpace) {
+            player.getInventory().addItemPotion(potion,1);
+            System.out.println("The item is added to the inventory");
+            getInventory().removeItemPotion(potion);
+
+        } else {
+            System.out.println("The inventory is full");
+        }
+        potionStage.close();
     }
 
     public StackPane renderPNJ() {

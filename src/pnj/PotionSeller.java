@@ -40,13 +40,16 @@ public class PotionSeller extends Entity {
         //getInventory().addItemPotion(new ItemGeneral("POTION_SPEED", map, player, getEntities()), 1);
         //getInventory().addItemPotion(new ItemGeneral("POTION_WHO_OPEN_DOOR", map, player, getEntities()), 1);
         getBoxEntity().setOnMouseClicked(event -> {
-            showPotionWindow(player);
+            setPnjRencontre(true);
+            if (isPnjRencontre()){
+                showPotionWindow(player);
+            }
         });
         entities.add(this);
     }
 
     public void showPotionWindow(Player player) {
-        setPnjRencontre(true);
+
         if (getInventory().getItemPotionList().isEmpty()) {
             System.out.println("No potions to sell.");
             return;
