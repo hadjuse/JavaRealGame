@@ -24,7 +24,7 @@ public class PotionSeller extends Entity {
     private Player player;
     private TileMap map;
     private List<Entity> entities;
-
+    private boolean pnjRencontre;
     // TODO configure transaction and place him in the beginning Map
     public PotionSeller(String name, double width, double height, TileMap map, Player player, List<Entity> entities) throws FileNotFoundException {
         super(name, width, height, map);
@@ -34,6 +34,7 @@ public class PotionSeller extends Entity {
         setEntities(entities);
         setBoxEntity(renderSeller());
         setInventory(new Inventory(5));
+        setPnjRencontre(false);
         //getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player, getEntities()), 1);
         //getInventory().addItemPotion(new ItemGeneral("POTION_STRENGTH", map, player, getEntities()), 1);
         //getInventory().addItemPotion(new ItemGeneral("POTION_SPEED", map, player, getEntities()), 1);
@@ -41,9 +42,11 @@ public class PotionSeller extends Entity {
         getBoxEntity().setOnMouseClicked(event -> {
             showPotionWindow(player);
         });
+        entities.add(this);
     }
 
-    private void showPotionWindow(Player player) {
+    public void showPotionWindow(Player player) {
+        setPnjRencontre(true);
         if (getInventory().getItemPotionList().isEmpty()) {
             System.out.println("No potions to sell.");
             return;
@@ -156,5 +159,13 @@ public class PotionSeller extends Entity {
 
     public void setEntities(List<Entity> entities) {
         this.entities = entities;
+    }
+
+    public boolean isPnjRencontre() {
+        return pnjRencontre;
+    }
+
+    public void setPnjRencontre(boolean pnjRencontre) {
+        this.pnjRencontre = pnjRencontre;
     }
 }

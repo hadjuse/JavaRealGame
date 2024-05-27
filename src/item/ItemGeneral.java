@@ -9,6 +9,7 @@ import javafx.scene.shape.Rectangle;
 import monster.Monster;
 import player.Player;
 import pnj.PnjQuest;
+import pnj.PotionSeller;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
@@ -89,6 +90,11 @@ public class ItemGeneral extends ItemEntity {
                 getPlayer().setOpen(true);
                 break;
             case ITEM1:
+                if (entity instanceof PotionSeller potionSeller ){
+                    potionSeller.showPotionWindow(getPlayer());
+                } else if (entity instanceof PnjQuest pnjQuest) {
+                    pnjQuest.showPotionWindow(getPlayer());
+                }
                 break;
             case ITEM2:
                 break;

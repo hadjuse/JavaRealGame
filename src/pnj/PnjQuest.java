@@ -27,6 +27,8 @@ public class PnjQuest extends Entity {
     private int j;
     private List<Entity> entities;
     private Stage stage;
+    private boolean pnjRencontre;
+
     // TODO QUEST PNJ that allow interaction.
     public PnjQuest(String name, double width, double height, TileMap map, Player player, int i, int j, List<Entity> entities, Stage stage) throws FileNotFoundException {
         super(name, width, height, map);
@@ -47,10 +49,12 @@ public class PnjQuest extends Entity {
         getBoxEntity().setOnMouseClicked(event -> {
             showPotionWindow(player);
         });
+        entities.add(this);
     }
 
-    private void showPotionWindow(Player player) {
+    public void showPotionWindow(Player player) {
         // Create a new stage for the mini window
+        setPnjRencontre(true);
         Stage potionStage = new Stage();
 
         // Set the title and size of the stage
@@ -157,5 +161,13 @@ public class PnjQuest extends Entity {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public boolean isPnjRencontre() {
+        return pnjRencontre;
+    }
+
+    public void setPnjRencontre(boolean pnjRencontre) {
+        this.pnjRencontre = pnjRencontre;
     }
 }
