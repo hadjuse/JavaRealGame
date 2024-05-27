@@ -38,7 +38,7 @@ public class Player extends Entity implements ActionEntityBattle {
     private List<Entity> entities;
     private int i;
     private int j;
-
+    private boolean pnjRencontre;
     public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities, Stage stage, int i, int j) throws FileNotFoundException {
         super(name, 30, 30, tileMap);
         spriteData = new SpriteData();

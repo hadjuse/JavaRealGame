@@ -14,5 +14,7 @@ sur la map dans la classe TileMap. à 2 cases. ils sont représenté par des fio
 Pour vérifier si les 2 pnj ont des items il faut cliquer sur eux.
 
 Ex0 2
-
+Pour cette exo j'utilise le potionSeller comme exemple.
+J'ai modifié la méthode showPotionWindow() pour afficher les potions du vendeur Comme il est demande.
+Pour vérifier la question j'ai instancier potionSeller 1 qui n'a rien dans son inventaire et 1 qui en a pas.
 

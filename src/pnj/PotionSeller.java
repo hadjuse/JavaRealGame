@@ -34,16 +34,20 @@ public class PotionSeller extends Entity {
         setEntities(entities);
         setBoxEntity(renderSeller());
         setInventory(new Inventory(5));
-        getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player, getEntities()), 1);
         //getInventory().addItemPotion(new ItemGeneral("POTION_STRENGTH", map, player, getEntities()), 1);
         //getInventory().addItemPotion(new ItemGeneral("POTION_SPEED", map, player, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("POTION_WHO_OPEN_DOOR", map, player, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("POTION_WHO_OPEN_DOOR", map, player, getEntities()), 1);
         getBoxEntity().setOnMouseClicked(event -> {
             showPotionWindow(player);
         });
     }
 
     private void showPotionWindow(Player player) {
+        if (getInventory().getItemPotionList().isEmpty()) {
+            System.out.println("No potions to sell.");
+            return;
+        }
         // Create a new stage for the mini window
         Stage potionStage = new Stage();
 
