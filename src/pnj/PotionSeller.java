@@ -24,7 +24,7 @@ public class PotionSeller extends Entity {
     private Player player;
     private TileMap map;
     private List<Entity> entities;
-
+    private boolean pnjRencontre;
     // TODO configure transaction and place him in the beginning Map
     public PotionSeller(String name, double width, double height, TileMap map, Player player, List<Entity> entities) throws FileNotFoundException {
         super(name, width, height, map);
@@ -34,16 +34,26 @@ public class PotionSeller extends Entity {
         setEntities(entities);
         setBoxEntity(renderSeller());
         setInventory(new Inventory(5));
-        getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("POTION_STRENGTH", map, player, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("POTION_SPEED", map, player, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("POTION_WHO_OPEN_DOOR", map, player, getEntities()), 1);
+        setPnjRencontre(false);
+        //getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("POTION_STRENGTH", map, player, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("POTION_SPEED", map, player, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("POTION_WHO_OPEN_DOOR", map, player, getEntities()), 1);
         getBoxEntity().setOnMouseClicked(event -> {
-            showPotionWindow(player);
+            setPnjRencontre(true);
+            if (isPnjRencontre()){
+                showPotionWindow(player);
+            }
         });
+        entities.add(this);
     }
 
-    private void showPotionWindow(Player player) {
+    public void showPotionWindow(Player player) {
+
+        if (getInventory().getItemPotionList().isEmpty()) {
+            System.out.println("No potions to sell.");
+            return;
+        }
         // Create a new stage for the mini window
         Stage potionStage = new Stage();
 
@@ -152,5 +162,13 @@ public class PotionSeller extends Entity {
 
     public void setEntities(List<Entity> entities) {
         this.entities = entities;
+    }
+
+    public boolean isPnjRencontre() {
+        return pnjRencontre;
+    }
+
+    public void setPnjRencontre(boolean pnjRencontre) {
+        this.pnjRencontre = pnjRencontre;
     }
 }

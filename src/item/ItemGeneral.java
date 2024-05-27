@@ -6,9 +6,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import monster.Monster;
 import player.Player;
 import pnj.PnjQuest;
+import pnj.PotionSeller;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
@@ -35,7 +37,12 @@ public class ItemGeneral extends ItemEntity {
             String.format("%sflask_red.png", directory),
             String.format("%sflask_yellow.png", directory),
     };
-
+    private String[] Levels = new String[]{
+            "level1.csv",
+            "level2.csv",
+            "level3.csv",
+            "backroom.csv"
+    };
     private double life;
     private double strength;
     private double speed;
@@ -49,8 +56,8 @@ public class ItemGeneral extends ItemEntity {
     private PnjQuest pnjQuest;
     private Monster monster;
     private List<Entity> entities;
-
-    public ItemGeneral(String name, TileMap map, Entity entity, List<Entity> entities) throws FileNotFoundException {
+    private Stage stage;
+    public ItemGeneral(String name, TileMap map, Entity entity, List<Entity> entities, Stage stage) throws FileNotFoundException {
         if (entity instanceof Player) {
             setPlayer((Player) entity);
         } else if (entity instanceof PnjQuest pnjQuest) {
@@ -58,6 +65,7 @@ public class ItemGeneral extends ItemEntity {
         } else if (entity instanceof Monster monstre) {
             setMonster(monstre);
         }
+        setStage(stage);
         setEntities(entities);
         setMap(map);
         setName(name);
@@ -74,16 +82,6 @@ public class ItemGeneral extends ItemEntity {
                 System.out.printf("You gain %f Life !%n", getLife());
                 entity.addLife(getLife());
                 break;
-            case POTION_STRENGTH:
-                setStrength(10);
-                System.out.printf("You gain %f Strength!%n", getStrength());
-                entity.addStrength(getStrength());
-                break;
-            case POTION_SPEED:
-                setSpeed(2);
-                System.out.printf("You gain %f Speed!%n", getSpeed());
-                entity.setSpeed(getSpeed());
-                break;
             case KILL:
                 System.out.print("I can kill all entities");
                 getPlayer().setOneShot(true);
@@ -95,8 +93,30 @@ public class ItemGeneral extends ItemEntity {
             case TELEPORTATION:
                 teleportation();
                 break;
-            case POTION_WHO_OPEN_DOOR:
-                getPlayer().setOpen(true);
+            case ITEM1:
+                if (entity instanceof PotionSeller potionSeller ){
+                    potionSeller.showPotionWindow(getPlayer());
+                } else if (entity instanceof PnjQuest pnjQuest) {
+                    pnjQuest.showPotionWindow(getPlayer());
+                }
+                break;
+            case ITEM2:
+                for (Entity entity1: entities){
+                    //System.out.println(entity1.getName());
+                    if (entity1 instanceof PotionSeller pnjQuest ){
+                        if (pnjQuest.getName().equals("pnjQuest1")){
+                            System.out.println("I steal the item");
+                        }
+                        break;
+                    }
+                }
+                break;
+            case ITEM4:
+                System.out.println("I absorb the life of the monster");
+                break;
+            case ITEM5:
+                System.out.println("Victory ! endGame");
+                getStage().close();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
@@ -104,19 +124,20 @@ public class ItemGeneral extends ItemEntity {
     }
 
     private void teleportation() {
-        System.out.println("I can teleport");
-        Scanner scanner = new Scanner(System.in);
-        int x, y;
-        do {
-            System.out.print("Enter the x-coordinate of the desired location: ");
-            x = scanner.nextInt();
-            System.out.print("Enter the y-coordinate of the desired location: ");
-            y = scanner.nextInt();
-            getPlayer().setI(x);
-            getPlayer().setJ(y);
-            getMap().moveEntity(getPlayer(), getPlayer().getI(), getPlayer().getJ());
-        } while (x < 1 || x > 14 || y < 1 || y > 14);
-        System.out.println("The player is teleport to the desired location");
+        try{
+            int levelRandom = (int) (Math.random() * getLevels().length);
+            if (levelRandom == 0){
+                getMap().moveEntity(getPlayer(), getPlayer().getI(), getPlayer().getJ());
+            }else if (levelRandom == 1){
+                getMap().moveEntity(getPlayer(),1,6 );
+            }else if (levelRandom == 2){
+                getMap().moveEntity(getPlayer(), 1, 9);
+            } else if (levelRandom == 3) {
+                getMap().moveEntity(getPlayer(), 1, 10);
+            }
+        }catch (Exception e){
+            System.out.println("The player is teleport to the desired location");
+        }
     }
 
     @Override
@@ -126,25 +147,13 @@ public class ItemGeneral extends ItemEntity {
         Image image;
         ImageView imageView;
         switch (getItemEnum()) {
-            case POTION_HEAL:
+            case POTION_HEAL, ITEM4:
                 setValueMoney(10);
                 image = new Image(getClass().getResourceAsStream(getSpritePath()[0]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
-            case POTION_STRENGTH:
-                setValueMoney(10);
-                image = new Image(getClass().getResourceAsStream(getSpritePath()[1]));
-                imageView = new ImageView(image);
-                getHitBox().setFill(new ImagePattern(image));
-                break;
-            case POTION_SPEED:
-                setValueMoney(10);
-                image = new Image(getClass().getResourceAsStream(getSpritePath()[2]));
-                imageView = new ImageView(image);
-                getHitBox().setFill(new ImagePattern(image));
-                break;
-            case KILL:
+            case KILL,ITEM5:
                 setValueMoney(10);
                 image = new Image(getClass().getResourceAsStream(getSpritePath()[3]));
                 imageView = new ImageView(image);
@@ -162,9 +171,15 @@ public class ItemGeneral extends ItemEntity {
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
-            case POTION_WHO_OPEN_DOOR:
-                setValueMoney(10);
-                image = new Image(getClass().getResourceAsStream(getSpritePath()[6]));
+            case ITEM1:
+                setValueMoney(0);
+                image = new Image(getClass().getResourceAsStream(getSpritePath()[7]));
+                imageView = new ImageView(image);
+                getHitBox().setFill(new ImagePattern(image));
+                break;
+            case ITEM2:
+                setValueMoney(0);
+                image = new Image(getClass().getResourceAsStream(getSpritePath()[7]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;
@@ -293,5 +308,21 @@ public class ItemGeneral extends ItemEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String[] getLevels() {
+        return Levels;
+    }
+
+    public void setLevels(String[] levels) {
+        Levels = levels;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }

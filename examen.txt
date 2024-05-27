@@ -1,0 +1,40 @@
+Hadj Rabearimanana GIA 2 LEVEL One
+
+Exo 1
+a) L'implementation pour vérifier si il y a assez d'espace est déjà faite dans la Class Player sur la methode
+eventInteractionItem().
+Il y a 5 item dejà ajouter dans le sac à dos, donc il y a 5 emplacements occupées.
+Player situé dans la méthode eventInteractionItem().
+
+b) Le pnj utilisé pour répondre à cette question est la classe PnjQuest.
+qui est situé dans le package pnj, pour répondre à cette question,
+J'ai créé 2 instances de PnjQuest dans la classe Tilemap, qui sont des sorciers blancs et qui possèdent 2 items:
+POTION_HEAL en double exemplaire.
+J'ai modifié la classe ItemGeneral pour ajouter les item1 et item2. et je les ai placé et supprimer des items inutiles.
+sur la map dans la classe TileMap. à 2 cases. ils sont représenté par des fioles oranges.
+Pour vérifier si les 2 pnj ont des items il faut cliquer sur eux.
+
+Ex0 2
+Pour cette exo j'utilise le potionSeller comme exemple.
+J'ai modifié la méthode showPotionWindow() pour afficher les potions du vendeur Comme il est demande.
+Pour vérifier la question j'ai instancier potionSeller 1 qui n'a rien dans son inventaire et 1 qui en a pas.
+
+Ex0 3 ITEM1
+Pour utiliser les items il appuyer sur P
+Pour cette exo j'utilise le potion seller comme exemple. J'ai modifié la classe Item général pour faire les changements
+appropriés d'ajout d'item notamment avec la méthode applyEffectPotion.
+et aussi la méthode useEffectPotion() dans la classe Player pour les items.
+
+EXO 3 ITEM3
+Pour cette EXO j'ai modifié l'ITEM teleportation dans dans ItemGeneral
+et adapter la fonction usePotion() dans la classe player pour l'utiliser indéfiniment.
+
+Exo 3 ITEM2
+J'utilise la class PNJQUest pour le test de cette question.
+On peut voler le pnjQuest1 qui s'appelle pnjQuest1 et c'est le premier sorcier blanc pas le 2ème.
+Mais de manière général on peut voler n'importe quel pnjQuest qui possède un item.
+J'ai essayé de modifier la classe ItemGeneral mais je n'ai pas réussi.
+
+EXO3 5 ITEM5:
+Pour le code cette ITEM il faut aller dans ITEMGeneral et dans les method applyEffectPotion()
+pour voir le code de l'item5.

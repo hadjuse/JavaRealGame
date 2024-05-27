@@ -20,6 +20,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import monster.Monster;
+import pnj.PnjQuest;
+import pnj.PotionSeller;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
@@ -38,7 +40,8 @@ public class Player extends Entity implements ActionEntityBattle {
     private List<Entity> entities;
     private int i;
     private int j;
-
+    private PotionSeller potionSeller;
+    private PnjQuest pnjQuest;
     public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities, Stage stage, int i, int j) throws FileNotFoundException {
         super(name, 30, 30, tileMap);
         spriteData = new SpriteData();
@@ -72,9 +75,15 @@ public class Player extends Entity implements ActionEntityBattle {
         getHitBox().setFocusTraversable(true);
         //getHitBox().requestFocus();
         eventInteractionItem(tileMap, itemEntities);
-        getInventory().addItemPotion(new ItemGeneral("INVINCIBLE", tileMap, this, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this, getEntities()), 1);
-        getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("INVINCIBLE", tileMap, this, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", tileMap, this, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("POTION_STRENGTH", tileMap, this, getEntities()), 1);
+        //getInventory().addItemPotion(new ItemGeneral("POTION_SPEED", tileMap, this, getEntities()), 1);
+        getInventory().addItemPotion(new ItemGeneral("ITEM1", tileMap, this, getEntities(), getStage()), 1);
+        getInventory().addItemPotion(new ItemGeneral("ITEM2", tileMap, this, getEntities(), getStage()), 1);
+        getInventory().addItemPotion(new ItemGeneral("TELEPORTATION", tileMap, this, getEntities(), getStage()), 1);
+        getInventory().addItemPotion(new ItemGeneral("ITEM5", tileMap, this, getEntities(), getStage()), 1);
     }
 
     private void initInfoPlayer(String name) throws FileNotFoundException {
@@ -86,7 +95,7 @@ public class Player extends Entity implements ActionEntityBattle {
         setBoxEntity(boxEntity());
         setXSpawn(0);
         setYSpawn(0);
-        setInventory(new Inventory(10));
+        setInventory(new Inventory(5));
         setMoney(0);
         setCollidable(true);
         setOneShot(false);
@@ -366,8 +375,22 @@ private Button UsePotionButton(ItemGeneral potion, ImageView potionImageView, Li
         boolean potionInInventory = getInventory().getItemPotionList().contains(potion);
         if (potionInInventory) {
             stage.close();
-            potion.applyEffectPotion(this);
-            getInventory().removeItemPotion(potion);
+            //
+            if (potion.getName().equals("ITEM1")){
+                //System.out.println("I am a potion seller");
+                for (Entity entity : entities){
+                    if (entity instanceof PotionSeller potionSeller && potionSeller.isPnjRencontre()){
+                        potionSeller.showPotionWindow(this);
+                    }else {
+                        System.out.println("Je ne peux pas utilisé l'item car pnj non rencontre");
+                    }
+                }
+            }else {
+                potion.applyEffectPotion(this);
+            }
+            if (!potion.getName().equals("TELEPORTATION")){
+                getInventory().removeItemPotion(potion);
+            }
 
         } else {
             stage.close();
@@ -423,6 +446,22 @@ private Button UsePotionButton(ItemGeneral potion, ImageView potionImageView, Li
 
     public void setJ(int j) {
         this.j = j;
+    }
+
+    public PotionSeller getPotionSeller() {
+        return potionSeller;
+    }
+
+    public void setPotionSeller(PotionSeller potionSeller) {
+        this.potionSeller = potionSeller;
+    }
+
+    public PnjQuest getPnjQuest() {
+        return pnjQuest;
+    }
+
+    public void setPnjQuest(PnjQuest pnjQuest) {
+        this.pnjQuest = pnjQuest;
     }
 
     public static class SpriteData {

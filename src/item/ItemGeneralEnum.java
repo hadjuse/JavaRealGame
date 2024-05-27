@@ -2,10 +2,11 @@ package item;
 
 public enum ItemGeneralEnum {
     POTION_HEAL,
-    POTION_STRENGTH,
-    POTION_SPEED,
     KILL,
     INVINCIBLE,
     TELEPORTATION,
-    POTION_WHO_OPEN_DOOR,
+    ITEM1,
+    ITEM2,
+    ITEM4,
+    ITEM5,
 }

@@ -2,7 +2,14 @@ package pnj;
 
 import entity.Entity;
 import inventory.Inventory;
+import item.ItemGeneral;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -20,6 +27,8 @@ public class PnjQuest extends Entity {
     private int j;
     private List<Entity> entities;
     private Stage stage;
+    private boolean pnjRencontre;
+
     // TODO QUEST PNJ that allow interaction.
     public PnjQuest(String name, double width, double height, TileMap map, Player player, int i, int j, List<Entity> entities, Stage stage) throws FileNotFoundException {
         super(name, width, height, map);
@@ -35,7 +44,80 @@ public class PnjQuest extends Entity {
         setBoxEntity(renderPNJ());
         getMap().moveEntity(this, getI(), getJ());
         getEntities().add(this);
+        getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", map, player, getEntities(), getStage()), 1);
+        getInventory().addItemPotion(new ItemGeneral("INVINCIBLE", map, player, getEntities(), getStage()), 1);
+        getBoxEntity().setOnMouseClicked(event -> {
+            showPotionWindow(player);
+        });
+        entities.add(this);
     }
+
+    public void showPotionWindow(Player player) {
+        // Create a new stage for the mini window
+        //setPnjRencontre(true);
+        Stage potionStage = new Stage();
+
+        // Set the title and size of the stage
+        potionStage.setTitle("Potion Seller");
+        potionStage.setWidth(720);
+        potionStage.setHeight(200);
+
+        // Create a GridPane to contain the potion buttons and labels
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+
+        // Add the potions to the GridPane
+        int rowIndex = 0;
+        for (ItemGeneral potion : getInventory().getItemPotionList()) {
+            // Create an ImageView for the potion
+            ImageView potionImageView = new ImageView(new Image(getClass().getResourceAsStream(potion.getSpritePath()[potion.getItemEnum().ordinal()])));
+
+            // Create a Label for the name of the potion
+            Label potionNameLabel = new Label(potion.getName());
+
+            // Create a Label for the price of the potion
+            Label potionPriceLabel = new Label(String.valueOf(potion.getValueMoney()));
+
+            // Create a Button for the potion
+            Button potionButton = new Button();
+            potionButton.setGraphic(potionImageView);
+            potionButton.setOnAction(event -> stealItem(player, potion, potionStage));
+
+            // Add the Button, the name Label, and the price Label to the GridPane
+            gridPane.add(potionButton, 0, rowIndex);
+            gridPane.add(potionNameLabel, 1, rowIndex);
+            gridPane.add(potionPriceLabel, 2, rowIndex);
+
+            rowIndex++;
+        }
+
+        // If there are more potions than can fit in the window, add the GridPane to a ScrollPane
+        if (rowIndex * 30 > potionStage.getHeight()) { // assuming each row is 30 pixels tall
+            ScrollPane scrollPane = new ScrollPane(gridPane);
+            scrollPane.setFitToWidth(true);
+            potionStage.setScene(new Scene(scrollPane));
+        } else {
+            potionStage.setScene(new Scene(gridPane));
+        }
+
+        // Show the stage
+        potionStage.show();
+    }
+
+    private void stealItem(Player player, ItemGeneral potion, Stage potionStage) {
+        boolean enoughSpace = player.getInventory().getItemPotionList().size() <= getPlayer().getInventory().getQuantity();
+        if (enoughSpace) {
+            player.getInventory().addItemPotion(potion,1);
+            System.out.println("The item is added to the inventory");
+            getInventory().removeItemPotion(potion);
+
+        } else {
+            System.out.println("The inventory is full");
+        }
+        potionStage.close();
+    }
+
     public StackPane renderPNJ() {
         StackPane stackPane = new StackPane();
         Image image = new Image("images/pnj/wizzard_m_run_anim_f0.png");
@@ -92,5 +174,13 @@ public class PnjQuest extends Entity {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public boolean isPnjRencontre() {
+        return pnjRencontre;
+    }
+
+    public void setPnjRencontre(boolean pnjRencontre) {
+        this.pnjRencontre = pnjRencontre;
     }
 }
