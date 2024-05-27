@@ -98,6 +98,10 @@ public class ItemGeneral extends ItemEntity {
             case POTION_WHO_OPEN_DOOR:
                 getPlayer().setOpen(true);
                 break;
+            case ITEM1:
+                break;
+            case ITEM2:
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: %s".formatted(getItemEnum()));
         }
@@ -165,6 +169,18 @@ public class ItemGeneral extends ItemEntity {
             case POTION_WHO_OPEN_DOOR:
                 setValueMoney(10);
                 image = new Image(getClass().getResourceAsStream(getSpritePath()[6]));
+                imageView = new ImageView(image);
+                getHitBox().setFill(new ImagePattern(image));
+                break;
+            case ITEM1:
+                setValueMoney(0);
+                image = new Image(getClass().getResourceAsStream(getSpritePath()[7]));
+                imageView = new ImageView(image);
+                getHitBox().setFill(new ImagePattern(image));
+                break;
+            case ITEM2:
+                setValueMoney(0);
+                image = new Image(getClass().getResourceAsStream(getSpritePath()[7]));
                 imageView = new ImageView(image);
                 getHitBox().setFill(new ImagePattern(image));
                 break;

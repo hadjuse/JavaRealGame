@@ -4,3 +4,11 @@ Exo 1
 a) L'implementation pour vérifier si il y a assez d'espace est déjà faite dans la Class
 Il y a 5 item dejà ajouter dans le sac à dos, donc il y a 5 emplacements occupées.
 Player situé dans la méthode eventInteractionItem().
+
+b) Le pnj utilisé pour répondre à cette question est la classe PnjQuest.
+qui est situé dans le package pnj, pour répondre à cette question,
+J'ai créé 2 instances de PnjQuest dans la classe Tilemap, qui sont des sorciers blancs et qui possèdent 2 items:
+POTION_HEAL et POTION_STRENGTH.
+J'ai modifié la classe ItemGeneral pour ajouter les item1 et item2. et je les ai placé
+sur la map dans la classe TileMap. à 2 cases. ils sont représenté par des fioles oranges.
+Pour vérifier si les 2 pnj ont des items il faut cliquer sur eux.

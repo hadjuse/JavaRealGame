@@ -247,10 +247,17 @@ public class TileMap extends GridPane {
         moveEntity(getPlayer(), 14, 1);
         setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer(), entities));
         setQuest(new PnjQuest("pnjQuest", 30, 50, this, getPlayer(), 8,1, entities, stage));
+        setQuest(new PnjQuest("pnjQuest", 30, 50, this, getPlayer(), 8,2, entities, stage));
         placeEntity(getPotionSeller(), 7, 1);
         entities.add(getPotionSeller());
         //moveEntity(getPlayer(), 14, 7);
         //getPlayer().getInventory().addItemPotion(new ItemGeneral("KILL", this, getPlayer()), 1);
+        ItemGeneral item1 = new ItemGeneral("ITEM1", this, getPlayer(), entities);
+        ItemGeneral item2 = new ItemGeneral("ITEM2", this, getPlayer(), entities);
+        itemEntities.add(item1);
+        itemEntities.add(item2);
+        placeItemEntity(item1, 14, 3);
+        placeItemEntity(item2, 14, 4);
         ButtonLevel1(stage);
         ButtonLevel2(stage);
         ButtonLevel3(stage);
