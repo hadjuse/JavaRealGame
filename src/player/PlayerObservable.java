@@ -4,6 +4,7 @@ import entity.Entity;
 import inventory.Inventory;
 import item.ItemGeneral;
 import item.Spike;
+import itemObservable.itemList.Item4;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
@@ -123,6 +124,8 @@ public class PlayerObservable extends Entity implements Observer{
 
     @Override
     public void update(Observable observable) {
+        if(observable instanceof Item4 item4){
 
+        }
     }
 }

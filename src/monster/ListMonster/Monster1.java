@@ -1,5 +1,6 @@
 package monster.ListMonster;
 
+import itemObservable.itemList.Item4;
 import monster.MonsterEntity;
 import monster.MonsterEnum;
 import obs.Observable;
@@ -47,6 +48,10 @@ public class Monster1 extends MonsterEntity implements Observer {
                 getMap().removeEntity(this);
                 player.getObservers().remove(this);
             }
+        }else if (observable instanceof Item4 item4){
+            System.out.println("J'utilise l'item4 sur ce monstre1");
+            System.out.println("Life of Monster1: " + getLife());
+            loseLife(getLife());
         }
 
     }

@@ -14,8 +14,6 @@ import world.TileMap;
 import java.io.FileNotFoundException;
 
 public class Spike extends Entity implements Observer{
-    private Rectangle hitBox;
-
     public Spike(String name, double width, double height, TileMap map, PlayerObservable playerObservable, int i , int j) throws FileNotFoundException {
         super(name, width, height, map);
         setBoxEntity(spikes());
@@ -37,13 +35,6 @@ public class Spike extends Entity implements Observer{
         return stackPane;
     }
 
-    public Rectangle getHitBox() {
-        return hitBox;
-    }
-
-    public void setHitBox(Rectangle hitBox) {
-        this.hitBox = hitBox;
-    }
 
     @Override
     public void update(Observable observable) {

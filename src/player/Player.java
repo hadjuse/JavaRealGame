@@ -239,7 +239,7 @@ public void checkCollision(List<Entity> bounds, SpriteData spriteData) throws Fi
             }
         } else if (bound instanceof Spike spike) {
             // Checks for collision between the player's hitbox and a spike's hitbox.
-            Shape intersection = Shape.intersect(getHitBox(), spike.getHitBox());
+            Shape intersection = Shape.intersect(getHitBox(), spike.getBounds());
             boolean collisionX = intersection.getBoundsInLocal().getMinX() > 0 && intersection.getBoundsInLocal().getMaxX() > 0;
             boolean collisionY = intersection.getBoundsInLocal().getMinY() > 0 && intersection.getBoundsInLocal().getMaxY() > 0;
             if (collisionX && collisionY && getLife() > 0 && this.isCollision()) {

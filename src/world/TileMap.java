@@ -2,6 +2,8 @@ package world;
 
 import entity.Entity;
 import item.*;
+import itemObservable.ItemObservable;
+import itemObservable.itemList.Item4;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -101,7 +103,7 @@ public class TileMap extends GridPane {
                     case "q1":
                         placeMap(i, j, "images/tile/tile000.png");
                         QuestItem newQuestItem = new QuestItem("QuestItem", tileMap);
-                        placeItemEntity(newQuestItem, i, j);
+                        //placeItemEntity(newQuestItem, i, j);
                         itemEntities.add(newQuestItem);
                         break;
                     case "f":
@@ -144,7 +146,7 @@ public class TileMap extends GridPane {
         this.getChildren().add(entity.getBoxEntity());
     }
 
-    public void placeItemEntity(ItemEntity itemEntity, int i, int j) {
+    public void placeItemEntity(ItemObservable itemEntity, int i, int j) {
         GridPane.setRowIndex(itemEntity.getItemStackPane(), i);
         GridPane.setColumnIndex(itemEntity.getItemStackPane(), j);
         this.getChildren().add(itemEntity.getItemStackPane());
@@ -161,38 +163,6 @@ public class TileMap extends GridPane {
         itemEntity.getHitBox().setTranslateX(0);
         itemEntity.getHitBox().setTranslateY(0);
         this.getChildren().add(itemEntity.getItemStackPane());
-    }
-
-    public void level1(String string, Stage stage) throws FileNotFoundException {
-        this.setOnKeyPressed(null);
-        for (ItemEntity item : itemGenerals) {
-            removeItemEntity(item);
-        }
-        itemEntities.clear();
-        entities.clear();
-        getChildren().clear();
-        setPathToCsv(string);
-        setMap(new ArrayList<>());
-        this.setVgap(-1);
-        this.setHgap(-1);
-        genMap(getMap());
-        showMap(getMap(), this);
-
-        //placeEntity(spike, 14, 7);
-        ItemEntity potionHeal = new ItemGeneral("POTION_HEAL", this, getPlayer(), entities, stage);
-        //ItemEntity potionSpeed = new ItemGeneral("POTION_SPEED", this, getPlayer(), entities, stage);
-        //ItemEntity potionStrength = new ItemGeneral("POTION_STRENGTH", this, getPlayer(), entities, stage);
-        //QuestItem newQuestItem = new QuestItem("GG", this);
-        itemEntities.add(potionHeal);
-        //itemEntities.add(potionSpeed);
-        //itemEntities.add(potionStrength);
-
-        //itemEntities.add(newQuestItem);
-
-        //player = new Player("Hadjuse", this, itemEntities, entities);
-
-        moveEntity(getPlayerObservable(), 14, 1);
-        ButtonBackRoom(stage);
     }
 
     public void Level2(String pathToCsv, Stage stage) throws FileNotFoundException {
@@ -263,6 +233,11 @@ public class TileMap extends GridPane {
         monster1.addObserver(getPlayerObservable());
         monster2.addObserver(getPlayerObservable());
         Spike spike = new Spike("Spike", 50, 50, this, getPlayerObservable(), 5, 5);
+        Item4 item4 = new Item4(this, 5, 5);
+        item4.getObservers().add(monster1);
+        item4.getObservers().add(getPlayerObservable());
+        placeItemEntity(item4, 5, 5);
+        item4.applyEffect();
         /*
         setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer(), entities));
         PotionSeller potionSeller2 = new PotionSeller("PotionSeller2", 35, 35, this, getPlayer(), entities);
@@ -280,7 +255,6 @@ public class TileMap extends GridPane {
         itemEntities.add(item2);
         placeItemEntity(item1, 14, 3);
         placeItemEntity(item2, 14, 4);*/
-        ButtonLevel1(stage);
         ButtonLevel2(stage);
         ButtonLevel3(stage);
     }
@@ -315,22 +289,6 @@ public class TileMap extends GridPane {
             }
         });
         GridPane.setColumnIndex(changeMapButton, 9);
-        GridPane.setRowIndex(changeMapButton, 0);
-        this.getChildren().add(changeMapButton);
-    }
-
-    private void ButtonLevel1(Stage stage) {
-        Button changeMapButton = new Button("1");
-        changeMapButton.setOnAction(event -> {
-            try {
-                itemEntities.clear();
-                entities.clear();
-                this.level1(Levels[0], stage);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
-        GridPane.setColumnIndex(changeMapButton, 6);
         GridPane.setRowIndex(changeMapButton, 0);
         this.getChildren().add(changeMapButton);
     }
