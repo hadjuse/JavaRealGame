@@ -2,10 +2,11 @@ package item;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import obs.Observer;
 
 import java.io.FileNotFoundException;
 
-public abstract class ItemEntity {
+public abstract class ItemEntity{
     private double valueMoney;
     private StackPane itemStackPane;
     private int quantity;

@@ -3,11 +3,13 @@ package player;
 import entity.Entity;
 import inventory.Inventory;
 import item.ItemGeneral;
+import item.Spike;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import monster.ListMonster.Monster1;
 import monster.MonsterEntity;
 import obs.Observable;
@@ -15,6 +17,9 @@ import obs.Observer;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class PlayerObservable extends Entity implements Observer{
     private boolean oneShot;
@@ -26,7 +31,7 @@ public class PlayerObservable extends Entity implements Observer{
         setGridJ(j);
         setBoxEntity(boxEntity());
         getBounds().setFocusTraversable(true);
-        getMap().placeEntity(this, getGridI(), getGridJ());
+        //getMap().placeEntity(this, getGridI(), getGridJ());
         //getInventory().getItemPotionList().add(new ItemGeneral("POTION_HEAL", map, this, getMap()));
         map.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             checkCollision();
@@ -72,7 +77,7 @@ public class PlayerObservable extends Entity implements Observer{
     }
     private void initInfoPlayer(String name) throws FileNotFoundException {
         setName(name);
-        setLife(100);
+        setLife(200);
         setSpeed(1.2);
         setStrength(20);
         //setDamage(20 * (1 + getStrength() / 100));
@@ -94,19 +99,30 @@ public class PlayerObservable extends Entity implements Observer{
         return stackPane;
     }
     public void checkCollision() {
-        getObservers().forEach(observer -> {
-            if (observer instanceof MonsterEntity monsterEntity){
-                Boolean collision = monsterEntity.getGridI() == getGridI() && monsterEntity.getGridJ() == getGridJ();
+        List<Observer> toNotify = new ArrayList<>();
+        for (Observer observer : getObservers()) {
+            if (observer instanceof MonsterEntity monster) {
+                Boolean collision = getGridI() == monster.getGridI() && getGridJ() == monster.getGridJ();
                 if (collision){
-                    System.out.println("Collision with monster");
-                    monsterEntity.setCollision(true);
-                    notifyObserver();
+                    monster.setCollision(true);
+                    toNotify.add(observer);
                 }
             }
-        });
+            if (observer instanceof Spike spike) {
+                Boolean collision = getGridI() == spike.getGridI() && getGridJ() == spike.getGridJ();
+                if (collision){
+                    spike.setCollision(true);
+                    toNotify.add(observer);
+                }
+            }
+        }
+        for (Observer observer : toNotify) {
+            observer.update(this);
+        }
     }
 
     @Override
     public void update(Observable observable) {
+
     }
 }

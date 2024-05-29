@@ -5,6 +5,7 @@ import item.ItemEntity;
 import item.ItemGeneral;
 import item.QuestItem;
 import item.UsableItem;
+import itemObservable.ItemObservable;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
@@ -337,5 +338,7 @@ public abstract class Entity implements Observable {
 
     public void setMap(TileMap map) {
         this.map = map;
+    }
+    public void usePotion(ItemObservable itemObservable){
     }
 }

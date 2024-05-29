@@ -55,13 +55,14 @@ public class TileMap extends GridPane {
     private PnjQuest quest;
     private PlayerObservable playerObservable;
     public TileMap(Stage stage) throws FileNotFoundException {
+        setPlayerObservable(new PlayerObservable("hadjuse", 50, 50, this, 14, 1));
         //level1(Levels[0], stage);
         setPathToCsv("backroom.csv");
         setMap(new ArrayList<>());
         genMap(getMap());
         showMap(getMap(), this);
+        placeEntity(getPlayerObservable(), 14, 1);
         //setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities(), stage, 14, 1));
-        setPlayerObservable(new PlayerObservable("hadjuse", 50, 50, this, 14, 1));
         backRoom(getLevels()[5], stage);
 
 
@@ -96,11 +97,6 @@ public class TileMap extends GridPane {
                         Wall newWall = new Wall("Wall", 50, 50, tileMap);
                         placeEntity(newWall, i, j);
                         entities.add(newWall);
-                        break;
-                    case "4":
-                        Spike newSpike = new Spike("Spike", 50, 50, tileMap);
-                        placeEntity(newSpike, i, j);
-                        entities.add(newSpike);
                         break;
                     case "q1":
                         placeMap(i, j, "images/tile/tile000.png");
@@ -182,6 +178,7 @@ public class TileMap extends GridPane {
         genMap(getMap());
         showMap(getMap(), this);
 
+        //placeEntity(spike, 14, 7);
         ItemEntity potionHeal = new ItemGeneral("POTION_HEAL", this, getPlayer(), entities, stage);
         //ItemEntity potionSpeed = new ItemGeneral("POTION_SPEED", this, getPlayer(), entities, stage);
         //ItemEntity potionStrength = new ItemGeneral("POTION_STRENGTH", this, getPlayer(), entities, stage);
@@ -263,7 +260,9 @@ public class TileMap extends GridPane {
         getPlayerObservable().getObservers().add(monster1);
         Monster2 monster2 = new Monster2(MonsterEnum.MONSTER_2,this , 14, 6);
         getPlayerObservable().getObservers().add(monster2);
-
+        monster1.addObserver(getPlayerObservable());
+        monster2.addObserver(getPlayerObservable());
+        Spike spike = new Spike("Spike", 50, 50, this, getPlayerObservable(), 5, 5);
         /*
         setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer(), entities));
         PotionSeller potionSeller2 = new PotionSeller("PotionSeller2", 35, 35, this, getPlayer(), entities);

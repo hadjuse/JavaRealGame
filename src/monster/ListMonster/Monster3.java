@@ -18,22 +18,36 @@ public class Monster3 extends MonsterEntity implements Observer{
 
     @Override
     public void update(Observable observable) {
-        PlayerObservable player = (PlayerObservable) observable;
-        if (isCollision()){
-            if (player.getStrength()> getStrength()){
-                System.out.println("J'ai plus de force que le monstre3 donc j'attaque");
-                loseLife(player.getStrength());
-                System.out.println("Life of Monster2: " + getLife());
-            }else if (player.getStrength()< getStrength()){
-                System.out.println("J'ai moins de force que le monstre3 donc je me fais attaquer");
-                player.loseLife(getStrength());
-                System.out.println("Life of Player: " + player.getLife());
-            }else {
-                System.out.println("J'ai la même force que le monstre3 donc je me fais attaquer");
-                player.loseLife(getStrength());
-                System.out.println("Life of Player: " + player.getLife());
+        if (observable instanceof PlayerObservable player){
+            if (getLife() <= 0){
+                System.out.println("Monster2 est mort !");
+                getMap().removeEntity(this);
+                player.getObservers().remove(this);
+                setCollision(false);
+                return;
             }
-            setCollision(false);
+            if (isCollision()){
+                if (player.getStrength()> getStrength()){
+                    System.out.println("J'ai plus de force que le monstre3 donc j'attaque");
+                    loseLife(player.getStrength());
+                    System.out.println("Life of Monster2: " + getLife());
+                }else if (player.getStrength()< getStrength()){
+                    System.out.println("J'ai moins de force que le monstre3 donc je me fais attaquer");
+                    player.loseLife(getStrength());
+                    System.out.println("Life of Player: " + player.getLife());
+                }else {
+                    System.out.println("J'ai la même force que le monstre3 donc je me fais attaquer");
+                    player.loseLife(getStrength());
+                    System.out.println("Life of Player: " + player.getLife());
+                }
+                setCollision(false);
+            }
+            if (getLife()<=0){
+                System.out.println("Monster3 est mort !");
+                getMap().removeEntity(this);
+                player.getObservers().remove(this);
+            }
         }
+
     }
 }
