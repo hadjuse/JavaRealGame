@@ -17,6 +17,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import obs.Observable;
+import obs.Observer;
 import player.Player;
 import world.TileMap;
 
@@ -27,7 +29,7 @@ import java.util.List;
 Si je veux modifier des interactions avec les monstres je vais les switchs correspondant
 
  */
-public class Monster extends Entity implements ActionEntityBattle {
+public class Monster extends Entity implements ActionEntityBattle, Observer {
     private Timeline attackTimer;
     private MonsterEnum monsterEnum;
     private Player player;
@@ -47,17 +49,14 @@ public class Monster extends Entity implements ActionEntityBattle {
         setStrength(30);
         setI(i);
         setJ(j);
-        setAttacked(false);
         setMonsterEnum(monsterEnum);
         setBoxEntity(boxMonster());
-        setCanBeAttacked(true);
-        setCollidable(true);
+        setCollision(true);
         setPlayer(player);
         getMap().moveEntity(this, i, j);
         setDamage(20 * (1 + getStrength() / 100));
         getBoxEntity().setOnMouseClicked(mouseEvent -> {
-            if (getBoxEntity().contains(mouseEvent.getX(), mouseEvent.getY()) && isCanBeAttacked()) {
-                setAttacked(true);
+            if (getBoxEntity().contains(mouseEvent.getX(), mouseEvent.getY())) {
                 receiveAttackFromEntity(this, map);
             }
         });
@@ -292,7 +291,7 @@ public void actionAfterDeath(TileMap map, Entity entity) {
                 player.addMoney(getMoney(), getPlayer());
                 map.removeEntity(entity);
                 getEntities().remove(entity);
-                setDead(true);
+                //setDead(true);
                 System.out.printf("%s receive %s\n", getPlayer().getName(), itemGeneral.getName());
                 System.out.printf("%s%n", getPlayer().getInventory());
             }
@@ -369,5 +368,10 @@ public void actionAfterDeath(TileMap map, Entity entity) {
 
     public void setAttacked(double attacked) {
         this.attacked = attacked;
+    }
+
+    @Override
+    public void update(Observable observable) {
+
     }
 }

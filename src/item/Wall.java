@@ -27,7 +27,7 @@ public class Wall extends Entity {
     public Wall(String name, double width, double height, TileMap map) throws FileNotFoundException {
         super(name, width, height, map);
         setBoxEntity(Wall());
-        setCollidable(true);
+        setCollision(true);
         if (name.equals("fountain")) {
             spriteImage = new ImageView(new Image(getClass().getResourceAsStream(idlePath[0])));
             spriteImage.setFitWidth(width);

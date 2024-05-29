@@ -3,12 +3,14 @@ package inventory;
 import item.ItemGeneral;
 import item.QuestItem;
 import item.UsableItem;
+import obs.Observable;
+import obs.Observer;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Inventory {
+public class Inventory implements Observer {
     private List<QuestItem> questItemList;
     private List<UsableItem> usableItemList;
     private List<ItemGeneral> itemGeneralList;
@@ -114,5 +116,10 @@ public class Inventory {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public void update(Observable observable) {
+        System.out.println("Inventory updated");
     }
 }

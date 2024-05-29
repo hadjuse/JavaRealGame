@@ -16,7 +16,7 @@ public class Spike extends Entity {
     public Spike(String name, double width, double height, TileMap map) throws FileNotFoundException {
         super(name, width, height, map);
         setBoxEntity(spikes());
-        setCollidable(true);
+        setCollision(true);
     }
 
     public StackPane spikes() {

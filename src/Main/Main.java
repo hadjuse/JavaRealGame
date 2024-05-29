@@ -8,6 +8,7 @@ import world.TileMap;
 // A la fin du projet ne pas oublier de changer les chemins pour le jar
 public class Main extends Application {
     public static void main(String[] args) {
+
         launch(args);
     }
 

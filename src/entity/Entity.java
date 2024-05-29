@@ -8,11 +8,15 @@ import item.UsableItem;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import obs.Observable;
+import obs.Observer;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class Entity {
+public abstract class Entity implements Observable {
     private double life;
     private double strength;
     private double money;
@@ -20,31 +24,35 @@ public abstract class Entity {
     private double damage;
     private StackPane boxEntity;
     private Inventory inventory;
-    private boolean isAttacked;
-    private boolean canBeAttacked;
-    private boolean isDead;
     private double width;
     private double height;
     private String name;
     private Rectangle bounds;
-    private ItemGeneral potionHeal;
-    private ItemGeneral potionStrength;
-    private ItemGeneral potionSpeed;
-    private ItemGeneral potionDamage;
     private QuestItem questItem;
-    private boolean collidable;
+    private boolean collision;
     private Alert dialog;
     private boolean open;
-
+    private List<Observer> observers;
+    private boolean attack;
+    private boolean takingItem;
+    private double XSpawn;
+    private double YSpawn;
+    private int gridI;
+    private int gridJ;
+    private TileMap map;
     public Entity(String name, double width, double height, TileMap map) throws FileNotFoundException {
         setMoney(0);
         setWidth(width);
         setHeight(height);
-        setBoxEntity(getBoxEntity());
-        setInventory(new Inventory(5));
+        //setBoxEntity(getBoxEntity());
         setName(name);
+        setObservers(new ArrayList<>());
+        setMap(map);
     }
 
+    public boolean isDead() {
+        return getLife() <= 0;
+    }
     public double getLife() {
         return life;
     }
@@ -75,22 +83,6 @@ public abstract class Entity {
 
     public void setBoxEntity(StackPane boxEntity) {
         this.boxEntity = boxEntity;
-    }
-
-    public boolean isDead() {
-        return getLife() <= 0;
-    }
-
-    public void setDead(boolean dead) {
-        isDead = dead;
-    }
-
-    public boolean isAttacked() {
-        return isAttacked;
-    }
-
-    public void setAttacked(boolean attacked) {
-        isAttacked = attacked;
     }
 
     public double getSpeed() {
@@ -224,38 +216,6 @@ public abstract class Entity {
         this.bounds = bounds;
     }
 
-    public ItemGeneral getPotionStrength() {
-        return potionStrength;
-    }
-
-    public void setPotionStrength(ItemGeneral potionStrength) {
-        this.potionStrength = potionStrength;
-    }
-
-    public ItemGeneral getPotionSpeed() {
-        return potionSpeed;
-    }
-
-    public void setPotionSpeed(ItemGeneral potionSpeed) {
-        this.potionSpeed = potionSpeed;
-    }
-
-    public ItemGeneral getPotionDamage() {
-        return potionDamage;
-    }
-
-    public void setPotionDamage(ItemGeneral potionDamage) {
-        this.potionDamage = potionDamage;
-    }
-
-    public ItemGeneral getPotionHeal() {
-        return potionHeal;
-    }
-
-    public void setPotionHeal(ItemGeneral potionHeal) {
-        this.potionHeal = potionHeal;
-    }
-
     public QuestItem getQuestItem() {
         return questItem;
     }
@@ -264,20 +224,12 @@ public abstract class Entity {
         this.questItem = questItem;
     }
 
-    public boolean isCanBeAttacked() {
-        return canBeAttacked;
+    public boolean isCollision() {
+        return collision;
     }
 
-    public void setCanBeAttacked(boolean canBeAttacked) {
-        this.canBeAttacked = canBeAttacked;
-    }
-
-    public boolean isCollidable() {
-        return collidable;
-    }
-
-    public void setCollidable(boolean collidable) {
-        this.collidable = collidable;
+    public void setCollision(boolean collision) {
+        this.collision = collision;
     }
 
     public void displayDialog(String dialog) {
@@ -301,5 +253,89 @@ public abstract class Entity {
 
     public void setOpen(boolean open) {
         this.open = open;
+    }
+
+    public List<Observer> getObservers() {
+        return observers;
+    }
+
+    public void setObservers(List<Observer> observers) {
+        this.observers = observers;
+    }
+    @Override
+    public void addObserver(Observer obs) {
+        getObservers().add(obs);
+    }
+
+    @Override
+    public void removeObserver(Observer obs) {
+        getObservers().remove(obs);
+    }
+
+    @Override
+    public void notifyObserver() {
+        for (Observer obs : getObservers()) {
+            obs.update(this);
+        }
+    }
+
+
+    public boolean isTakingItem() {
+        return takingItem;
+    }
+
+    public void setTakingItem(boolean takingItem) {
+        this.takingItem = takingItem;
+    }
+
+    public boolean isAttack() {
+        return attack;
+    }
+
+    public void setAttack(boolean attack) {
+        this.attack = attack;
+    }
+
+    public double getXSpawn() {
+        return XSpawn;
+    }
+
+    public void setXSpawn(double XSpawn) {
+        this.XSpawn = XSpawn;
+    }
+
+    public double getYSpawn() {
+        return YSpawn;
+    }
+
+    public void setYSpawn(double YSpawn) {
+        this.YSpawn = YSpawn;
+    }
+    public void displayInventory() {
+        getInventory().getItemPotionList().forEach(item -> System.out.println(item.getName()));
+    }
+
+    public int getGridI() {
+        return gridI;
+    }
+
+    public void setGridI(int gridI) {
+        this.gridI = gridI;
+    }
+
+    public int getGridJ() {
+        return gridJ;
+    }
+
+    public void setGridJ(int gridJ) {
+        this.gridJ = gridJ;
+    }
+
+    public TileMap getMap() {
+        return map;
+    }
+
+    public void setMap(TileMap map) {
+        this.map = map;
     }
 }

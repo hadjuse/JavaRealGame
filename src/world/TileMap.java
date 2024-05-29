@@ -7,9 +7,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
+import monster.ListMonster.Monster1;
+import monster.ListMonster.Monster2;
 import monster.Monster;
+import monster.MonsterEntity;
 import monster.MonsterEnum;
+import obs.Observer;
 import player.Player;
+import player.PlayerObservable;
 import pnj.PnjQuest;
 import pnj.PotionSeller;
 
@@ -48,14 +53,17 @@ public class TileMap extends GridPane {
     private List<QuestItem> questItems = new ArrayList<QuestItem>();
     private MonsterEnum monsterEnum;
     private PnjQuest quest;
+    private PlayerObservable playerObservable;
     public TileMap(Stage stage) throws FileNotFoundException {
         //level1(Levels[0], stage);
         setPathToCsv("backroom.csv");
         setMap(new ArrayList<>());
         genMap(getMap());
         showMap(getMap(), this);
-        setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities(), stage, 14, 1));
+        //setPlayer(new Player("hadjuse", this, getItemEntities(), getEntities(), stage, 14, 1));
+        setPlayerObservable(new PlayerObservable("hadjuse", 50, 50, this, 14, 1));
         backRoom(getLevels()[5], stage);
+
 
     }
 
@@ -186,7 +194,7 @@ public class TileMap extends GridPane {
 
         //player = new Player("Hadjuse", this, itemEntities, entities);
 
-        moveEntity(getPlayer(), 14, 1);
+        moveEntity(getPlayerObservable(), 14, 1);
         ButtonBackRoom(stage);
     }
 
@@ -204,7 +212,7 @@ public class TileMap extends GridPane {
         ItemGeneral potion = new ItemGeneral("KILL", this, getPlayer(), entities, stage);
         itemEntities.add(potion);
         monster1.getInventory().addItemPotion(potion, 1);
-        moveEntity(getPlayer(), 14, 1);
+        moveEntity(getPlayerObservable(), 14, 1);
         ButtonBackRoom(stage);
     }
 
@@ -212,13 +220,14 @@ public class TileMap extends GridPane {
         generation(pathToCsv);
         itemEntities.clear();
         entities.clear();
+        /*
         ItemGeneral potion1 = new ItemGeneral("TELEPORTATION", this, getPlayer(), entities, stage);
         ItemGeneral potion2 = new ItemGeneral("POTION_HEAL", this, getPlayer(), entities, stage);
         itemEntities.add(potion1);
         itemEntities.add(potion2);
         placeItemEntity(potion1, 1, 1);
-        placeItemEntity(potion2, 1, 2);
-        moveEntity(getPlayer(), 14, 1);
+        placeItemEntity(potion2, 1, 2);*/
+        moveEntity(getPlayerObservable(), 14, 1);
         ButtonBackRoom(stage);
     }
 
@@ -249,7 +258,13 @@ public class TileMap extends GridPane {
         setMap(new ArrayList<>());
         genMap(getMap());
         showMap(getMap(), this);
-        moveEntity(getPlayer(), 14, 1);
+        moveEntity(getPlayerObservable(), 14, 1);
+        Monster1 monster1 = new Monster1(MonsterEnum.MONSTER_1,this , 14, 5);
+        getPlayerObservable().getObservers().add(monster1);
+        Monster2 monster2 = new Monster2(MonsterEnum.MONSTER_2,this , 14, 6);
+        getPlayerObservable().getObservers().add(monster2);
+
+        /*
         setPotionSeller(new PotionSeller("PotionSeller", 35, 35, this, getPlayer(), entities));
         PotionSeller potionSeller2 = new PotionSeller("PotionSeller2", 35, 35, this, getPlayer(), entities);
         getPotionSeller().getInventory().addItemPotion(new ItemGeneral("POTION_HEAL", this, getPlayer(), entities, stage), 1);
@@ -265,7 +280,7 @@ public class TileMap extends GridPane {
         itemEntities.add(item1);
         itemEntities.add(item2);
         placeItemEntity(item1, 14, 3);
-        placeItemEntity(item2, 14, 4);
+        placeItemEntity(item2, 14, 4);*/
         ButtonLevel1(stage);
         ButtonLevel2(stage);
         ButtonLevel3(stage);
@@ -454,5 +469,13 @@ public class TileMap extends GridPane {
 
     public void setQuestItems(List<QuestItem> questItems) {
         this.questItems = questItems;
+    }
+
+    public PlayerObservable getPlayerObservable() {
+        return playerObservable;
+    }
+
+    public void setPlayerObservable(PlayerObservable playerObservable) {
+        this.playerObservable = playerObservable;
     }
 }

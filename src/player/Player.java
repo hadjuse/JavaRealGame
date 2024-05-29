@@ -20,15 +20,18 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import monster.Monster;
+import obs.Observable;
+import obs.Observer;
 import pnj.PnjQuest;
 import pnj.PotionSeller;
 import world.TileMap;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Player extends Entity implements ActionEntityBattle {
+public class Player extends Entity implements ActionEntityBattle, Observable {
     private final AnimationTimer movementPlayer;
     public SpriteData spriteData;
     private Rectangle hitBox;
@@ -42,6 +45,7 @@ public class Player extends Entity implements ActionEntityBattle {
     private int j;
     private PotionSeller potionSeller;
     private PnjQuest pnjQuest;
+    private List<Observer> observers = new ArrayList<>();
     public Player(String name, TileMap tileMap, List<ItemEntity> itemEntities, List<Entity> entities, Stage stage, int i, int j) throws FileNotFoundException {
         super(name, 30, 30, tileMap);
         spriteData = new SpriteData();
@@ -97,7 +101,7 @@ public class Player extends Entity implements ActionEntityBattle {
         setYSpawn(0);
         setInventory(new Inventory(5));
         setMoney(0);
-        setCollidable(true);
+        setCollision(true);
         setOneShot(false);
         setMoney(50);
     }
@@ -226,7 +230,7 @@ public void checkCollision(List<Entity> bounds, SpriteData spriteData) throws Fi
             Shape intersection = Shape.intersect(getHitBox(), wall.getHitBox());
             boolean collisionX = intersection.getBoundsInLocal().getMinX() > 0 && intersection.getBoundsInLocal().getMaxX() > 0;
             boolean collisionY = intersection.getBoundsInLocal().getMinY() > 0 && intersection.getBoundsInLocal().getMaxY() > 0;
-            if (collisionX && collisionY && wall.isCollidable()) {
+            if (collisionX && collisionY && wall.isCollision()) {
                 // If there is a collision and the wall is collidable, adjusts the player's hitbox position.
                 double newX = getHitBox().getTranslateX() - spriteData.velocityX * getSpeed();
                 double newY = getHitBox().getTranslateY() - spriteData.velocityY * getSpeed();
@@ -238,7 +242,7 @@ public void checkCollision(List<Entity> bounds, SpriteData spriteData) throws Fi
             Shape intersection = Shape.intersect(getHitBox(), spike.getHitBox());
             boolean collisionX = intersection.getBoundsInLocal().getMinX() > 0 && intersection.getBoundsInLocal().getMaxX() > 0;
             boolean collisionY = intersection.getBoundsInLocal().getMinY() > 0 && intersection.getBoundsInLocal().getMaxY() > 0;
-            if (collisionX && collisionY && getLife() > 0 && this.isCollidable()) {
+            if (collisionX && collisionY && getLife() > 0 && this.isCollision()) {
                 // If there is a collision and the player is alive and collidable, decreases the player's life to 0 and then increases it back to 100.
                 setLife(0);
                 setLife(100);
@@ -247,12 +251,12 @@ public void checkCollision(List<Entity> bounds, SpriteData spriteData) throws Fi
                 getHitBox().setTranslateX(getXSpawn());
                 getHitBox().setTranslateY(getYSpawn());
             }
-        } else if (bound instanceof Monster monster && isCollidable()) {
+        } else if (bound instanceof Monster monster && isCollision()) {
             // Checks for collision between the player's hitbox and a monster's hitbox.
             Shape intersection = Shape.intersect(getHitBox(), monster.getBounds());
             boolean collisionX = intersection.getBoundsInLocal().getMinX() > 0 && intersection.getBoundsInLocal().getMaxX() > 0;
             boolean collisionY = intersection.getBoundsInLocal().getMinY() > 0 && intersection.getBoundsInLocal().getMaxY() > 0;
-            if (collisionX && collisionY && getLife() > 0 && monster.isCollidable()) {
+            if (collisionX && collisionY && getLife() > 0 && monster.isCollision()) {
                 // If there is a collision and the player is alive and the monster is collidable, calls the monster's attackPlayer method.
                 monster.attackPlayer(monster, getMap());
             }
@@ -462,6 +466,23 @@ private Button UsePotionButton(ItemGeneral potion, ImageView potionImageView, Li
 
     public void setPnjQuest(PnjQuest pnjQuest) {
         this.pnjQuest = pnjQuest;
+    }
+
+    @Override
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer obs) {
+        observers.remove(obs);
+    }
+
+    @Override
+    public void notifyObserver() {
+    for (Observer observer : observers) {
+            observer.update(this);
+        }
     }
 
     public static class SpriteData {

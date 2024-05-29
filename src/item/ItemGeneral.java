@@ -15,7 +15,6 @@ import world.TileMap;
 
 import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Scanner;
 
 
 /*
@@ -88,7 +87,7 @@ public class ItemGeneral extends ItemEntity {
                 break;
             case INVINCIBLE:
                 System.out.println("I am Invincible !");
-                getPlayer().setCollidable(false);
+                getPlayer().setCollision(false);
                 break;
             case TELEPORTATION:
                 teleportation();
